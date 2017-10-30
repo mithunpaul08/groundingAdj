@@ -1,5 +1,7 @@
 package initializer
 
+import java.io.{BufferedWriter, File, FileWriter}
+
 import org.clulab.embeddings.word2vec.Word2Vec
 
 object initializer extends App {
@@ -34,9 +36,20 @@ object initializer extends App {
     val firstAdj_sanitized = objW2v.sanitizeWord(firstAdj);
     print(adj_sanitized)
     val sim=w2v.similarity(firstAdj_sanitized,adj_sanitized);
-    (sim)
+    (adj_sanitized,sim)
 
   }
+val sorted_w2vSim=w2vSim.sortBy(_._2)
+  println(sorted_w2vSim.mkString("\n"))
+  
+  writeToFile(sorted_w2vSim.mkString("\n"),"comparew2vsim.txt","src/main/outputs/")
 
-  println(w2vSim.mkString("\n"))
+
+  def writeToFile(stringToWrite: String, outputFilename: String, outputDirectoryPath: String): Unit = {
+    val outFile = new File(outputDirectoryPath, outputFilename)
+    val bw = new BufferedWriter(new FileWriter(outFile))
+    bw.write(stringToWrite)
+    bw.close()
+  }
+
 }
