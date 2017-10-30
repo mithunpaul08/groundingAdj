@@ -31,8 +31,9 @@ object initializer extends App {
     val adj= d._1;
     val intercept=d._2
     val adj_sanitized = objW2v.sanitizeWord(adj);
+    val firstAdj_sanitized = objW2v.sanitizeWord(firstAdj);
     print(adj_sanitized)
-    val sim=w2v.similarity(firstAdj,adj_sanitized);
+    val sim=w2v.similarity(firstAdj_sanitized,adj_sanitized);
     (sim)
 
   }
