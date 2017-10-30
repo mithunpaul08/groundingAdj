@@ -4,7 +4,7 @@
 		module="gradability-wm$sources_2.10"
 		revision="1.0"
 		status="integration"
-		publication="20171030140649"
+		publication="20171030143826"
 	/>
 	<configurations>
 		<conf name="default" visibility="public" description=""/>
@@ -75,6 +75,9 @@
 		<dependency org="org.scala-sbt" name="relation" rev="0.13.16" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="relation" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
+		<dependency org="org.jetbrains" name="sbt-structure-extractor" rev="7.0.0+49-9bc0cd21" transitive="false" conf="default->compile,default(compile)" scalaVersion="2.10" sbtVersion="0.13">
+			<artifact name="sbt-structure-extractor" type="src" ext="jar" conf="sources" e:classifier="sources"/>
+		</dependency>
 		<dependency org="org.scala-sbt" name="completion" rev="0.13.16" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="completion" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
@@ -89,6 +92,9 @@
 		</dependency>
 		<dependency org="org.spire-math" name="jawn-parser_2.10" rev="0.6.0" transitive="false" conf="default->master(*),compile,runtime(*),master(compile),runtime,compile(*),master">
 			<artifact name="jawn-parser_2.10" type="src" ext="jar" conf="sources" e:classifier="sources"/>
+		</dependency>
+		<dependency org="org.jetbrains" name="sbt-idea-shell" rev="1.2+2-3eadcace" transitive="false" conf="default->compile,default(compile)" scalaVersion="2.10" sbtVersion="0.13">
+			<artifact name="sbt-idea-shell" type="src" ext="jar" conf="sources" e:classifier="sources"/>
 		</dependency>
 		<dependency org="org.scala-sbt" name="persist" rev="0.13.16" transitive="false" conf="default->compile,default(compile)">
 			<artifact name="persist" type="src" ext="jar" conf="sources" e:classifier="sources"/>

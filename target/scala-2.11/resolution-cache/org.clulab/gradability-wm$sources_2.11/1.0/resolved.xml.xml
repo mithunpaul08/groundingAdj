@@ -4,7 +4,7 @@
 		module="gradability-wm$sources_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20171030140650"
+		publication="20171030143826"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>

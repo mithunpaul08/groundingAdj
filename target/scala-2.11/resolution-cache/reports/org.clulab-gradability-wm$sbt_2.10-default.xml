@@ -7,8 +7,32 @@
 		revision="1.0"
 		conf="default"
 		confs="default"
-		date="20171030140640"/>
+		date="20171030143825"/>
 	<dependencies>
+		<module organisation="org.jetbrains" name="sbt-idea-shell">
+			<revision name="1.2+2-3eadcace" status="release" pubdate="20170530160427" resolver="sbt-chain" artresolver="sbt-chain" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="compile, default(compile)" position="52">
+				<license name="Apache-2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+				<metadata-artifact status="no" details="" size="1741" time="0" location="/home/mithunpaul/.ivy2/cache/scala_2.10/sbt_0.13/org.jetbrains/sbt-idea-shell/ivy-1.2+2-3eadcace.xml" searched="false" origin-is-local="false" origin-location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/org.jetbrains/sbt-idea-shell/scala_2.10/sbt_0.13/1.2+2-3eadcace/ivys/ivy.xml"/>
+				<caller organisation="org.clulab" name="gradability-wm$sbt_2.10" conf="default" rev="1.2+2-3eadcace" rev-constraint-default="1.2+2-3eadcace" rev-constraint-dynamic="1.2+2-3eadcace" callerrev="1.0" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
+				<artifacts>
+					<artifact name="sbt-idea-shell" type="jar" ext="jar" status="no" details="" size="12064" time="0" location="/home/mithunpaul/.ivy2/cache/scala_2.10/sbt_0.13/org.jetbrains/sbt-idea-shell/jars/sbt-idea-shell-1.2+2-3eadcace.jar">
+						<origin-location is-local="false" location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/org.jetbrains/sbt-idea-shell/scala_2.10/sbt_0.13/1.2+2-3eadcace/jars/sbt-idea-shell.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.jetbrains" name="sbt-structure-extractor">
+			<revision name="7.0.0+49-9bc0cd21" status="release" pubdate="20170622013742" resolver="sbt-chain" artresolver="sbt-chain" extra-scalaVersion="2.10" extra-sbtVersion="0.13" downloaded="false" searched="false" default="false" conf="compile, default(compile)" position="51">
+				<license name="Apache-2.0" url="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+				<metadata-artifact status="no" details="" size="1950" time="0" location="/home/mithunpaul/.ivy2/cache/scala_2.10/sbt_0.13/org.jetbrains/sbt-structure-extractor/ivy-7.0.0+49-9bc0cd21.xml" searched="false" origin-is-local="false" origin-location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/org.jetbrains/sbt-structure-extractor/scala_2.10/sbt_0.13/7.0.0+49-9bc0cd21/ivys/ivy.xml"/>
+				<caller organisation="org.clulab" name="gradability-wm$sbt_2.10" conf="default" rev="7.0.0+49-9bc0cd21" rev-constraint-default="7.0.0+49-9bc0cd21" rev-constraint-dynamic="7.0.0+49-9bc0cd21" callerrev="1.0" extra-scalaVersion="2.10" extra-sbtVersion="0.13"/>
+				<artifacts>
+					<artifact name="sbt-structure-extractor" type="jar" ext="jar" status="no" details="" size="697909" time="0" location="/home/mithunpaul/.ivy2/cache/scala_2.10/sbt_0.13/org.jetbrains/sbt-structure-extractor/jars/sbt-structure-extractor-7.0.0+49-9bc0cd21.jar">
+						<origin-location is-local="false" location="https://repo.scala-sbt.org/scalasbt/sbt-plugin-releases/org.jetbrains/sbt-structure-extractor/scala_2.10/sbt_0.13/7.0.0+49-9bc0cd21/jars/sbt-structure-extractor.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
 		<module organisation="org.scala-sbt" name="sbt">
 			<revision name="0.13.16" status="release" pubdate="20170726165851" resolver="sbt-chain" artresolver="sbt-chain" downloaded="false" searched="false" default="false" conf="compile, default(compile)" position="0">
 				<metadata-artifact status="no" details="" size="1455" time="0" location="/home/mithunpaul/.ivy2/cache/org.scala-sbt/sbt/ivy-0.13.16.xml" searched="false" origin-is-local="false" origin-location="https://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/sbt/0.13.16/ivys/ivy.xml"/>

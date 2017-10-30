@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="compile"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20171030140650"/>
+		date="20171030143826"/>
 	<dependencies>
 		<module organisation="commons-io" name="commons-io">
 			<revision name="2.4" status="release" pubdate="20120612152206" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://commons.apache.org/io/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="28">
@@ -158,7 +158,7 @@
 				<metadata-artifact status="no" details="" size="2640" time="0" location="/home/mithunpaul/.ivy2/cache/org.scala-lang/scalap/ivy-2.11.8.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scalap/2.11.8/scalap-2.11.8.pom"/>
 				<caller organisation="org.clulab" name="gradability-wm$sources_2.11" conf="compile" rev="2.11.8" rev-constraint-default="2.11.8" rev-constraint-dynamic="2.11.8" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="scalap" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="37159" time="259" location="/home/mithunpaul/.ivy2/cache/org.scala-lang/scalap/srcs/scalap-2.11.8-sources.jar">
+					<artifact name="scalap" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="37159" time="0" location="/home/mithunpaul/.ivy2/cache/org.scala-lang/scalap/srcs/scalap-2.11.8-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scalap/2.11.8/scalap-2.11.8-sources.jar"/>
 					</artifact>
 				</artifacts>
@@ -440,7 +440,7 @@
 				<metadata-artifact status="no" details="" size="2718" time="0" location="/home/mithunpaul/.ivy2/cache/javax.activation/activation/ivy-1.1.xml" searched="false" origin-is-local="false" origin-location="https://jcenter.bintray.com/javax/activation/activation/1.1/activation-1.1.pom"/>
 				<caller organisation="org.clulab" name="gradability-wm$sources_2.11" conf="compile" rev="1.1" rev-constraint-default="1.1" rev-constraint-dynamic="1.1" callerrev="1.0"/>
 				<artifacts>
-					<artifact name="activation" type="src" ext="jar" extra-classifier="sources" status="successful" details="" size="63338" time="141" location="/home/mithunpaul/.ivy2/cache/javax.activation/activation/srcs/activation-1.1-sources.jar">
+					<artifact name="activation" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="63338" time="0" location="/home/mithunpaul/.ivy2/cache/javax.activation/activation/srcs/activation-1.1-sources.jar">
 						<origin-location is-local="false" location="https://repo1.maven.org/maven2/javax/activation/activation/1.1/activation-1.1-sources.jar"/>
 					</artifact>
 				</artifacts>
