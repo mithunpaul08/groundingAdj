@@ -9,5 +9,6 @@ object utils {
     val bw = new BufferedWriter(new FileWriter(outFile))
     bw.write(stringToWrite)
     bw.close()
+
   }
 }
