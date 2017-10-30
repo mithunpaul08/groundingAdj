@@ -29,7 +29,8 @@ object initializer extends App {
 //
 //  }
 
-  writeToFile(sorted_split_data.mkString("\n"),"Turksim.txt","src/main/outputs/")
+  println(sorted_split_data.mkString("\n"))
+ // writeToFile(sorted_split_data.mkString("\n"),"Turksim.txt","src/main/outputs/")
 
 
   val w2vSim=sorted_split_data.map { d=>
@@ -48,7 +49,7 @@ object initializer extends App {
 val sorted_w2vSim=w2vSim.sortBy(_._2)
   println(sorted_w2vSim.mkString("\n"))
 
-  writeToFile(sorted_w2vSim.mkString("\n"),"comparew2vsim.txt","src/main/outputs/")
+  //writeToFile(sorted_w2vSim.mkString("\n"),"comparew2vsim.txt","src/main/outputs/")
 
 
 
