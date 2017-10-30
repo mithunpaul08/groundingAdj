@@ -3,6 +3,7 @@ package initializer
 import java.io.{BufferedWriter, File, FileWriter}
 
 import org.clulab.embeddings.word2vec.Word2Vec
+import utils._
 
 object initializer extends App {
 
@@ -41,15 +42,10 @@ object initializer extends App {
   }
 val sorted_w2vSim=w2vSim.sortBy(_._2)
   println(sorted_w2vSim.mkString("\n"))
-  
-  writeToFile(sorted_w2vSim.mkString("\n"),"comparew2vsim.txt","src/main/outputs/")
+
+  //writeToFile(sorted_w2vSim.mkString("\n"),"comparew2vsim.txt","src/main/outputs/")
 
 
-  def writeToFile(stringToWrite: String, outputFilename: String, outputDirectoryPath: String): Unit = {
-    val outFile = new File(outputDirectoryPath, outputFilename)
-    val bw = new BufferedWriter(new FileWriter(outFile))
-    bw.write(stringToWrite)
-    bw.close()
-  }
+
 
 }
