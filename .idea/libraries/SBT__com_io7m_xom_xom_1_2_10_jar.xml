@@ -3,7 +3,9 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.ivy2/cache/com.io7m.xom/xom/jars/xom-1.2.10.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.io7m.xom/xom/docs/xom-1.2.10-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.ivy2/cache/com.io7m.xom/xom/srcs/xom-1.2.10-sources.jar!/" />
     </SOURCES>

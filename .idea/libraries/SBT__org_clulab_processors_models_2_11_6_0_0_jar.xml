@@ -3,7 +3,9 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.ivy2/cache/org.clulab/processors-models_2.11/jars/processors-models_2.11-6.0.0.jar!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.clulab/processors-models_2.11/docs/processors-models_2.11-6.0.0-javadoc.jar!/" />
+    </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.ivy2/cache/org.clulab/processors-models_2.11/srcs/processors-models_2.11-6.0.0-sources.jar!/" />
     </SOURCES>
