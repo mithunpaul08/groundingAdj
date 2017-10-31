@@ -49,7 +49,7 @@ object initializer extends App {
   }
 
 
-val sorted_w2vSim=w2vSim.sortBy(_._2)
+val sorted_w2vSim=w2vSim.sortBy(-_._2)
   println(sorted_w2vSim.mkString("\n"))
 
   writeToFile(sorted_w2vSim.mkString("\n"),"comparew2vsim.txt","src/main/outputs/")
