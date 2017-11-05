@@ -26,5 +26,5 @@ object initializer extends App {
   //pick the adjective with the smallest intercept
   val firstAdj = sorted_split_data(0)._1
   println(sorted_split_data.mkString("\n"))
-  calculateSimilarity(w2v,firstAdj,outputFileGlove,sorted_split_data)
+  calculateSimilarity(glove,firstAdj,outputFileGlove,sorted_split_data)
 }
