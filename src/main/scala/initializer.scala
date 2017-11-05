@@ -1,9 +1,9 @@
 package adjVectorCompare
 
 import java.io.{BufferedWriter, File, FileWriter}
-
 import org.clulab.embeddings.word2vec.Word2Vec
 import utils._
+import w2v._
 
 object initializer extends App {
   val w2v = "//data/nlp/corpora/word2vec/gigaword/vectors.txt";
@@ -26,5 +26,5 @@ object initializer extends App {
   //pick the adjective with the smallest intercept
   val firstAdj = sorted_split_data(0)._1
   println(sorted_split_data.mkString("\n"))
-  calculateSimilarity(glove,firstAdj,outputFileGlove)
+  calculateSimilarity(glove,firstAdj,outputFileGlove,sorted_split_data)
 }
