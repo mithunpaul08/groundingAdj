@@ -8,9 +8,11 @@ import w2v._
 object initializer extends App {
   val w2v = "//data/nlp/corpora/word2vec/gigaword/vectors.txt";
   val glove = "//data/nlp/corpora/glove/6B/glove.6B.200d.txt"
+  val marneffe1 = "/work/mithunpaul/turkAdjSim/src/main/resources/marneffe/cbow_vectors_syn_ant.txt"
 
  val outputFileW2v="comparew2vsim.txt"
   val outputFileGlove="turkGlove.txt"
+  val outputFileMarneffe="turkMarneffe.txt"
 
 
   //for each adj in the turk task adjectives get and sort by its intercept
@@ -26,5 +28,5 @@ object initializer extends App {
   //pick the adjective with the smallest intercept
   val firstAdj = sorted_split_data(0)._1
   println(sorted_split_data.mkString("\n"))
-  calculateSimilarity(glove,firstAdj,outputFileGlove,sorted_split_data)
+  calculateSimilarity(marneffe1,firstAdj,outputFileMarneffe,sorted_split_data)
 }
