@@ -48,12 +48,14 @@ if __name__ == "__main__":
         #spear_turk_w2v = spearmanr(w2v_data['intercept'], turk_data['intercept'])[0]
 
 
-        turk_glove = spearmanr( turk_data['adj'],glove_data['adj'])
-        turk_w2v = spearmanr(turk_data['adj'],w2v_data['adj'])
+       # turk_glove = spearmanr( turk_data['adj'],glove_data['adj'])
+       # turk_w2v = spearmanr(turk_data['adj'],w2v_data['adj'])
+turk_marneffe = spearmanr(turk_data['adj'],cbow_data['adj'])
 
         print("spearman correlation values varies between -1 and +1 with 0 implying no correlation.Correlations of -1 or +1 imply an exact monotonic relationship. Positive correlations imply that as x increases, so does y. Negative correlations imply that as x increases, y decreases.")
-        print("turk_glove:"+str(turk_glove))
-        print("turk_w2v:" + str(turk_w2v))
+       # print("turk_glove:"+str(turk_glove))
+       # print("turk_w2v:" + str(turk_w2v))
+print("turk_marneffe:" + str(turk_marneffe))
 
 
 

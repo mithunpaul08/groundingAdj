@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5fde0a56-5ba7-4a94-a5ef-fd2da8c0cbae" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/spearmanCompare.py" afterPath="$PROJECT_DIR$/src/main/python/spearmanCompare.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/initializer.scala" afterPath="$PROJECT_DIR$/src/main/scala/initializer.scala" />
-    </list>
+    <list default="true" id="5fde0a56-5ba7-4a94-a5ef-fd2da8c0cbae" name="Default" comment="" />
     <ignored path="w2vSim.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/resolution-cache/" />
