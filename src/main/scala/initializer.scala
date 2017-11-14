@@ -28,5 +28,6 @@ object initializer extends App {
   //pick the adjective with the smallest intercept
   val firstAdj = sorted_split_data(0)._1
   println(sorted_split_data.mkString("\n"))
+  println("value of firstAdj is:"+firstAdj)
   calculateSimilarity(marneffe1,firstAdj,outputFileMarneffe,sorted_split_data)
 }
