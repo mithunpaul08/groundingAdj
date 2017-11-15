@@ -8,7 +8,7 @@ import w2v._
 object initializer extends App {
   val w2v = "//data/nlp/corpora/word2vec/gigaword/vectors.txt";
   val glove = "//data/nlp/corpora/glove/6B/glove.6B.200d.txt"
-  val marneffe1 = "/work/mithunpaul/turkAdjSim/src/main/resources/marneffe/cbow_vectors_syn_ant.txt"
+  val marneffe1 = "/data/nlp/corpora/demarneffe/cbow_vectors_syn_ant_sameord_difford.txt"
 
  val outputFileW2v="comparew2vsim.txt"
   val outputFileGlove="turkGlove.txt"

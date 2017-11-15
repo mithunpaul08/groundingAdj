@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5fde0a56-5ba7-4a94-a5ef-fd2da8c0cbae" name="Default" comment="" />
+    <list default="true" id="5fde0a56-5ba7-4a94-a5ef-fd2da8c0cbae" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/initializer.scala" afterPath="$PROJECT_DIR$/src/main/scala/initializer.scala" />
+    </list>
     <ignored path="w2vSim.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/resolution-cache/" />
@@ -46,8 +48,8 @@
       <file leaf-file-name="initializer.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/initializer.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="26" column="61" lean-forward="false" selection-start-line="26" selection-start-column="61" selection-end-line="26" selection-end-column="61" />
+            <state relative-caret-position="126">
+              <caret line="10" column="48" lean-forward="true" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="88" />
               <folding />
             </state>
           </provider>
@@ -378,8 +380,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/initializer.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="26" column="61" lean-forward="false" selection-start-line="26" selection-start-column="61" selection-end-line="26" selection-end-column="61" />
+        <state relative-caret-position="126">
+          <caret line="10" column="48" lean-forward="true" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="88" />
           <folding />
         </state>
       </provider>
