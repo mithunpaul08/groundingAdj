@@ -25,7 +25,7 @@ if __name__ == "__main__":
         glove = "glove.txt"
         turk = "turk.txt"
         w2v = "w2v.txt"
-        cbow1 = " turkMarneffe.txt"
+        cbow1 = "turkMarneffe.txt"
         cbow2 = "cbow_vectors_syn_ant_sameord_difford.txt"
         cbow3 = "glove_vectors_syn_ant.txt"
         cbow4 = "glove_vectors_syn_ant_sameord_difford.txt"
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         #glove_data = utils.read_data.readFile(cwd, glove)
         turk_data = utils.read_data.readFile(cwd, turk)
         #w2v_data = utils.read_data.readFile(cwd, w2v)
-	    marneffe_data= utils.read_data.readFile(cwd, cbow1)
+        marneffe_data= utils.read_data.readFile(cwd, cbow1)
 
         #print(w2v_data)
 
@@ -48,8 +48,8 @@ if __name__ == "__main__":
         #spear_turk_w2v = spearmanr(w2v_data['intercept'], turk_data['intercept'])[0]
 
 
-       # turk_glove = spearmanr( turk_data['adj'],glove_data['adj'])
-       # turk_w2v = spearmanr(turk_data['adj'],w2v_data['adj'])
+        # turk_glove = spearmanr( turk_data['adj'],glove_data['adj'])
+        # turk_w2v = spearmanr(turk_data['adj'],w2v_data['adj'])
         turk_marneffe = spearmanr(turk_data['adj'],marneffe_data['adj'])
 
         print("spearman correlation values varies between -1 and +1 with 0 implying no correlation.Correlations of -1 or +1 imply an exact monotonic relationship. Positive correlations imply that as x increases, so does y. Negative correlations imply that as x increases, y decreases.")
