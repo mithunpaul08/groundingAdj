@@ -26,7 +26,7 @@ if __name__ == "__main__":
         turk = "turk.txt"
         w2v = "w2v.txt"
         cbow1 = "turkMarneffe.txt"
-        cbow2 = "cbow_vectors_syn_ant_sameord_difford.txt"
+        cbow2 = "turkMarneffeCbowDifford.txt"
         cbow3 = "glove_vectors_syn_ant.txt"
         cbow4 = "glove_vectors_syn_ant_sameord_difford.txt"
         
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         #glove_data = utils.read_data.readFile(cwd, glove)
         turk_data = utils.read_data.readFile(cwd, turk)
         #w2v_data = utils.read_data.readFile(cwd, w2v)
-        marneffe_data= utils.read_data.readFile(cwd, cbow1)
+        marneffe_data= utils.read_data.readFile(cwd, cbow2)
 
         #print(w2v_data)
 
