@@ -40,7 +40,7 @@ if __name__ == "__main__":
         #glove_data = utils.read_data.readFile(cwd, glove)
         turk_data = utils.read_data.readFile(cwd, turk)
         #w2v_data = utils.read_data.readFile(cwd, w2v)
-        marneffe_data= utils.read_data.readFile(cwd, cbow2)
+        marneffe_data= utils.read_data.readFile(cwd, cbow3)
 
         #print(w2v_data)
 
