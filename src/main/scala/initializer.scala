@@ -11,7 +11,7 @@ object initializer extends App {
   val marneffe1 = "/data/nlp/corpora/demarneffe/cbow_vectors_syn_ant_sameord_difford.txt"
   val marneffe2 = "/data/nlp/corpora/demarneffe/glove_vectors_syn_ant.txt"
   val marneffe3 = "/data/nlp/corpora/demarneffe/glove_vectors_syn_ant_sameord_difford.txt"
-  val marneffe4 = "/data/nlp/corpora/demarneffe/paragram_vectors_syn_ant.txt"
+  val marneffe4 = "/data/nlp/corpora/demarneffe/paragram_vectors_syn_ant_sameord_difford.txt"
 
 
  val outputFileW2v="comparew2vsim.txt"
