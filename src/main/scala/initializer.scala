@@ -33,5 +33,5 @@ object initializer extends App {
   val firstAdj = sorted_split_data(0)._1
   println(sorted_split_data.mkString("\n"))
   println("value of firstAdj is:"+firstAdj)
-  calculateSimilarity(marneffe3,firstAdj,outputFileMarneffe,sorted_split_data)
+  calculateSimilarity(marneffe4,firstAdj,outputFileMarneffe,sorted_split_data)
 }

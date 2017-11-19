@@ -29,6 +29,7 @@ if __name__ == "__main__":
         cbow2 = "turkMarneffeCbowDifford.txt"
         cbow3 = "glove_vectors_syn_ant.txt"
         cbow4 = "glove_vectors_syn_ant_sameord_difford.txt"
+	paragram1="paragram_vectors_syn_ant.txt"
         
         cwd = os.getcwd()
 
@@ -40,7 +41,7 @@ if __name__ == "__main__":
         #glove_data = utils.read_data.readFile(cwd, glove)
         turk_data = utils.read_data.readFile(cwd, turk)
         #w2v_data = utils.read_data.readFile(cwd, w2v)
-        marneffe_data= utils.read_data.readFile(cwd, cbow4)
+        marneffe_data= utils.read_data.readFile(cwd, paragram1)
 
         #print(w2v_data)
 
