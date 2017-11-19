@@ -11,6 +11,8 @@ object initializer extends App {
   val marneffe1 = "/data/nlp/corpora/demarneffe/cbow_vectors_syn_ant_sameord_difford.txt"
   val marneffe2 = "/data/nlp/corpora/demarneffe/glove_vectors_syn_ant.txt"
   val marneffe3 = "/data/nlp/corpora/demarneffe/glove_vectors_syn_ant_sameord_difford.txt"
+  val marneffe4 = "/data/nlp/corpora/demarneffe/paragram_vectors_syn_ant.txt"
+
 
  val outputFileW2v="comparew2vsim.txt"
   val outputFileGlove="turkGlove.txt"
@@ -31,5 +33,5 @@ object initializer extends App {
   val firstAdj = sorted_split_data(0)._1
   println(sorted_split_data.mkString("\n"))
   println("value of firstAdj is:"+firstAdj)
-  calculateSimilarity(marneffe2,firstAdj,outputFileMarneffe,sorted_split_data)
+  calculateSimilarity(marneffe3,firstAdj,outputFileMarneffe,sorted_split_data)
 }
