@@ -20,7 +20,7 @@ def readRawTurkDataFile(cwd, inputFile):
 
     #print(data["logrespdev"][0])
     #shuffle the data to make sure we have mixed it evenly
-    data= data.sample(frac=1).reset_index(drop=True)
+    #data= data.sample(frac=1).reset_index(drop=True)
     #print(data["logrespdev"][0])
 
     return data;

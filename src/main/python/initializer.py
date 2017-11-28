@@ -25,9 +25,18 @@ turkFile="adjectiveData.csv"
 
 if __name__ == "__main__":
     try:
-        rawTurkData=readRawTurkDataFile(cwd,turkFile)
-        #print(rawTurkData["logrespdev"][0])
-        splitTurk=np.array_split(rawTurkData,2)
+        df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
+        noOfRows=df_raw_turk_data.shape[0]
+
+        #create an numpy array of that range
+        allIndex=np.arange(noOfRows)
+
+        #now shuffle it and split
+        np.random.shuffle(allIndex)
+
+        splitTurk=np.array_split(allIndex,2)
+
+        #print(df_raw_turk_data["logrespdev"][0])
 
         trainingData=splitTurk[0]
         rest=splitTurk[1]
@@ -37,9 +46,20 @@ if __name__ == "__main__":
         dev=dev_test[0]
         test=dev_test[1]
 
-        print(trainingData.shape)
-        print(dev.shape)
-        print(test.shape)
+        #print(trainingData.shape)
+        #print(dev.shape)
+        #print(test.shape)
+
+        #print(trainingData["mean"])
+
+        #For each line in the training part of turk data document:Get the mean and variance from that line in the turk document
+        for eachTurkRow in trainingData:
+            #give this index to the actual data frame
+            mean=df_raw_turk_data["mean"][eachTurkRow]
+            variance=df_raw_turk_data["onestdev"][eachTurkRow]
+            print("index:"+str(eachTurkRow))
+            print("mean"+str(mean))
+            sys.exit(1)
 
 
 
