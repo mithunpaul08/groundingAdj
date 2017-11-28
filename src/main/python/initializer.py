@@ -26,9 +26,20 @@ turkFile="adjectiveData.csv"
 if __name__ == "__main__":
     try:
         rawTurkData=readRawTurkDataFile(cwd,turkFile)
-        print(rawTurkData["logrespdev"][0])
-        shuffled=rawTurkData.sample(frac=1)
-        print(shuffled["logrespdev"][0])
+        #print(rawTurkData["logrespdev"][0])
+        splitTurk=np.array_split(rawTurkData,2)
+
+        trainingData=splitTurk[0]
+        rest=splitTurk[1]
+
+        #split the rest into half as dev and test
+        dev_test=np.array_split(rest,2)
+        dev=dev_test[0]
+        test=dev_test[1]
+
+        print(trainingData.shape)
+        print(dev.shape)
+        print(test.shape)
 
 
 
