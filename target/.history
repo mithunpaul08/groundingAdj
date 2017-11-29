@@ -1,2 +1,0 @@
-;reload; set org.jetbrains.sbt.StructureKeys.sbtStructureOptions in Global := "download resolveClassifiers resolveSbtClassifiers" ;*/*:dumpStructureTo /tmp/sbt-structure.xml
-all {file:/home/mithunpaul/fall2017/research/git-gradability-wm/}git-gradability-wm/products {file:/home/mithunpaul/fall2017/research/git-gradability-wm/}git-gradability-wm/test:products
