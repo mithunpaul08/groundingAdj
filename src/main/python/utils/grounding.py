@@ -108,22 +108,37 @@ def with_one_hot_adj(cwd,turkFile):
 
         # #for each of the adjective create a one hot vector
         for eachTurkRow in trainingData:
-            #give this index to the actual data frame
+
+            ########create a one hot vector for adjective
+            # give this index to the actual data frame
             adj=df_raw_turk_data["adjective"][eachTurkRow]
 
             #get the index of the adjective
             adjIndex=uniq_adj[adj]
-            print("adjIndex:"+str(adjIndex))
-            print("uniq_adj_count:"+str(uniq_adj_count))
+            #print("adjIndex:"+str(adjIndex))
+            #print("uniq_adj_count:"+str(uniq_adj_count))
 
             #create a one hot vector for all adjectives
             one_hot=np.zeros(uniq_adj_count)
-            print(one_hot)
-            print("one hot shape:"+str((one_hot.shape)))
+            #print(one_hot)
+            #print("one hot shape:"+str((one_hot.shape)))
             one_hot[adjIndex]=1
 
-            print(one_hot)
+            ################to create a one hot vector for turker data also
+            #get the id number of of the turker
+            turkerId=df_raw_turk_data["turler"][eachTurkRow]
+            turkerIndex=uniq_turker[turkerId]
+            print("turkerIndex:"+str(turkerIndex))
 
+            #create a one hot vector for all turkers
+            one_hotT=np.zeros(uniq_turker_count)
+            print(one_hotT)
+            print("one one_hotT shape:"+str((one_hotT.shape)))
+            one_hotT[turkerIndex]=1
+            print(one_hotT)
+
+
+            #get the mean and variance for this row and attach to this one hot
 
 
             sys.exit(1)
