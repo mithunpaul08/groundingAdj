@@ -191,6 +191,48 @@ def with_one_hot_adj(cwd,turkFile):
 
 
             ################get the mean and variance for this row and attach to this one hot
+            #give this index to the actual data frame
+            adj=df_raw_turk_data["adjective"][eachTurkRow]
+            mean=df_raw_turk_data["mean"][eachTurkRow]
+            stddev=df_raw_turk_data["onestdev"][eachTurkRow]
+            logRespDev=df_raw_turk_data["logrespdev"][eachTurkRow]
+            #print("index:"+str(eachTurkRow))
+            #print("mean"+str(mean))
+            #print("adjective:"+str(adj))
+
+
+            oneoutput=marneffe_data[adj]
+            print("shape of oneoutput  is:")
+            print((oneoutput.shape))
+            withmean=np.append(oneoutput,mean)
+            withstd = np.append(withmean, stddev)
+            #print(len(withstd))
+            #print(logRespDev)
+            print("size of withstd is:")
+            print((withstd.shape))
+            #print("size of y is:")
+            #print((y.shape))
+            ylabelLocal=np.array([logRespDev])
+            featuresLocal = np.asarray(withstd)
+            featuresLocal=featuresLocal.transpose()
+            print("size of featuresLocal is:")
+            print((featuresLocal.shape))
+            print("size of ylabelLocal is:")
+            print((ylabelLocal.shape))
+            print("size of big features is:")
+            print((features.shape))
+
+            #print("logrespdev")
+            combinedY=np.append(y,ylabelLocal)
+            combinedFeatures=np.append(features,featuresLocal,axis=0)
+            features=combinedFeatures
+            y=combinedY
+
+            print("size of big features is:")
+            print((features.shape))
+            print("size of big y is:")
+            print((y.shape))
+            sys.exit(1)
 
 
             sys.exit(1)
