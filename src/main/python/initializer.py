@@ -7,11 +7,11 @@ import csv;
 import collections
 import numpy as np
 import itertools
-from utils.read_data import readAdjInterceptFile
+
 from utils.read_data import readRawTurkDataFile
 import pickle as pk
 from scipy.stats import kendalltau, spearmanr
-
+from utils.grounding import with_one_hot_adj
 import time
 
 from utils.grounding import predict_grounding
@@ -25,7 +25,7 @@ turkFile="adjectiveData.csv"
 
 if __name__ == "__main__":
     try:
-
+        with_one_hot_adj(cwd,turkFile)
         predict_grounding(cwd,turkFile)
 
     ##################################end of dev phase####################

@@ -4,7 +4,7 @@ import sys
 import csv
 import pandas as pd
 
-def readAdjInterceptFile(cwd, inputFile):
+def readFile(cwd, inputFile):
 
     path = cwd+"/data/"
     data =pd.read_csv(path  + inputFile,sep=',',header=None,names=['adj','intercept'])
