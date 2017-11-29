@@ -171,10 +171,10 @@ def with_one_hot_adj(cwd,turkFile):
             #print("uniq_adj_count:"+str(uniq_adj_count))
 
             #create a one hot vector for all adjectives
-            one_hot=np.zeros(uniq_adj_count)
-            #print(one_hot)
-            #print("one hot shape:"+str((one_hot.shape)))
-            one_hot[adjIndex]=1
+            one_hot_adj=np.zeros(uniq_adj_count)
+            #print(one_hot_adj)
+            #print("one hot shape:"+str((one_hot_adj.shape)))
+            one_hot_adj[adjIndex]=1
 
             ################to create a one hot vector for turker data also
             #get the id number of of the turker
@@ -200,16 +200,22 @@ def with_one_hot_adj(cwd,turkFile):
             #print("mean"+str(mean))
             #print("adjective:"+str(adj))
 
+            #############combine adj-1-hot to mean , variance and turker-one-hot
 
-            oneoutput=marneffe_data[adj]
-            print("shape of oneoutput  is:")
-            print((oneoutput.shape))
-            withmean=np.append(oneoutput,mean)
+            withmean=np.append(one_hot_adj,mean)
             withstd = np.append(withmean, stddev)
-            #print(len(withstd))
-            #print(logRespDev)
             print("size of withstd is:")
             print((withstd.shape))
+            adj_mean_stddev_turk=np.append(withstd, one_hotT)
+
+            print("size of adj_mean_stddev_turk is:")
+            print((adj_mean_stddev_turk.shape))
+
+            sys.exit(1)
+
+            #print(len(withstd))
+            #print(logRespDev)
+
             #print("size of y is:")
             #print((y.shape))
             ylabelLocal=np.array([logRespDev])
