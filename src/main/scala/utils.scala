@@ -1,4 +1,4 @@
-package initializer
+package adjVectorCompare
 
 import java.io.{BufferedWriter, File, FileWriter}
 
