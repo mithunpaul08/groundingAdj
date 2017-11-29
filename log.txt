@@ -1,0 +1,254 @@
+[0m[[0m[0minfo[0m] [0m[0mLoading project definition from /net/kate/storage/work/mithunpaul/turkAdjSim/project[0m
+[0m[[0m[0minfo[0m] [0m[0mLoading settings from build.sbt ...[0m
+[0m[[0m[0minfo[0m] [0m[0mSet current project to gradability-wm (in build file:/net/kate/storage/work/mithunpaul/turkAdjSim/)[0m
+[0m[[0m[0minfo[0m] [0m[0mPackaging /net/kate/storage/work/mithunpaul/turkAdjSim/target/scala-2.11/gradability-wm_2.11-1.0.jar ...[0m
+[0m[[0m[0minfo[0m] [0m[0mDone packaging.[0m
+[0m[[0m[0minfo[0m] [0m[0mRunning adjVectorCompare.initializer [0m
+[0m[[0m[0mdebug[0m] [0m[0mWaiting for threads to exit or System.exit to be called.[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Classpath:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/job-1/target/69c3917c/gradability-wm_2.11-1.0.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/ddd5a8bc/scala-library-2.11.8.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/7395f25a/processors-main_2.11-6.0.0.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/b74530de/scala-reflect-2.11.8.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/b85f2ff7/scala-parser-combinators_2.11-1.0.3.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/1d71a92d/bioresources-1.1.15.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/4165e25b/xom-1.2.10.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/3845d5aa/xml-apis-1.3.03.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/cfd3ebe2/xercesImpl-2.8.0.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/a33c0097/xalan-2.7.0.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/173a191b/json4s-native_2.11-3.2.11.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/87d4c44d/json4s-core_2.11-3.2.11.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/4e3c3796/json4s-ast_2.11-3.2.11.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/52c3c8d8/paranamer-2.6.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/0e1222db/scalap-2.11.8.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/fe1285c9/scala-compiler-2.11.8.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/b67c76af/scala-xml_2.11-1.0.4.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/9865cf69/logback-classic-1.1.7.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/7873092d/logback-core-1.1.7.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/5af35056/log4j-1.2.17.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/5d05bc7f/liblinear-1.94.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/6036d752/libsvm-3.17.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/c2df9192/snakeyaml-1.14.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/6995a145/jline-2.12.1.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/ddee30d7/processors-models_2.11-6.0.0.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/c6d5fda6/processors-corenlp_2.11-6.0.0.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/ffceaa7e/stanford-corenlp-3.5.1-models.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/3f454b62/stanford-corenlp-3.5.1.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/8f79e353/joda-time-2.1.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/aa1c57aa/jollyday-0.4.7.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/2f51c4bb/jaxb-api-2.2.7.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/fb9a8806/ejml-0.23.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/0a74939e/javax.json-api-1.0.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/f771f71f/config-1.2.1.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/b1b6ea3b/commons-io-2.4.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/0db6e386/processors-agiga_2.11-0.0.2.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/991d5502/scala-logging_2.11-3.5.0.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/139535a6/slf4j-api-1.7.21.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/214591a0/agiga-1.4.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/ee5bcf62/vtd-xml-2.11.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/5eeb27c5/commons-compress-1.10.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/1aa1579a/mail-1.4.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/tmp/sbt_5c3db743/target/e6cb5414/activation-1.1.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0mWaiting for thread run-main-0 to terminate.[0m
+(inadequate,-3.0774)
+(disappointing,-3.0164)
+(tiny,-2.6394)
+(poor,-2.5504)
+(weak,-2.0414)
+(narrow,-1.9484)
+(slight,-1.9374)
+(low,-1.8384)
+(minor,-1.8084)
+(small,-1.7094)
+(little,-1.5714)
+(thin,-1.5654)
+(sensitive,-1.3874)
+(light,-1.3334)
+(tight,-1.3181)
+(conservative,-1.1743)
+(modest,-0.8006)
+(stable,-0.7299)
+(likely,-0.6251)
+(bearish,-0.6099)
+(routine,-0.6068)
+(regular,-0.5904)
+(ordinary,-0.5531)
+(typical,-0.5414)
+(normal,-0.5104)
+(fair,-0.4851)
+(relative,-0.47488)
+(familiar,-0.43325)
+(appropriate,-0.41529)
+(fine,-0.389696)
+(usual,-0.381746)
+(conventional,-0.3806549)
+(acceptable,-0.3804)
+(reasonable,-0.36144)
+(traditional,-0.33759)
+(positive,-0.33357)
+(moderate,-0.31407)
+(adequate,-0.2031)
+(comfortable,-0.1841)
+(fundamental,-0.1007)
+(legitimate,0.0168)
+(rare,0.0271)
+(sound,0.0413)
+(important,0.0563)
+(good,0.0798)
+(healthy,0.1068)
+(favorable,0.1225)
+(nice,0.1377)
+(clear,0.1592)
+(obvious,0.165)
+(promising,0.1652)
+(firm,0.1657)
+(vital,0.2026)
+(solid,0.2119)
+(bullish,0.215)
+(unusual,0.3137)
+(valuable,0.3498)
+(prominent,0.3856)
+(competitive,0.3953)
+(liberal,0.4211)
+(crucial,0.4356)
+(sizable,0.4392)
+(wide,0.464)
+(rich,0.4951)
+(broad,0.503)
+(hefty,0.5117)
+(generous,0.5213)
+(large,0.5645)
+(critical,0.5659)
+(strong,0.5724)
+(sharp,0.5958)
+(significant,0.6154)
+(big,0.6346)
+(surprising,0.6426)
+(high,0.6496)
+(impressive,0.6556)
+(deep,0.6566)
+(substantial,0.6586)
+(aggressive,0.6596)
+(steep,0.6696)
+(powerful,0.6866)
+(great,0.6906)
+(serious,0.6986)
+(intense,0.7066)
+(unexpected,0.7076)
+(considerable,0.7096)
+(extensive,0.7636)
+(grand,0.7696)
+(severe,0.8486)
+(major,0.8546)
+(striking,0.8616)
+(radical,0.8806)
+(dramatic,0.8826)
+(remarkable,0.9186)
+(outstanding,0.9396)
+(excessive,0.9466)
+(huge,0.9496)
+(extraordinary,0.9606)
+value of firstAdj is:inadequate
+inadequatedisappointingtinypoorweaknarrowslightlowminorsmalllittlethinsensitivelighttightconservativemodeststablelikelybearishroutineregularordinarytypicalnormalfairrelativefamiliarappropriatefineusualconventionalacceptablereasonabletraditionalpositivemoderateadequatecomfortablefundamentallegitimateraresoundimportantgoodhealthyfavorableniceclearobviouspromisingfirmvitalsolidbullishunusualvaluableprominentcompetitiveliberalcrucialsizablewiderichbroadheftygenerouslargecriticalstrongsharpsignificantbigsurprisinghighimpressivedeepsubstantialaggressivesteeppowerfulgreatseriousintenseunexpectedconsiderableextensivegrandseveremajorstrikingradicaldramaticremarkableoutstandingexcessivehugeextraordinary(inadequate,1.0000000000000002)
+(excessive,0.5490923203177306)
+(poor,0.5031747136406372)
+(weak,0.4461936163234831)
+(aggressive,0.3790454174033835)
+(acceptable,0.35850903981451143)
+(severe,0.3562117166905635)
+(appropriate,0.34148555747925624)
+(unexpected,0.3331232281364725)
+(serious,0.3273450462254603)
+(rare,0.31618448626203266)
+(unusual,0.30214753077293055)
+(critical,0.2910996106147579)
+(vital,0.28597376576191214)
+(minor,0.28484091402900724)
+(crucial,0.2689927232295732)
+(fundamental,0.25882457111253765)
+(adequate,0.25738169288025364)
+(obvious,0.25597983502359084)
+(extraordinary,0.24965269033459678)
+(legitimate,0.2432787604412397)
+(disappointing,0.23432445907502852)
+(hefty,0.22753358187514117)
+(outstanding,0.22719304757885447)
+(important,0.2262201817459895)
+(narrow,0.22135870159239868)
+(modest,0.21790243375657192)
+(huge,0.2142153829722194)
+(significant,0.21254091319682517)
+(steep,0.21136057158648558)
+(low,0.1967298838477797)
+(substantial,0.18849171040746315)
+(remarkable,0.1862224691215063)
+(major,0.1819466034035955)
+(likely,0.1814231882782428)
+(surprising,0.17981789181923907)
+(extensive,0.17693835825804674)
+(small,0.1761764032468331)
+(tiny,0.1691029550376763)
+(generous,0.16550355970105887)
+(considerable,0.16461362687473113)
+(typical,0.16449286316226516)
+(sizable,0.16432708652844955)
+(favorable,0.15995784047189102)
+(striking,0.1581649587910036)
+(impressive,0.1565972681728384)
+(good,0.1512511519274647)
+(firm,0.15108337913111963)
+(tight,0.15019242797403373)
+(prominent,0.1494404632408499)
+(dramatic,0.14607012445868528)
+(little,0.14545471888321307)
+(large,0.14246001109392104)
+(ordinary,0.14152925351680648)
+(positive,0.14099433664518857)
+(broad,0.13900426667044385)
+(traditional,0.1389420380985205)
+(great,0.1387964520543873)
+(intense,0.13538690765007574)
+(routine,0.13454033391135578)
+(radical,0.1330356749128162)
+(conventional,0.13289707130505016)
+(usual,0.12708145009661165)
+(wide,0.1267728385494679)
+(light,0.12249444366731098)
+(fine,0.1209664253505673)
+(liberal,0.11636117202085251)
+(competitive,0.1151336550118266)
+(relative,0.10880472520305966)
+(sensitive,0.10651801450660318)
+(conservative,0.10567021004881322)
+(grand,0.10193684466799699)
+(normal,0.09824367799347648)
+(slight,0.0934884119630295)
+(thin,0.09151302486761469)
+(big,0.0858045970159256)
+(promising,0.08358425838287856)
+(solid,0.08202964074209358)
+(clear,0.07506744421497075)
+(moderate,0.07170453563293464)
+(stable,0.07135586642604007)
+(sound,0.07107743261968175)
+(reasonable,0.06941324898080538)
+(high,0.06894577961069999)
+(comfortable,0.048516836590503355)
+(nice,0.04520960595218217)
+(powerful,0.03773895242874011)
+(fair,0.029969794554230163)
+(deep,0.006921401751742464)
+(sharp,0.00421691198035591)
+(valuable,-0.0024476637319658227)
+(rich,-0.015420722925591398)
+(familiar,-0.042322543902364985)
+(healthy,-0.051360102137761626)
+(regular,-0.056538470154483454)
+(strong,-0.11776016921856632)
+(bearish,-1.0)
+(bullish,-1.0)
+[0m[[0m[0mdebug[0m] [0m[0m	Thread run-main-0 exited.[0m
+[0m[[0m[0mdebug[0m] [0m[0mInterrupting remaining threads (should be all daemons).[0m
+[0m[[0m[0mdebug[0m] [0m[0mSandboxed run complete..[0m
+[0m[[0m[0mdebug[0m] [0m[0mExited with code 0[0m
+[0m[[0m[32msuccess[0m] [0m[0mTotal time: 174 s, completed Nov 14, 2017 5:41:20 PM[0m

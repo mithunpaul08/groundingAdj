@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/git-gradability-wm.iml" filepath="$PROJECT_DIR$/.idea/modules/git-gradability-wm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/w2vsim.iml" filepath="$PROJECT_DIR$/.idea/modules/w2vsim.iml" />
     </modules>
   </component>
 </project>
