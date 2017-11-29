@@ -39,32 +39,33 @@ def get_batch(batch_size=10):
     y = f(x)
     return Variable(x), Variable(y)
 
+def runLR():
 
-# Define model
-fc = torch.nn.Linear(W_target.size(0), 1)
+    # Define model
+    fc = torch.nn.Linear(W_target.size(0), 1)
 
-for batch_idx in count(1):
-    # Get data
-    batch_x, batch_y = get_batch()
+    for batch_idx in count(1):
+        # Get data
+        batch_x, batch_y = get_batch()
 
-    # Reset gradients
-    fc.zero_grad()
+        # Reset gradients
+        fc.zero_grad()
 
-    # Forward pass
-    output = F.MSELoss(fc(batch_x), batch_y)
-    loss = output.data[0]
+        # Forward pass
+        output = F.MSELoss(fc(batch_x), batch_y)
+        loss = output.data[0]
 
-    # Backward pass
-    output.backward()
+        # Backward pass
+        output.backward()
 
-    # Apply gradients
-    for param in fc.parameters():
-        param.data.add_(-0.1 * param.grad.data)
+        # Apply gradients
+        for param in fc.parameters():
+            param.data.add_(-0.1 * param.grad.data)
 
-    # Stop criterion
-    if loss < 1e-3:
-        break
+        # Stop criterion
+        if loss < 1e-3:
+            break
 
-print('Loss: {:.6f} after {} batches'.format(loss, batch_idx))
-print('==> Learned function:\t' + poly_desc(fc.weight.data.view(-1), fc.bias.data))
-print('==> Actual function:\t' + poly_desc(W_target.view(-1), b_target))
+    print('Loss: {:.6f} after {} batches'.format(loss, batch_idx))
+    print('==> Learned function:\t' + poly_desc(fc.weight.data.view(-1), fc.bias.data))
+    print('==> Actual function:\t' + poly_desc(W_target.view(-1), b_target))
