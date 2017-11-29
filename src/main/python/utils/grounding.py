@@ -63,16 +63,17 @@ def with_one_hot_adj(cwd,turkFile):
 
         print("total number of unique adjectives is "+len(uniq_adj))
    
-
+        uniq_turker={}
+        turk_counter=1
         #create a total list of unique turkers in this collection
-        for a in df_raw_turk_data["adjective"]:
-
-            if(a) not in uniq_adj:
+        for b in df_raw_turk_data["turker"]:
+            if(b) not in uniq_turker:
                 #if its not there already add it as the latest element
-                uniq_adj[a]=counter
-                counter=counter+1
+                uniq_turker[b]=turk_counter
+                turk_counter=turk_counter+1
 
-
+        print("total number of unique adjectives is "+str(len(uniq_adj)))
+        print("total number of unique adjectives is "+str(len(uniq_turker)))
         sys.exit(1)
         noOfRows=df_raw_turk_data.shape[0]
 
