@@ -15,7 +15,7 @@ from scipy.stats import kendalltau, spearmanr
 import time
 
 from utils.grounding import predict_grounding
-
+from utils.grounding import with_one_hot_adj
 
 
 start_time = time.time()
@@ -26,11 +26,12 @@ turkFile="adjectiveData.csv"
 if __name__ == "__main__":
     try:
 
-        features,y =predict_grounding(cwd,turkFile)
-        print("size of features is:")
-        print((features.shape))
-        print("size of y is:")
-        print((y.shape))
+        with_one_hot_adj(cwd,turkFile)
+        # features,y =predict_grounding(cwd,turkFile)
+        # print("size of features is:")
+        # print((features.shape))
+        # print("size of y is:")
+        # print((y.shape))
 
     ##################################end of dev phase####################
     except:
