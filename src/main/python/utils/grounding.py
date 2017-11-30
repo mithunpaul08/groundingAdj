@@ -254,10 +254,10 @@ def with_one_hot_adj(cwd,turkFile):
         print(len(features))
         print("size of big y is:")
         print((y.shape))
-        #print("rowCounter")
-        #print(rowCounter)
-        #print(features)
-
+        npfeatures=np.asarray(features)
+        print("size of big features is:")
+        print((npfeatures.shape))
+        
 
 
 
