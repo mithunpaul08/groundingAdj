@@ -103,7 +103,7 @@ def with_one_hot_adj(cwd,turkFile):
 
         #create a hash table to store unique adj
         uniq_adj={}
-        counter=1
+        counter=0
 
         #create a total list of unique adj in this collection
         for a in df_raw_turk_data["adjective"]:
@@ -116,7 +116,7 @@ def with_one_hot_adj(cwd,turkFile):
 
 
         uniq_turker={}
-        turk_counter=1
+        turk_counter=0
         #create a total list of unique turkers in this collection
         for b in df_raw_turk_data["turker"]:
             if(b) not in uniq_turker:
@@ -250,15 +250,14 @@ def with_one_hot_adj(cwd,turkFile):
             #features=combinedFeatures
             y=combinedY
 
-            print("size of big features is:")
-            print(len(features))
-            print("size of big y is:")
-            print((y.shape))
-            #print("rowCounter")
-            #print(rowCounter)
-            #print(features)
-            if(rowCounter>1):
-                sys.exit(1)
+        print("size of big features is:")
+        print(len(features))
+        print("size of big y is:")
+        print((y.shape))
+        #print("rowCounter")
+        #print(rowCounter)
+        #print(features)
+
 
 
 
