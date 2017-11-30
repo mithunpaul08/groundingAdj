@@ -155,11 +155,14 @@ def with_one_hot_adj(cwd,turkFile):
         dev=dev_test[0]
         test=dev_test[1]
 
+        features=[]
 
+
+        y=np.array([])
 
 
         # #for each of the adjective create a one hot vector
-        for eachTurkRow in trainingData:
+        for rowCounter, eachTurkRow in enumerate(trainingData):
 
             ########create a one hot vector for adjective
             # give this index to the actual data frame
@@ -171,23 +174,25 @@ def with_one_hot_adj(cwd,turkFile):
             #print("uniq_adj_count:"+str(uniq_adj_count))
 
             #create a one hot vector for all adjectives
-            one_hot_adj=np.zeros(uniq_adj_count)
+            #one_hot_adj=np.zeros(uniq_adj_count)
+            one_hot_adj=[0]*uniq_adj_count
             #print(one_hot_adj)
             #print("one hot shape:"+str((one_hot_adj.shape)))
             one_hot_adj[adjIndex]=1
+            print(one_hot_adj)
 
             ################to create a one hot vector for turker data also
             #get the id number of of the turker
             turkerId=df_raw_turk_data["turker"][eachTurkRow]
             turkerIndex=uniq_turker[turkerId]
-            print("turkerIndex:"+str(turkerIndex))
+            #print("turkerIndex:"+str(turkerIndex))
 
             #create a one hot vector for all turkers
-            one_hotT=np.zeros(uniq_turker_count)
+            one_hotT=[0]*(uniq_turker_count)
             #print(one_hotT)
             #print("one one_hotT shape:"+str((one_hotT.shape)))
             one_hotT[turkerIndex]=1
-            print(one_hotT)
+            #print(one_hotT)
 
 
             ################get the mean and variance for this row and attach to this one hot
@@ -202,43 +207,60 @@ def with_one_hot_adj(cwd,turkFile):
 
             #############combine adj-1-hot to mean , variance and turker-one-hot
 
-            withmean=np.append(one_hot_adj,mean)
-            withstd = np.append(withmean, stddev)
-            print("size of withstd is:")
-            print((withstd.shape))
-            adj_mean_stddev_turk=np.append(withstd, one_hotT)
+            localFeatures=[]
+            print("one hot shape:"+str(len(one_hot_adj)))
+            print(" localFeatures shape:"+str(len(localFeatures)))
+            localFeatures.extend(one_hot_adj)
 
-            print("size of adj_mean_stddev_turk is:")
-            print((adj_mean_stddev_turk.shape))
+            print(" mean :"+str(type(mean.item())))
+            print(" localFeatures shape:"+str(len(localFeatures)))
+            localFeatures.append(mean.item())
+            print(localFeatures)
+            print(" localFeatures shape:"+str(len(localFeatures)))
+            print(" stddev :"+str((stddev)))
+            localFeatures.append(stddev)
+            localFeatures.extend(one_hotT)
+            print(" localFeatures shape:"+str(len(localFeatures)))
+            
 
-            sys.exit(1)
+            #print("size of adj_mean_stddev_turk is:")
+            #print((adj_mean_stddev_turk.shape))
 
-            #print(len(withstd))
+
+
+            ############feed this combined vector as a feature vector to the linear regression
+            # print(len(withstd))
             #print(logRespDev)
 
             #print("size of y is:")
             #print((y.shape))
+
             ylabelLocal=np.array([logRespDev])
-            featuresLocal = np.asarray(withstd)
-            featuresLocal=featuresLocal.transpose()
-            print("size of featuresLocal is:")
-            print((featuresLocal.shape))
-            print("size of ylabelLocal is:")
-            print((ylabelLocal.shape))
+            #featuresLocal = np.array([adj_mean_stddev_turk])
+            #featuresLocal=featuresLocal.transpose()
+            #print("size of featuresLocal is:")
+            #print((featuresLocal.shape))
+            #print("size of ylabelLocal is:")
+            #print((ylabelLocal.shape))
+            features=features.append(localFeatures)
             print("size of big features is:")
             print((features.shape))
 
             #print("logrespdev")
             combinedY=np.append(y,ylabelLocal)
-            combinedFeatures=np.append(features,featuresLocal,axis=0)
-            features=combinedFeatures
+            #combinedFeatures=np.append(features,featuresLocal,axis=0)
+            #features=combinedFeatures
             y=combinedY
 
             print("size of big features is:")
             print((features.shape))
             print("size of big y is:")
             print((y.shape))
-            sys.exit(1)
+            print("rowCounter")
+            print(rowCounter)
+            print(features)
+            if(rowCounter==0):
+                sys.exit(1)
 
 
-            sys.exit(1)
+
