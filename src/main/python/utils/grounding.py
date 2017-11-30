@@ -179,7 +179,7 @@ def with_one_hot_adj(cwd,turkFile):
             #print(one_hot_adj)
             #print("one hot shape:"+str((one_hot_adj.shape)))
             one_hot_adj[adjIndex]=1
-            print(one_hot_adj)
+            #print(one_hot_adj)
 
             ################to create a one hot vector for turker data also
             #get the id number of of the turker
@@ -208,20 +208,20 @@ def with_one_hot_adj(cwd,turkFile):
             #############combine adj-1-hot to mean , variance and turker-one-hot
 
             localFeatures=[]
-            print("one hot shape:"+str(len(one_hot_adj)))
-            print(" localFeatures shape:"+str(len(localFeatures)))
+            #print("one hot shape:"+str(len(one_hot_adj)))
+            #print(" localFeatures shape:"+str(len(localFeatures)))
             localFeatures.extend(one_hot_adj)
 
-            print(" mean :"+str(type(mean.item())))
-            print(" localFeatures shape:"+str(len(localFeatures)))
+            #print(" mean :"+str(type(mean.item())))
+            #print(" localFeatures shape:"+str(len(localFeatures)))
             localFeatures.append(mean.item())
-            print(localFeatures)
-            print(" localFeatures shape:"+str(len(localFeatures)))
-            print(" stddev :"+str((stddev)))
+            #print(localFeatures)
+            #print(" localFeatures shape:"+str(len(localFeatures)))
+            #print(" stddev :"+str((stddev)))
             localFeatures.append(stddev)
             localFeatures.extend(one_hotT)
-            print(" localFeatures shape:"+str(len(localFeatures)))
-            
+            #print(" localFeatures shape:"+str(len(localFeatures)))
+
 
             #print("size of adj_mean_stddev_turk is:")
             #print((adj_mean_stddev_turk.shape))
@@ -242,9 +242,7 @@ def with_one_hot_adj(cwd,turkFile):
             #print((featuresLocal.shape))
             #print("size of ylabelLocal is:")
             #print((ylabelLocal.shape))
-            features=features.append(localFeatures)
-            print("size of big features is:")
-            print((features.shape))
+            features.append(localFeatures)
 
             #print("logrespdev")
             combinedY=np.append(y,ylabelLocal)
@@ -253,13 +251,13 @@ def with_one_hot_adj(cwd,turkFile):
             y=combinedY
 
             print("size of big features is:")
-            print((features.shape))
+            print(len(features))
             print("size of big y is:")
             print((y.shape))
-            print("rowCounter")
-            print(rowCounter)
-            print(features)
-            if(rowCounter==0):
+            #print("rowCounter")
+            #print(rowCounter)
+            #print(features)
+            if(rowCounter>1):
                 sys.exit(1)
 
 
