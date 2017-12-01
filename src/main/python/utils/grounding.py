@@ -97,7 +97,7 @@ def predict_grounding(cwd,turkFile):
 
 
 
-def with_one_hot_adj(cwd,turkFile):
+def get_features_y_one_hot(cwd, turkFile):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
         print(df_raw_turk_data["adjective"][0])
 
@@ -257,7 +257,8 @@ def with_one_hot_adj(cwd,turkFile):
         npfeatures=np.asarray(features)
         print("size of big features is:")
         print((npfeatures.shape))
-        
+        return npfeatures,y
+
 
 
 

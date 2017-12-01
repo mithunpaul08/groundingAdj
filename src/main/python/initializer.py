@@ -11,11 +11,12 @@ from utils.read_data import readAdjInterceptFile
 from utils.read_data import readRawTurkDataFile
 import pickle as pk
 from scipy.stats import kendalltau, spearmanr
+from utils.linearReg import runLR
 
 import time
 
 from utils.grounding import predict_grounding
-from utils.grounding import with_one_hot_adj
+from utils.grounding import get_features_y_one_hot
 
 
 start_time = time.time()
@@ -26,7 +27,10 @@ turkFile="adjectiveData.csv"
 if __name__ == "__main__":
     try:
 
-        with_one_hot_adj(cwd,turkFile)
+        features, y= get_features_y_one_hot(cwd, turkFile)
+
+        runLR(features, y)
+
         # features,y =predict_grounding(cwd,turkFile)
         # print("size of features is:")
         # print((features.shape))

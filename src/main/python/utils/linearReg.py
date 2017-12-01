@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 from itertools import count
-
+import torch.nn as nn
 import torch
 import torch.autograd
 import torch.nn.functional as F
@@ -32,27 +32,30 @@ def poly_desc(W, b):
     return result
 
 
-def get_batch(batch_size=10):
+def get_batch(features, labels,batch_size=10):
     """Builds a batch i.e. (x, f(x)) pair."""
-    random = torch.randn(batch_size)
-    x = make_features(random)
-    y = f(x)
+
+    #the actual features and y comes here.
+    # random = torch.randn(batch_size)
+
+    x = torch.from_numpy(features)
+    y = torch.from_numpy(labels)
     return Variable(x), Variable(y)
 
-def runLR():
+def runLR(features, y):
 
-    # Define model
+    # Define model-i.e the inputs are just sizes or dimensions of the weight matrix
     fc = torch.nn.Linear(W_target.size(0), 1)
 
     for batch_idx in count(1):
         # Get data
-        batch_x, batch_y = get_batch()
+        batch_x, batch_y = get_batch(features, y)
 
         # Reset gradients
         fc.zero_grad()
 
         # Forward pass
-        output = F.MSELoss(fc(batch_x), batch_y)
+        output = nn.MSELoss(fc(batch_x), batch_y)
         loss = output.data[0]
 
         # Backward pass
