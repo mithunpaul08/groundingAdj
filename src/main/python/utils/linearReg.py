@@ -54,8 +54,11 @@ def runLR(features, y):
         # Reset gradients
         fc.zero_grad()
 
+
+        loss = nn.MSELoss()
+        output = loss(fc(batch_x), batch_y)
         # Forward pass
-        output = nn.MSELoss(fc(batch_x), batch_y)
+        #output = nn.MSELoss(
         loss = output.data[0]
 
         # Backward pass
