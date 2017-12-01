@@ -158,7 +158,7 @@ def get_features_y_one_hot(cwd, turkFile):
         features=[]
 
 
-        y=np.array([])
+        y=np.array([],dtype="float32")
 
 
         # #for each of the adjective create a one hot vector
@@ -235,7 +235,7 @@ def get_features_y_one_hot(cwd, turkFile):
             #print("size of y is:")
             #print((y.shape))
 
-            ylabelLocal=np.array([logRespDev])
+            ylabelLocal=np.array([logRespDev], dtype="float32")
             #featuresLocal = np.array([adj_mean_stddev_turk])
             #featuresLocal=featuresLocal.transpose()
             #print("size of featuresLocal is:")
@@ -254,7 +254,7 @@ def get_features_y_one_hot(cwd, turkFile):
         print(len(features))
         print("size of big y is:")
         print((y.shape))
-        npfeatures=np.asarray(features)
+        npfeatures=np.asarray(features, dtype="float32")
         print("size of big features is:")
         print((npfeatures.shape))
         return npfeatures,y
