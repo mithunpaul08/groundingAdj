@@ -38,7 +38,7 @@ def get_batch(features, labels,batch_size=10):
     #the actual features and y comes here.
     # random = torch.randn(batch_size)
 
-    x = torch.FloatTensor(torch.from_numpy(torch.Floatfeatures))
+    x = torch.FloatTensor(torch.from_numpy(features))
     y = torch.from_numpy(labels)
     return Variable(x), Variable(y)
 
