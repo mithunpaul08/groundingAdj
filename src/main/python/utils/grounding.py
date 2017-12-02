@@ -97,13 +97,13 @@ def predict_grounding(cwd,turkFile):
 
 
 
-def with_one_hot_adj(cwd,turkFile):
+def get_features_y_one_hot(cwd, turkFile):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
         print(df_raw_turk_data["adjective"][0])
 
         #create a hash table to store unique adj
         uniq_adj={}
-        counter=1
+        counter=0
 
         #create a total list of unique adj in this collection
         for a in df_raw_turk_data["adjective"]:
@@ -116,7 +116,7 @@ def with_one_hot_adj(cwd,turkFile):
 
 
         uniq_turker={}
-        turk_counter=1
+        turk_counter=0
         #create a total list of unique turkers in this collection
         for b in df_raw_turk_data["turker"]:
             if(b) not in uniq_turker:
@@ -155,11 +155,14 @@ def with_one_hot_adj(cwd,turkFile):
         dev=dev_test[0]
         test=dev_test[1]
 
+        features=[]
 
+
+        y=np.array([],dtype="float32")
 
 
         # #for each of the adjective create a one hot vector
-        for eachTurkRow in trainingData:
+        for rowCounter, eachTurkRow in enumerate(trainingData):
 
             ########create a one hot vector for adjective
             # give this index to the actual data frame
@@ -171,23 +174,25 @@ def with_one_hot_adj(cwd,turkFile):
             #print("uniq_adj_count:"+str(uniq_adj_count))
 
             #create a one hot vector for all adjectives
-            one_hot=np.zeros(uniq_adj_count)
-            #print(one_hot)
-            #print("one hot shape:"+str((one_hot.shape)))
-            one_hot[adjIndex]=1
+            #one_hot_adj=np.zeros(uniq_adj_count)
+            one_hot_adj=[0]*uniq_adj_count
+            #print(one_hot_adj)
+            #print("one hot shape:"+str((one_hot_adj.shape)))
+            one_hot_adj[adjIndex]=1
+            #print(one_hot_adj)
 
             ################to create a one hot vector for turker data also
             #get the id number of of the turker
             turkerId=df_raw_turk_data["turker"][eachTurkRow]
             turkerIndex=uniq_turker[turkerId]
-            print("turkerIndex:"+str(turkerIndex))
+            #print("turkerIndex:"+str(turkerIndex))
 
             #create a one hot vector for all turkers
-            one_hotT=np.zeros(uniq_turker_count)
+            one_hotT=[0]*(uniq_turker_count)
             #print(one_hotT)
             #print("one one_hotT shape:"+str((one_hotT.shape)))
             one_hotT[turkerIndex]=1
-            print(one_hotT)
+            #print(one_hotT)
 
 
             ################get the mean and variance for this row and attach to this one hot
@@ -195,44 +200,65 @@ def with_one_hot_adj(cwd,turkFile):
             adj=df_raw_turk_data["adjective"][eachTurkRow]
             mean=df_raw_turk_data["mean"][eachTurkRow]
             stddev=df_raw_turk_data["onestdev"][eachTurkRow]
-            logRespDev=df_raw_turk_data["logrespdev"][eachTurkRow]
+            logRespDev=df_raw_turk_data["respdev"][eachTurkRow]
             #print("index:"+str(eachTurkRow))
             #print("mean"+str(mean))
             #print("adjective:"+str(adj))
 
+            #############combine adj-1-hot to mean , variance and turker-one-hot
 
-            oneoutput=marneffe_data[adj]
-            print("shape of oneoutput  is:")
-            print((oneoutput.shape))
-            withmean=np.append(oneoutput,mean)
-            withstd = np.append(withmean, stddev)
-            #print(len(withstd))
+            localFeatures=[]
+            #print("one hot shape:"+str(len(one_hot_adj)))
+            #print(" localFeatures shape:"+str(len(localFeatures)))
+            localFeatures.extend(one_hot_adj)
+
+            #print(" mean :"+str(type(mean.item())))
+            #print(" localFeatures shape:"+str(len(localFeatures)))
+            localFeatures.append(mean.item())
+            #print(localFeatures)
+            #print(" localFeatures shape:"+str(len(localFeatures)))
+            #print(" stddev :"+str((stddev)))
+            localFeatures.append(stddev)
+            #localFeatures.extend(one_hotT)
+            #print(" localFeatures shape:"+str(len(localFeatures)))
+
+
+            #print("size of adj_mean_stddev_turk is:")
+            #print((adj_mean_stddev_turk.shape))
+
+
+
+            ############feed this combined vector as a feature vector to the linear regression
+            # print(len(withstd))
             #print(logRespDev)
-            print("size of withstd is:")
-            print((withstd.shape))
+
             #print("size of y is:")
             #print((y.shape))
-            ylabelLocal=np.array([logRespDev])
-            featuresLocal = np.asarray(withstd)
-            featuresLocal=featuresLocal.transpose()
-            print("size of featuresLocal is:")
-            print((featuresLocal.shape))
-            print("size of ylabelLocal is:")
-            print((ylabelLocal.shape))
-            print("size of big features is:")
-            print((features.shape))
+
+            ylabelLocal=np.array([logRespDev], dtype="float32")
+            #featuresLocal = np.array([adj_mean_stddev_turk])
+            #featuresLocal=featuresLocal.transpose()
+            #print("size of featuresLocal is:")
+            #print((featuresLocal.shape))
+            #print("size of ylabelLocal is:")
+            #print((ylabelLocal.shape))
+            features.append(localFeatures)
 
             #print("logrespdev")
             combinedY=np.append(y,ylabelLocal)
-            combinedFeatures=np.append(features,featuresLocal,axis=0)
-            features=combinedFeatures
+            #combinedFeatures=np.append(features,featuresLocal,axis=0)
+            #features=combinedFeatures
             y=combinedY
 
-            print("size of big features is:")
-            print((features.shape))
-            print("size of big y is:")
-            print((y.shape))
-            sys.exit(1)
+        print("size of big features is:")
+        print(len(features))
+        print("size of big y is:")
+        print((y.shape))
+        npfeatures=np.asarray(features, dtype="float32")
+        print("size of big features is:")
+        print((npfeatures.shape))
+        return npfeatures,y
 
 
-            sys.exit(1)
+
+
