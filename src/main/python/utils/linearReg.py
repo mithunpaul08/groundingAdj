@@ -12,12 +12,12 @@ POLY_DEGREE = 1
 ##W_target = torch.randn(POLY_DEGREE, 1) * 5
 #b_target = torch.randn(1) * 5
 import torch.optim as optim
-
-def make_features(x):
-    """Builds features i.e. a matrix with columns [x, x^2, x^3, x^4]."""
-    x = x.unsqueeze(1)
-    return torch.cat([x ** i for i in range(1, POLY_DEGREE+1)], 1)
-
+#
+# def make_features(x):
+#     """Builds features i.e. a matrix with columns [x, x^2, x^3, x^4]."""
+#     x = x.unsqueeze(1)
+#     return torch.cat([x ** i for i in range(1, POLY_DEGREE+1)], 1)
+#
 
 # def f(x):
 #     """Approximated function."""
@@ -37,23 +37,24 @@ def convert_variable(features, labels):
     """Builds a batch i.e. (x, f(x)) pair."""
 
     #the actual features and y comes here.
-    # random = torch.randn(batch_size)
+    # Toy data
+    # x = np.random.randn(3, 3).astype('f')
+    # x2=torch.from_numpy(x)
+    # w = np.array([[1], [2], [3]],dtype="float32")
+    # y = np.dot(x, w)
+    # y2 = torch.from_numpy(y)
 
-    #x = np.random.rand(1000, 3)
-    x = np.random.randn(1000, 3).astype('f')
+    #actual data
 
-    x2=torch.from_numpy(x)
-    w = np.array([[1], [2], [3]],dtype="float32")
-    y = np.dot(x, w)
-    print(x.dtype)
-    print(y.dtype)
-    print("printed dtype")
-    y2 = torch.from_numpy(y)
-    #
-    # #x = (torch.from_numpy(features))
-    # x = Variable(torch.randn(1000, 3))
-    # labels=
-    # y = torch.from_numpy(labels)
+
+    x2 =torch.from_numpy(features)
+    y2 = torch.from_numpy(labels)
+
+    print("x2")
+    print(x2)
+    print("y2")
+    print(y2)
+
     return Variable(x2), Variable(y2,requires_grad=False)
 
 def runLR(features, y):
@@ -63,8 +64,10 @@ def runLR(features, y):
 
     # create teh weight matrix. the dimensions must be transpose
     # of your features, since they are going to be dot producted
-    # fc = torch.nn.Linear(featureShape[1],1)
-    fc = torch.nn.Linear(3, 1)
+
+
+    fc = torch.nn.Linear(featureShape[1],1)
+    #fc = torch.nn.Linear(3, 1)
 
     #print(fc)
 
@@ -86,7 +89,7 @@ def runLR(features, y):
 
 
         loss_fn = nn.MSELoss(size_average=True)
-        optimizer = optim.SGD(fc.parameters(), lr=0.1)
+        optimizer = optim.SGD(fc.parameters(), lr=0.00001)
 
 
         #print(batch_x)
@@ -128,7 +131,7 @@ def runLR(features, y):
         #     break
 
         #print('Loss: {:.6f} after {} epochs'.format(loss.data, epoch))
-    print("weight:")
+    #print("weight:")
     print(fc.weight.data.view(-1))
    # print('==> Learned function:\t' + poly_desc(fc.weight.data.view(-1), fc.bias.data))
     #print('==> Actual function:\t' + (W_target.view(-1), b_target))

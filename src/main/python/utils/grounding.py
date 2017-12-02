@@ -200,7 +200,7 @@ def get_features_y_one_hot(cwd, turkFile):
             adj=df_raw_turk_data["adjective"][eachTurkRow]
             mean=df_raw_turk_data["mean"][eachTurkRow]
             stddev=df_raw_turk_data["onestdev"][eachTurkRow]
-            logRespDev=df_raw_turk_data["logrespdev"][eachTurkRow]
+            logRespDev=df_raw_turk_data["respdev"][eachTurkRow]
             #print("index:"+str(eachTurkRow))
             #print("mean"+str(mean))
             #print("adjective:"+str(adj))
@@ -219,7 +219,7 @@ def get_features_y_one_hot(cwd, turkFile):
             #print(" localFeatures shape:"+str(len(localFeatures)))
             #print(" stddev :"+str((stddev)))
             localFeatures.append(stddev)
-            localFeatures.extend(one_hotT)
+            #localFeatures.extend(one_hotT)
             #print(" localFeatures shape:"+str(len(localFeatures)))
 
 
