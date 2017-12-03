@@ -27,9 +27,21 @@ turkFile="adjectiveData.csv"
 if __name__ == "__main__":
     try:
 
-        features, y= get_features_y_one_hot(cwd, turkFile)
+        features, y, adj_lexicon= get_features_y_one_hot(cwd, turkFile)
 
-        runLR(features, y)
+        adj_lexicon_flipped = dict()
+        num_adj = len(adj_lexicon)
+        for a, idx in adj_lexicon.items():
+            adj_lexicon_flipped[idx] = a
+        learned_weights = runLR(features, y)
+        print("NumUniqueAdj: ", num_adj)
+        adj_intercepts = learned_weights[:num_adj]
+        adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
+        print(adj_pairs[:2])
+        sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
+        print(sorted_adjs[:20])
+        print(sorted_adjs[-20:])
+
 
         # features,y =predict_grounding(cwd,turkFile)
         # print("size of features is:")
