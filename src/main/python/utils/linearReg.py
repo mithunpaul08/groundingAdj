@@ -23,6 +23,20 @@ import torch.optim as optim
 #     """Approximated function."""
 #     return x.mm(W_target) + b_target[0]
 
+def check_vectors_have_same_dimensions(Y,Y_):
+    '''
+    Checks that vector Y and Y_ have the same dimensions. If they don't
+    then there might be an error that could be caused due to wrong broadcasting.
+    '''
+    DY = tuple( Y.size() )
+    DY_ = tuple( Y_.size() )
+    if len(DY) != len(DY_):
+        return True
+    for i in range(len(DY)):
+        if DY[i] != DY_[i]:
+            return True
+    return False
+
 
 def poly_desc(W, b):
     """Creates a string description of a polynomial."""
@@ -50,33 +64,33 @@ def convert_variable(features, labels):
     x2 =torch.from_numpy(features)
     y2 = torch.from_numpy(labels)
 
-    print("x2")
-    print(x2)
-    print("y2")
-    print(y2)
+    # print("x2")
+    # print(x2)
+    # print("y2")
+    # print(y2)
 
     return Variable(x2), Variable(y2,requires_grad=False)
 
 def runLR(features, y):
     featureShape=features.shape
+    # print("Features row:" + str(features[0]))
+    # print("y row:" + str(y[0]))
+    # sys.exit()
     #print("featureShape")
     #print(featureShape)
+
+    # features = features[:20]
+    # y = y[:20]
 
     # create teh weight matrix. the dimensions must be transpose
     # of your features, since they are going to be dot producted
 
 
-    fc = torch.nn.Linear(featureShape[1],1)
+    fc = torch.nn.Linear(featureShape[1],1)#, bias=False)
     #fc = torch.nn.Linear(3, 1)
 
-    #print(fc)
 
-    #y = Variable(torch.randn(N, D_out), requires_grad=False)
-
-    #randX = np.random()
-
-
-    for epoch in range(100):
+    for epoch in range(10000):
 
         # Reset gradients
         fc.zero_grad()
@@ -86,34 +100,24 @@ def runLR(features, y):
         batch_x, batch_y = convert_variable(features, y)
 
 
-
-
         loss_fn = nn.MSELoss(size_average=True)
-        optimizer = optim.SGD(fc.parameters(), lr=0.00001)
-
-
-        #print(batch_x)
-        #print(batch_y)
-        #sys.exit(1)
+        optimizer = optim.SGD(fc.parameters(), lr=0.00000001)
+        adam = optim.Adam(fc.parameters())
+        rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
         #multiply weight with input vector
         affine=fc(batch_x)
-        #print(affine)
-        #sys.exit(1)
-        # for i in range(10):
-        #     print("Predicted: {0}\tActual: {1}".format(affine[i], y[i]))
-        #
-        # sys.exit(1)
+
+
         loss = loss_fn(affine, batch_y)
-        # Forward pass
-        #output = nn.MSELoss(
-        #loss = output.data[0]
 
 
         # Backward pass
         loss.backward()
 
-        optimizer.step()
+        # optimizer.step()
+        # adam.step()
+        rms.step()
 
         # # Apply gradients
         # for param in fc.parameters():
@@ -122,8 +126,8 @@ def runLR(features, y):
         # for param in fc.parameters():
         #     param.data.add_(-0.1 * param.grad.data)
 
-        print("loss")
-        print(loss)
+        print("loss:", loss)
+        # print(loss)
 
 
         # # Stop criterion
@@ -133,5 +137,7 @@ def runLR(features, y):
         #print('Loss: {:.6f} after {} epochs'.format(loss.data, epoch))
     #print("weight:")
     print(fc.weight.data.view(-1))
+    learned_weights = fc.weight.data
+    return(learned_weights.cpu().numpy())
    # print('==> Learned function:\t' + poly_desc(fc.weight.data.view(-1), fc.bias.data))
     #print('==> Actual function:\t' + (W_target.view(-1), b_target))
