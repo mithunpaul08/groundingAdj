@@ -257,7 +257,7 @@ def get_features_y_one_hot(cwd, turkFile):
         npfeatures=np.asarray(features, dtype="float32")
         print("size of big features is:")
         print((npfeatures.shape))
-        return npfeatures,y
+        return npfeatures,y, uniq_adj
 
 
 
