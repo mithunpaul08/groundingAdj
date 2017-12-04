@@ -1,3 +1,7 @@
+import matplotlib.pyplot as plt
+from scipy import stats
+
+
 #!/usr/bin/env python
 from __future__ import print_function
 from itertools import count
@@ -126,7 +130,8 @@ def runLR(features, y):
         # for param in fc.parameters():
         #     param.data.add_(-0.1 * param.grad.data)
 
-        print("loss:", loss)
+        #print("loss:", loss)
+        #print("loss:", loss)
         # print(loss)
 
 
@@ -136,8 +141,22 @@ def runLR(features, y):
 
         #print('Loss: {:.6f} after {} epochs'.format(loss.data, epoch))
     #print("weight:")
-    print(fc.weight.data.view(-1))
+    #print(fc.weight.data.view(-1))
     learned_weights = fc.weight.data
     return(learned_weights.cpu().numpy())
    # print('==> Learned function:\t' + poly_desc(fc.weight.data.view(-1), fc.bias.data))
     #print('==> Actual function:\t' + (W_target.view(-1), b_target))
+
+
+def rsquared(x, y):
+    """ Return R^2 where x and y are array-like."""
+
+    slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x, y)
+
+    #to plot#
+#     >>> plt.plot(x, y, 'o', label='original data')
+# >>> plt.plot(x, intercept + slope*x, 'r', label='fitted line')
+# >>> plt.legend()
+# >>> plt.show()
+
+    return r_value**2
