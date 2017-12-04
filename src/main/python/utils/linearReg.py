@@ -1,9 +1,8 @@
-import matplotlib.pyplot as plt
-from scipy import stats
-
-
 #!/usr/bin/env python
 from __future__ import print_function
+
+import matplotlib.pyplot as plt
+from scipy import stats
 from itertools import count
 import torch.nn as nn
 import torch
@@ -130,8 +129,7 @@ def runLR(features, y):
         # for param in fc.parameters():
         #     param.data.add_(-0.1 * param.grad.data)
 
-        #print("loss:", loss)
-        #print("loss:", loss)
+
         # print(loss)
 
 
