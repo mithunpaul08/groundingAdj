@@ -9,6 +9,7 @@ import numpy as np
 import itertools
 from utils.read_data import readAdjInterceptFile
 from utils.read_data import readRawTurkDataFile
+from utils.read_data import readWithSpace
 import pickle as pk
 from scipy.stats import kendalltau, spearmanr
 from utils.linearReg import runLR
@@ -23,9 +24,11 @@ start_time = time.time()
 
 cwd=os.getcwd()
 turkFile="adjectiveData.csv"
+turkInterceptFile="turk_with_intercept.txt"
 
 if __name__ == "__main__":
     try:
+
 
         features, y, adj_lexicon= get_features_y_one_hot(cwd, turkFile)
 
@@ -41,35 +44,12 @@ if __name__ == "__main__":
 
         #will be of size 1x100=98 adj, one mean and variance
         learned_weights = runLR(features, y)
-# <<<<<<< HEAD
-#
-#         #print((learned_weights))
-#
-#         #print("size of the learned weight vector is:"+str((learned_weights.shape)))
-#
-#
-#
-#
-#         #print("NumUniqueAdj: ", num_adj)
-#
-#         #get the predicted intercepts
-#         print("value of num_adj is:"+str((num_adj)))
-#
-#         adj_intercepts = learned_weights[:num_adj]
-#         print("size of the adj_intercepts  vector is:"+str((adj_intercepts.shape)))
-#
-#         sys.exit(1)
-#
-#         adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
-#
-#         print(adj_pairs[:2])
-#
-# =======
+
         print(str(learned_weights.shape))
         #sys.exit(1)
         #print("NumUniqueAdj: ", num_adj)
         # Get the weights that correspond to the individual adjs
-        adj_intercepts = learned_weights[:num_adj]
+        adj_intercepts_learned = learned_weights[:num_adj]
         #pairing weights with adjectives.
         adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
 
@@ -79,8 +59,19 @@ if __name__ == "__main__":
         sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
 
         #print highest 20 intercepts and lowest 20 intercepts
-        print(sorted_adjs[:20])
-        print(sorted_adjs[-20:])
+        #print(sorted_adjs[:20])
+        #print(sorted_adjs[-20:])
+
+
+        #get the actual intercepts
+        adj_intercepts_original=readWithSpace(cwd,turkInterceptFile)
+        print((adj_intercepts_original["adjective"][0]))
+        # print((adj_intercepts_original["intercept"][0]))
+        print(str(adj_intercepts_original.shape))
+        print(str(adj_intercepts_learned.shape))
+        sys.exit(1)
+
+
 
 
         # features,y =predict_grounding(cwd,turkFile)
