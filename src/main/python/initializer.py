@@ -34,11 +34,20 @@ if __name__ == "__main__":
         for a, idx in adj_lexicon.items():
             adj_lexicon_flipped[idx] = a
         learned_weights = runLR(features, y)
-        print("NumUniqueAdj: ", num_adj)
+        print(str(learned_weights.shape))
+        #sys.exit(1)
+        #print("NumUniqueAdj: ", num_adj)
+        # Get the weights that correspond to the individual adjs
         adj_intercepts = learned_weights[:num_adj]
+        #pairing weights with adjectives.
         adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
-        print(adj_pairs[:2])
+
+        #print(adj_pairs[:2])
+
+        #sorting them by their weight
         sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
+
+        #print highest 20 intercepts and lowest 20 intercepts
         print(sorted_adjs[:20])
         print(sorted_adjs[-20:])
 
