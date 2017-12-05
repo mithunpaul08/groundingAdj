@@ -219,7 +219,7 @@ def get_features_y_one_hot(cwd, turkFile):
             #print(" localFeatures shape:"+str(len(localFeatures)))
             #print(" stddev :"+str((stddev)))
             localFeatures.append(stddev)
-            #localFeatures.extend(one_hotT)
+            localFeatures.extend(one_hotT)
             #print(" localFeatures shape:"+str(len(localFeatures)))
 
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
-
+import sklearn as sklearn
+from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 from scipy import stats
 from itertools import count
@@ -11,6 +12,7 @@ import torch.nn.functional as F
 from torch.autograd import Variable
 import numpy as np
 import sys
+import scipy as scipy
 POLY_DEGREE = 1
 ##W_target = torch.randn(POLY_DEGREE, 1) * 5
 #b_target = torch.randn(1) * 5
@@ -93,6 +95,8 @@ def runLR(features, y):
     #fc = torch.nn.Linear(3, 1)
 
 
+    pred_y = None
+
     for epoch in range(10000):
 
         # Reset gradients
@@ -110,6 +114,7 @@ def runLR(features, y):
 
         #multiply weight with input vector
         affine=fc(batch_x)
+        pred_y=affine.data.cpu().numpy()
 
 
         loss = loss_fn(affine, batch_y)
@@ -138,8 +143,18 @@ def runLR(features, y):
         #     break
 
         #print('Loss: {:.6f} after {} epochs'.format(loss.data, epoch))
-    #print("weight:")
-    #print(fc.weight.data.view(-1))
+
+    rsquared_value=r2_score(y, pred_y, sample_weight=None, multioutput='uniform_average')
+
+
+    print("rsquared_value:")
+    print(str(rsquared_value))
+
+    # #rsquared_value2= rsquared(y, pred_y)
+    # print("rsquared_value2:")
+    # print(str(rsquared_value2))
+    sys.exit(1)
+    print(fc.weight.data.view(-1))
     learned_weights = fc.weight.data
     return(learned_weights.cpu().numpy())
    # print('==> Learned function:\t' + poly_desc(fc.weight.data.view(-1), fc.bias.data))
@@ -152,9 +167,9 @@ def rsquared(x, y):
     slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x, y)
 
     #to plot#
-#     >>> plt.plot(x, y, 'o', label='original data')
-# >>> plt.plot(x, intercept + slope*x, 'r', label='fitted line')
-# >>> plt.legend()
-# >>> plt.show()
+    plt.plot(x, y, 'o', label='original data')
+    plt.plot(x, intercept + slope*x, 'r', label='fitted line')
+    plt.legend()
+    plt.show()
 
     return r_value**2
