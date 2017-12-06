@@ -219,7 +219,7 @@ def get_features_y_one_hot(cwd, turkFile):
             #print(" localFeatures shape:"+str(len(localFeatures)))
             #print(" stddev :"+str((stddev)))
             localFeatures.append(stddev)
-            #localFeatures.extend(one_hotT)
+            localFeatures.extend(one_hotT)
             #print(" localFeatures shape:"+str(len(localFeatures)))
 
 
@@ -250,13 +250,13 @@ def get_features_y_one_hot(cwd, turkFile):
             #features=combinedFeatures
             y=combinedY
 
-        print("size of big features is:")
-        print(len(features))
-        print("size of big y is:")
-        print((y.shape))
+        #print("size of big features is:")
+        #print(len(features))
+        #print("size of big y is:")
+        #print((y.shape))
         npfeatures=np.asarray(features, dtype="float32")
-        print("size of big features is:")
-        print((npfeatures.shape))
+        #print("size of big features is:")
+        #print((npfeatures.shape))
         return npfeatures,y, uniq_adj
 
 
