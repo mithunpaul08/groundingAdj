@@ -227,8 +227,8 @@ def get_features_y(cwd, turkFile, useOneHot):
             #print(" localFeatures shape:"+str(len(localFeatures)))
             localFeatures.extend(embV)
 
-            print(" mean :"+str(type(mean.item())))
-            print(" localFeatures shape:"+str(len(localFeatures)))
+            #print(" mean :"+str(type(mean.item())))
+            #print(" localFeatures shape:"+str(len(localFeatures)))
             localFeatures.append(mean.item())
             #print(localFeatures)
             #print(" localFeatures shape:"+str(len(localFeatures)))
