@@ -69,7 +69,7 @@ if __name__ == "__main__":
         # print((adj_intercepts_original["intercept"][0]))
         print(str(adj_intercepts_original.shape))
         print(str(adj_intercepts_learned.shape))
-        sys.exit(1)
+        #sys.exit(1)
 
 
 
