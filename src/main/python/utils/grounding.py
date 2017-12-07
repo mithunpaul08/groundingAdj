@@ -168,7 +168,7 @@ def get_features_y(cwd, turkFile, useOneHot):
         features = []
 
         # #for each of the adjective create a one hot vector
-        for rowCounter, eachTurkRow in enumerate(trainingData):
+        for rowCounter, eachTurkRow in tqdm(enumerate(trainingData),total=len(trainingData), desc="readV:"):
 
             ########create a one hot vector for adjective
             # give this index to the actual data frame

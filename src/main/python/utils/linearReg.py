@@ -13,6 +13,7 @@ from torch.autograd import Variable
 import numpy as np
 import sys
 import scipy as scipy
+from tqdm import tqdm
 POLY_DEGREE = 1
 ##W_target = torch.randn(POLY_DEGREE, 1) * 5
 #b_target = torch.randn(1) * 5
@@ -78,14 +79,14 @@ def convert_variable(features, labels):
 
 def runLR(features, y):
     featureShape=features.shape
-    print("Features row:" + str(features[0]))
-    # print("y row:" + str(y[0]))
+    # print("Features row:" + str(features[0]))
+    # # print("y row:" + str(y[0]))
+    #
+    # print("featureShape")
+    # print(featureShape)
+    # print("size of big y is:")
+    # print((y.shape))
 
-    print("featureShape")
-    print(featureShape)
-    print("size of big y is:")
-    print((y.shape))
-    sys.exit()
 
     # features = features[:20]
     # y = y[:20]
@@ -99,8 +100,9 @@ def runLR(features, y):
 
 
     pred_y = None
+    noOfEpochs=10000
 
-    for epoch in range(10000):
+    for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
         # Reset gradients
         fc.zero_grad()
