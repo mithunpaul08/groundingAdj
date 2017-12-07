@@ -159,15 +159,9 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
         print(vec.size())
-        print(vec[vocab["apple"]])
-        #
-        # print("going to load glove embeddings")
-        # glove = vocab.GloVe(name='6B', dim=300)
-        # print('Loaded {} words'.format(len(glove.itos)))
-        # print("glove.vectors.size(0)")
-        # print(glove.vectors.size(0))
-        # print("glove.vectors[0]")
-        # print(glove.vectors[0])
+        emb=vec[vocab["apple"]].numpy()
+        print(emb)
+
         sys.exit(1)
 
         y=np.array([],dtype="float32")
