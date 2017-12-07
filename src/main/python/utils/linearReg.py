@@ -142,7 +142,7 @@ def runLR(features, y):
         # if loss < 1e-3:
         #     break
 
-    print('Loss: {:.6f} after {} epochs'.format(loss.data, epoch))
+    print('Loss: after all epochs'+str((loss.data)))
 
     print("y value:")
     print(y)
