@@ -5,6 +5,7 @@ from tqdm import tqdm
 import numpy as np
 import sys
 import torchtext.vocab as vocab
+import torchwordemb
 
 cbow4 = "glove_vectors_syn_ant_sameord_difford.txt"
 
@@ -156,13 +157,17 @@ def get_features_y(cwd, turkFile, useOneHot):
         dev=dev_test[0]
         test=dev_test[1]
 
-        print("going to load glove embeddings")
-        glove = vocab.GloVe(name='6B', dim=300)
-        print('Loaded {} words'.format(len(glove.itos)))
-        print("glove.vectors.size(0)")
-        print(glove.vectors.size(0))
-        print("glove.vectors[0]")
-        print(glove.vectors[0])
+        vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
+        print(vec.size())
+        print(vec[vocab["apple"]])
+        #
+        # print("going to load glove embeddings")
+        # glove = vocab.GloVe(name='6B', dim=300)
+        # print('Loaded {} words'.format(len(glove.itos)))
+        # print("glove.vectors.size(0)")
+        # print(glove.vectors.size(0))
+        # print("glove.vectors[0]")
+        # print(glove.vectors[0])
         sys.exit(1)
 
         y=np.array([],dtype="float32")
