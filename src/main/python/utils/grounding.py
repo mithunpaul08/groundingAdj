@@ -156,7 +156,7 @@ def get_features_y(cwd, turkFile, useOneHot):
         dev_test=np.array_split(rest,2)
         dev=dev_test[0]
         test=dev_test[1]
-
+        print("going to load glove:")
         vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
         print(vec.size())
         emb=vec[vocab["apple"]].numpy()
