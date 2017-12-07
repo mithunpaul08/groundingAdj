@@ -4,6 +4,8 @@ from utils.linearReg import runLR
 from tqdm import tqdm
 import numpy as np
 import sys
+import torchtext.vocab as vocab
+
 cbow4 = "glove_vectors_syn_ant_sameord_difford.txt"
 
 def predict_grounding(cwd,turkFile):
@@ -97,7 +99,7 @@ def predict_grounding(cwd,turkFile):
 
 
 
-def get_features_y_one_hot(cwd, turkFile):
+def get_features_y(cwd, turkFile, useOneHot):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
         print(df_raw_turk_data["adjective"][0])
 
@@ -135,7 +137,6 @@ def get_features_y_one_hot(cwd, turkFile):
 
 
         #Split data in to train-dev-test
-
         noOfRows=df_raw_turk_data.shape[0]
 
         #create an numpy array of that range
@@ -155,11 +156,17 @@ def get_features_y_one_hot(cwd, turkFile):
         dev=dev_test[0]
         test=dev_test[1]
 
-        features=[]
-
+        print("going to load glove embeddings")
+        glove = vocab.GloVe(name='6B', dim=300)
+        print('Loaded {} words'.format(len(glove.itos)))
+        print("glove.vectors.size(0)")
+        print(glove.vectors.size(0))
+        print("glove.vectors[0]")
+        print(glove.vectors[0])
+        sys.exit(1)
 
         y=np.array([],dtype="float32")
-
+        features = []
 
         # #for each of the adjective create a one hot vector
         for rowCounter, eachTurkRow in enumerate(trainingData):
@@ -173,13 +180,18 @@ def get_features_y_one_hot(cwd, turkFile):
             #print("adjIndex:"+str(adjIndex))
             #print("uniq_adj_count:"+str(uniq_adj_count))
 
-            #create a one hot vector for all adjectives
-            #one_hot_adj=np.zeros(uniq_adj_count)
-            one_hot_adj=[0]*uniq_adj_count
-            #print(one_hot_adj)
-            #print("one hot shape:"+str((one_hot_adj.shape)))
-            one_hot_adj[adjIndex]=1
-            #print(one_hot_adj)
+        if(useOneHot):
+            #####create a one hot vector for all adjectives
+            # one_hot_adj=np.zeros(uniq_adj_count)
+            one_hot_adj = [0] * uniq_adj_count
+            # print(one_hot_adj)
+            # print("one hot shape:"+str((one_hot_adj.shape)))
+            one_hot_adj[adjIndex] = 1
+            # print(one_hot_adj)
+
+        else:
+            #pick the corresponding embedding from glove
+            # print("glove.vectors[0]")
 
             ################to create a one hot vector for turker data also
             #get the id number of of the turker

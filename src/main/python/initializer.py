@@ -17,7 +17,7 @@ from utils.linearReg import runLR
 import time
 
 from utils.grounding import predict_grounding
-from utils.grounding import get_features_y_one_hot
+from utils.grounding import get_features_y
 
 
 start_time = time.time()
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     try:
 
 
-        features, y, adj_lexicon= get_features_y_one_hot(cwd, turkFile)
+        features, y, adj_lexicon= get_features_y(cwd, turkFile,False)
 
         adj_lexicon_flipped = dict()
         #total number of unique adjectives

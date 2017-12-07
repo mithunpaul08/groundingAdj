@@ -2,7 +2,7 @@
 from __future__ import print_function
 import sklearn as sklearn
 from sklearn.metrics import r2_score
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from scipy import stats
 from itertools import count
 import torch.nn as nn
@@ -167,9 +167,9 @@ def rsquared(x, y):
     slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x, y)
 
     #to plot#
-    plt.plot(x, y, 'o', label='original data')
-    plt.plot(x, intercept + slope*x, 'r', label='fitted line')
-    plt.legend()
-    plt.show()
+    # plt.plot(x, y, 'o', label='original data')
+    # plt.plot(x, intercept + slope*x, 'r', label='fitted line')
+    # plt.legend()
+    # plt.show()
 
     return r_value**2
