@@ -179,22 +179,22 @@ def get_features_y(cwd, turkFile, useOneHot):
             #print("adjIndex:"+str(adjIndex))
             #print("uniq_adj_count:"+str(uniq_adj_count))
 
-        embV=[]
-        if(useOneHot):
-            #####create a one hot vector for all adjectives
-            # one_hot_adj=np.zeros(uniq_adj_count)
-            one_hot_adj = [0] * uniq_adj_count
-            # print(one_hot_adj)
-            # print("one hot shape:"+str((one_hot_adj.shape)))
-            one_hot_adj[adjIndex] = 1
-            # print(one_hot_adj)
-            #todo : extend/append this new vector
-            embV=one_hot_adj
+            embV=[]
+            if(useOneHot):
+                #####create a one hot vector for all adjectives
+                # one_hot_adj=np.zeros(uniq_adj_count)
+                one_hot_adj = [0] * uniq_adj_count
+                # print(one_hot_adj)
+                # print("one hot shape:"+str((one_hot_adj.shape)))
+                one_hot_adj[adjIndex] = 1
+                # print(one_hot_adj)
+                #todo : extend/append this new vector
+                embV=one_hot_adj
 
-        else:
-            #pick the corresponding embedding from glove
-            emb = vec[vocab[adj]].numpy()
-            embV=emb
+            else:
+                #pick the corresponding embedding from glove
+                emb = vec[vocab[adj]].numpy()
+                embV=emb
 
             ################to create a one hot vector for turker data also
             #get the id number of of the turker

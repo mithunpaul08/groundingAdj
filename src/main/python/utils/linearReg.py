@@ -78,11 +78,14 @@ def convert_variable(features, labels):
 
 def runLR(features, y):
     featureShape=features.shape
-    # print("Features row:" + str(features[0]))
+    print("Features row:" + str(features[0]))
     # print("y row:" + str(y[0]))
-    # sys.exit()
-    #print("featureShape")
-    #print(featureShape)
+
+    print("featureShape")
+    print(featureShape)
+    print("size of big y is:")
+    print((y.shape))
+    sys.exit()
 
     # features = features[:20]
     # y = y[:20]
