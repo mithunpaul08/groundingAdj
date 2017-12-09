@@ -17,7 +17,7 @@ from utils.linearReg import runLR
 import time
 
 from utils.grounding import predict_grounding
-from utils.grounding import get_features_y_one_hot
+from utils.grounding import get_features_y
 
 
 start_time = time.time()
@@ -30,7 +30,7 @@ if __name__ == "__main__":
     try:
 
 
-        features, y, adj_lexicon= get_features_y_one_hot(cwd, turkFile)
+        features, y, adj_lexicon= get_features_y(cwd, turkFile,False)
 
         adj_lexicon_flipped = dict()
         #total number of unique adjectives
@@ -59,17 +59,17 @@ if __name__ == "__main__":
         sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
 
         #print highest 20 intercepts and lowest 20 intercepts
-        #print(sorted_adjs[:20])
-        #print(sorted_adjs[-20:])
+        print(sorted_adjs[:20])
+        print(sorted_adjs[-20:])
 
 
         #get the actual intercepts
-        adj_intercepts_original=readWithSpace(cwd,turkInterceptFile)
-        print((adj_intercepts_original["adjective"][0]))
-        # print((adj_intercepts_original["intercept"][0]))
-        print(str(adj_intercepts_original.shape))
-        print(str(adj_intercepts_learned.shape))
-        sys.exit(1)
+        # adj_intercepts_original=readWithSpace(cwd,turkInterceptFile)
+        # print((adj_intercepts_original["adjective"][0]))
+        # # print((adj_intercepts_original["intercept"][0]))
+        # print(str(adj_intercepts_original.shape))
+        # print(str(adj_intercepts_learned.shape))
+        #sys.exit(1)
 
 
 

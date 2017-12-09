@@ -25,7 +25,7 @@ then
 
 												  echo "value of pushto is" $pushTo
 
-												  git add --all
+												  git add --all .
 												  git commit -m "$comment"
 												  git push $pushTo
 #git push

@@ -2,7 +2,7 @@
 from __future__ import print_function
 import sklearn as sklearn
 from sklearn.metrics import r2_score
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from scipy import stats
 from itertools import count
 import torch.nn as nn
@@ -13,6 +13,7 @@ from torch.autograd import Variable
 import numpy as np
 import sys
 import scipy as scipy
+from tqdm import tqdm
 POLY_DEGREE = 1
 ##W_target = torch.randn(POLY_DEGREE, 1) * 5
 #b_target = torch.randn(1) * 5
@@ -79,10 +80,13 @@ def convert_variable(features, labels):
 def runLR(features, y):
     featureShape=features.shape
     # print("Features row:" + str(features[0]))
-    # print("y row:" + str(y[0]))
-    # sys.exit()
-    #print("featureShape")
-    #print(featureShape)
+    # # print("y row:" + str(y[0]))
+    #
+    # print("featureShape")
+    # print(featureShape)
+    # print("size of big y is:")
+    # print((y.shape))
+
 
     # features = features[:20]
     # y = y[:20]
@@ -96,8 +100,9 @@ def runLR(features, y):
 
 
     pred_y = None
+    noOfEpochs=10000
 
-    for epoch in range(10000):
+    for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
         # Reset gradients
         fc.zero_grad()
@@ -142,8 +147,12 @@ def runLR(features, y):
         # if loss < 1e-3:
         #     break
 
-        #print('Loss: {:.6f} after {} epochs'.format(loss.data, epoch))
+    print('Loss: after all epochs'+str((loss.data)))
 
+    print("y value:")
+    print(y)
+    print("predicted y value")
+    print(pred_y)
     rsquared_value=r2_score(y, pred_y, sample_weight=None, multioutput='uniform_average')
 
 
@@ -153,7 +162,7 @@ def runLR(features, y):
     # #rsquared_value2= rsquared(y, pred_y)
     # print("rsquared_value2:")
     # print(str(rsquared_value2))
-    sys.exit(1)
+
     print(fc.weight.data.view(-1))
     learned_weights = fc.weight.data
     return(learned_weights.cpu().numpy())
@@ -167,9 +176,9 @@ def rsquared(x, y):
     slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(x, y)
 
     #to plot#
-    plt.plot(x, y, 'o', label='original data')
-    plt.plot(x, intercept + slope*x, 'r', label='fitted line')
-    plt.legend()
-    plt.show()
+    # plt.plot(x, y, 'o', label='original data')
+    # plt.plot(x, intercept + slope*x, 'r', label='fitted line')
+    # plt.legend()
+    # plt.show()
 
     return r_value**2

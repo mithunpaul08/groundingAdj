@@ -4,6 +4,9 @@ from utils.linearReg import runLR
 from tqdm import tqdm
 import numpy as np
 import sys
+import torchtext.vocab as vocab
+import torchwordemb
+
 cbow4 = "glove_vectors_syn_ant_sameord_difford.txt"
 
 def predict_grounding(cwd,turkFile):
@@ -97,7 +100,7 @@ def predict_grounding(cwd,turkFile):
 
 
 
-def get_features_y_one_hot(cwd, turkFile):
+def get_features_y(cwd, turkFile, useOneHot):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
         print(df_raw_turk_data["adjective"][0])
 
@@ -135,7 +138,6 @@ def get_features_y_one_hot(cwd, turkFile):
 
 
         #Split data in to train-dev-test
-
         noOfRows=df_raw_turk_data.shape[0]
 
         #create an numpy array of that range
@@ -154,15 +156,19 @@ def get_features_y_one_hot(cwd, turkFile):
         dev_test=np.array_split(rest,2)
         dev=dev_test[0]
         test=dev_test[1]
+        print("going to load glove:")
+        vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
+        print(vec.size())
+        emb=vec[vocab["apple"]].numpy()
+        #print(emb)
 
-        features=[]
 
 
         y=np.array([],dtype="float32")
-
+        features = []
 
         # #for each of the adjective create a one hot vector
-        for rowCounter, eachTurkRow in enumerate(trainingData):
+        for rowCounter, eachTurkRow in tqdm(enumerate(trainingData),total=len(trainingData), desc="readV:"):
 
             ########create a one hot vector for adjective
             # give this index to the actual data frame
@@ -173,13 +179,22 @@ def get_features_y_one_hot(cwd, turkFile):
             #print("adjIndex:"+str(adjIndex))
             #print("uniq_adj_count:"+str(uniq_adj_count))
 
-            #create a one hot vector for all adjectives
-            #one_hot_adj=np.zeros(uniq_adj_count)
-            one_hot_adj=[0]*uniq_adj_count
-            #print(one_hot_adj)
-            #print("one hot shape:"+str((one_hot_adj.shape)))
-            one_hot_adj[adjIndex]=1
-            #print(one_hot_adj)
+            embV=[]
+            if(useOneHot):
+                #####create a one hot vector for all adjectives
+                # one_hot_adj=np.zeros(uniq_adj_count)
+                one_hot_adj = [0] * uniq_adj_count
+                # print(one_hot_adj)
+                # print("one hot shape:"+str((one_hot_adj.shape)))
+                one_hot_adj[adjIndex] = 1
+                # print(one_hot_adj)
+                #todo : extend/append this new vector
+                embV=one_hot_adj
+
+            else:
+                #pick the corresponding embedding from glove
+                emb = vec[vocab[adj]].numpy()
+                embV=emb
 
             ################to create a one hot vector for turker data also
             #get the id number of of the turker
@@ -210,7 +225,7 @@ def get_features_y_one_hot(cwd, turkFile):
             localFeatures=[]
             #print("one hot shape:"+str(len(one_hot_adj)))
             #print(" localFeatures shape:"+str(len(localFeatures)))
-            localFeatures.extend(one_hot_adj)
+            localFeatures.extend(embV)
 
             #print(" mean :"+str(type(mean.item())))
             #print(" localFeatures shape:"+str(len(localFeatures)))
@@ -250,13 +265,13 @@ def get_features_y_one_hot(cwd, turkFile):
             #features=combinedFeatures
             y=combinedY
 
-        #print("size of big features is:")
-        #print(len(features))
+        print("size of big features 1is:")
+        print(len(features))
         #print("size of big y is:")
         #print((y.shape))
         npfeatures=np.asarray(features, dtype="float32")
-        #print("size of big features is:")
-        #print((npfeatures.shape))
+        print("size of big features 2is:")
+        print((npfeatures.shape))
         return npfeatures,y, uniq_adj
 
 
