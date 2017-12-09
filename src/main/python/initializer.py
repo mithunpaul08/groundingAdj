@@ -59,16 +59,16 @@ if __name__ == "__main__":
         sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
 
         #print highest 20 intercepts and lowest 20 intercepts
-        #print(sorted_adjs[:20])
-        #print(sorted_adjs[-20:])
+        print(sorted_adjs[:20])
+        print(sorted_adjs[-20:])
 
 
         #get the actual intercepts
-        adj_intercepts_original=readWithSpace(cwd,turkInterceptFile)
-        print((adj_intercepts_original["adjective"][0]))
-        # print((adj_intercepts_original["intercept"][0]))
-        print(str(adj_intercepts_original.shape))
-        print(str(adj_intercepts_learned.shape))
+        # adj_intercepts_original=readWithSpace(cwd,turkInterceptFile)
+        # print((adj_intercepts_original["adjective"][0]))
+        # # print((adj_intercepts_original["intercept"][0]))
+        # print(str(adj_intercepts_original.shape))
+        # print(str(adj_intercepts_learned.shape))
         #sys.exit(1)
 
 

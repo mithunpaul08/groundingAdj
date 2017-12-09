@@ -162,7 +162,7 @@ def runLR(features, y):
     # #rsquared_value2= rsquared(y, pred_y)
     # print("rsquared_value2:")
     # print(str(rsquared_value2))
-    sys.exit(1)
+
     print(fc.weight.data.view(-1))
     learned_weights = fc.weight.data
     return(learned_weights.cpu().numpy())
