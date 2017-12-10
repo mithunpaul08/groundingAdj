@@ -111,6 +111,7 @@ def runLR(features, y):
         # Get data
         batch_x, batch_y = convert_variable(features, y)
 
+        #self.hidden_dim = hidden_dim
 
         loss_fn = nn.MSELoss(size_average=True)
         optimizer = optim.SGD(fc.parameters(), lr=0.00000001)
