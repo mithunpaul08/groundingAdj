@@ -147,8 +147,10 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         print(featureV)
 
         #combined=np.concatenate(feature,squished_np)
+        feature_squished=torch.cat((featureV,squished_emb.data),1)
 
-        #print("total size of combined is:"+str(len(combined)))
+        print("feature_squished:")
+        print(feature_squished)
 
         sys.exit(1)
 
