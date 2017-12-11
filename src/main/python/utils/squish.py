@@ -209,23 +209,24 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     print("loss")
 
     print(loss)
-    sys.exit(1)
-
-    #todo: return the entire new 98x10 hashtable to regression code
-    print(adj_10_emb)
-    sys.exit(1)
-
-    print('Loss: after all epochs'+str((loss.data)))
-
-    print("y value:")
-    print(y)
-    print("predicted y value")
-    print(pred_y)
+    #
+    #
+    # #todo: return the entire new 98x10 hashtable to regression code
+    # print(adj_10_emb)
+    # sys.exit(1)
+    #
+    # print('Loss: after all epochs'+str((loss.data)))
+    #
+    # print("y value:")
+    # print(y)
+    # print("predicted y value")
+    # print(pred_y)
     rsquared_value=r2_score(y, pred_y, sample_weight=None, multioutput='uniform_average')
 
 
     print("rsquared_value:")
     print(str(rsquared_value))
+    sys.exit(1)
 
     # #rsquared_value2= rsquared(y, pred_y)
     # print("rsquared_value2:")
