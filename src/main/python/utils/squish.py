@@ -107,6 +107,11 @@ def run_adj_emb(list_Adj):
 
             squished_emb=model(adj_variable)
 
+            #concatenate this squished embedding with turk one hot vector, and do linear regression
+            print(squished_emb)
+
+            sys.exit(1)
+
             #calculate the loss
             loss=loss_function(squished_emb)
 

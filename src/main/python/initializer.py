@@ -18,7 +18,7 @@ import time
 
 from utils.grounding import predict_grounding
 from utils.grounding import get_features_y
-
+from utils.squish import run_adj_emb
 
 start_time = time.time()
 
@@ -30,7 +30,16 @@ if __name__ == "__main__":
     try:
 
 
+
+
+
         features, y, adj_lexicon= get_features_y(cwd, turkFile,False)
+
+
+
+        #get the 300 embedding vector from glove for an adj
+        run_adj_emb(adj_lexicon)
+
 
         adj_lexicon_flipped = dict()
         #total number of unique adjectives
