@@ -92,11 +92,6 @@ def convert_adj_index(listOfAdj):
 
 
 
-def convert_scalar_to_variable(features):
-
-    x2 =torch.from_numpy(np.array([features]))
-
-    return Variable(x2,requires_grad=True)
 
 def convert_to_variable(features):
 
@@ -146,7 +141,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         #concatenate this squished embedding with turk one hot vector, and do linear regression
 
-        featureV= convert_scalar_to_variable(feature)
+        featureV= convert_to_variable(feature)
 
         print("feature")
         print(featureV)
@@ -157,29 +152,31 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         print("feature_squished:")
         print(feature_squished)
 
+        sys.exit(1)
 
 
 
-        #adj_10_emb[each_adj]=squished_emb
+
+        adj_10_emb[each_adj]=squished_emb
 
 
         #the complete linear regression code- only thing is features here will include the squished_emb
         # Reset gradients
         fc.zero_grad()
 
-        y_variable = convert_to_variable(y)
+        batch_x, batch_y = convert_variable(features, y)
 
         loss_fn = nn.MSELoss(size_average=True)
         rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
         #multiply weight with input vector
-        affine=fc(feature_squished)
+        affine=fc(batch_x)
 
         #this is the actual prediction of the intercept
         pred_y=affine.data.cpu().numpy()
 
 
-        loss = loss_fn(affine, y_variable)
+        loss = loss_fn(affine, batch_y)
 
 
         # Backward pass
@@ -188,10 +185,6 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         # optimizer.step()
         # adam.step()
         rms.step()
-
-        print("loss")
-        print(loss)
-        sys.exit(1)
 
 
 
