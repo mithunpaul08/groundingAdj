@@ -176,13 +176,14 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         loss_fn = nn.MSELoss(size_average=True)
         rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
-        sys.exit(1)
 
         #multiply weight with input vector
         affine=fc(batch_x)
 
         #this is the actual prediction of the intercept
         pred_y=affine.data.cpu().numpy()
+
+        sys.exit(1)
 
 
         loss = loss_fn(affine, batch_y)
