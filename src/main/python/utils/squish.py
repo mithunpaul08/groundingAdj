@@ -128,7 +128,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         squished_emb=model(each_adj)
         print("squished_emb")
-        print(squished_emb)
+        print(squished_emb.data.numpy())
 
         #concatenate this squished embedding with turk one hot vector, and do linear regression
         combined=[]
