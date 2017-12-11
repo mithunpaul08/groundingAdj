@@ -96,7 +96,7 @@ def convert_scalar_to_variable(features):
 
     x2 =torch.from_numpy(np.array([features]))
 
-    return Variable(x2,requires_grad=True)
+    return Variable(x2,requires_grad=False)
 
 def convert_to_variable(features):
 
