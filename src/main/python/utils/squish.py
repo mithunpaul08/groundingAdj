@@ -20,7 +20,7 @@ class AdjEmb(nn.Module):
         super(AdjEmb,self).__init__()
 
         #get teh glove vectors
-        glove=vocab.Glove(name='6B',dim=300)
+        glove = vocab.GloVe(name='6B', dim=300)
         self.embeddings=nn.Embedding(glove.vectors.size(0),glove.vectors.size(1))
 
         #the layer where you squish the 300 embeddings to a dense layer of 10
@@ -109,6 +109,7 @@ def run_adj_emb(list_Adj):
             squished_emb=model(adj_variable)
 
             #concatenate this squished embedding with turk one hot vector, and do linear regression
+            #todo: call linear regression code here, or concatenate these vectors
             print(squished_emb)
 
             sys.exit(1)
