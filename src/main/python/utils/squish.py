@@ -112,7 +112,7 @@ def run_adj_emb(list_Adj):
 
         print("got inside each_adj. going to call model.zero grad")
 
-        model.zero_grad()
+        #model.zero_grad()
 
         print("value of each_adj is:"+str(each_adj))
         #convert adj into the right sequence
