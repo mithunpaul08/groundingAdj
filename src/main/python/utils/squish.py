@@ -43,6 +43,8 @@ class AdjEmb(nn.Module):
         #get the glove embeddings for this adjective
         vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
         print(vec.size())
+        print("adj:")
+        print(adj)
         emb=vec[vocab[adj]].numpy()
         embT =torch.from_numpy(emb)
         embV=Variable(embT,requires_grad=True)
@@ -93,7 +95,7 @@ def run_adj_emb(list_Adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
-
+    print("got inside run_adj_emb. going to call model")
     model=AdjEmb()
     loss_function= nn.MSELoss(size_average=True)
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
@@ -104,10 +106,15 @@ def run_adj_emb(list_Adj):
         #for each word in the list of adjectives
         for each_adj in tqdm(list_Adj,total=len(list_Adj),desc="each_adj:"):
 
+            print("got inside each_adj. going to call model.zero grad")
+
             model.zero_grad()
 
+            print("value of each_adj is:"+str(each_adj))
             #convert adj into the right sequence
             adj_variable=getIndex(each_adj,adj_index)
+
+            print("value of adj_variable is:"+str(adj_variable))
 
             squished_emb=model(adj_variable)
 
