@@ -189,13 +189,15 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         loss = loss_fn(affine, batch_y)
 
-        print("loss")
-        print(loss)
-        sys.exit(1)
+
 
 
         # Backward pass
         loss.backward()
+
+        print("loss")
+        print(loss)
+        sys.exit(1)
 
         # optimizer.step()
         # adam.step()
