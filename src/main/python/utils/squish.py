@@ -91,7 +91,7 @@ def run_adj_emb(list_Adj):
     adj_index=convert_adj_index(list_Adj)
 
 
-    model=AdjEmb(adj)
+    model=AdjEmb()
     loss_function=nn.MSELoss(size_average=true)
     rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
