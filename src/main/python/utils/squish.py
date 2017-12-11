@@ -6,7 +6,7 @@ import torch.optim as optim
 import torchtext.vocab as vocab
 import torchwordemb
 
-
+from torch.autograd import Variable
 from tqdm import tqdm
 
 
