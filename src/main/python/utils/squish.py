@@ -55,7 +55,7 @@ class AdjEmb(nn.Module):
         return squished_layer
 
 
-
+   
 #########################actual feed forward neural network related class and code ends here
 #for each word  append its correesponding index, convert it to a long tensor, then to a variable and return
 def getIndex(w, to_ix):
