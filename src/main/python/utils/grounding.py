@@ -198,7 +198,8 @@ def get_features_y(cwd, turkFile, useOneHot):
             else:
                 #pick the corresponding embedding from glove
                 #emb = vec[vocab[adj]].numpy()
-                embV=emb
+                embV=embV
+                #embV=emb
 
             ################to create a one hot vector for turker data also
             #get the id number of of the turker
