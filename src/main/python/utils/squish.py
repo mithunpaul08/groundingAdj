@@ -1,3 +1,4 @@
+import sys
 import torch
 import torch.nn as nn
 import torch.autograd as autograd
@@ -5,10 +6,10 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torchtext.vocab as vocab
 import torchwordemb
-
-
+from utils.linearReg import convert_variable
+from torch.autograd import Variable
 from tqdm import tqdm
-
+import numpy as np
 
 torch.manual_seed(1)
 
@@ -35,7 +36,7 @@ class AdjEmb(nn.Module):
     def forward(self,adj):
 
         #get the corresponding  embeddings of the adjective
-        emb_adj=self.embeddings(adj)
+        #emb_adj=self.embeddings(adj)
 
 
 
@@ -47,10 +48,10 @@ class AdjEmb(nn.Module):
         print(adj)
         emb=vec[vocab[adj]].numpy()
         embT =torch.from_numpy(emb)
-        embV=Variable(embT,requires_grad=True)
+        embV=Variable(embT,requires_grad=False)
 
         #give that to the squishing layer
-        squished_layer=self.squish(embV,-1)
+        squished_layer=self.squish(embV)
 
         return squished_layer
 
@@ -90,48 +91,129 @@ def convert_adj_index(listOfAdj):
     pk.dump(adj_Indices, fileObject2)
 
 
+
+def convert_scalar_to_variable(features):
+
+    x2 =torch.from_numpy(np.array([features]))
+
+    return Variable(x2,requires_grad=False)
+
+def convert_to_variable(features):
+
+    x2 =torch.from_numpy(features)
+
+    return Variable(x2,requires_grad=False)
+
 #the actual trainign code. Basically create an object of the class above
-def run_adj_emb(list_Adj):
+def run_adj_emb(features,y,list_Adj,all_adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
     print("got inside run_adj_emb. going to call model")
     model=AdjEmb()
-    loss_function= nn.MSELoss(size_average=True)
+
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
     #run through each epoch, feed forward, calculate loss, back propagate
-    for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
+
+    #no point having epoch if you are not back propagating
+    #for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
+
+    #things needed for the linear regression phase
+    featureShape=features.shape
+    fc = torch.nn.Linear(205,1)
+    rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    loss_fn = nn.MSELoss(size_average=True)
 
         #for each word in the list of adjectives
-        for each_adj in tqdm(list_Adj,total=len(list_Adj),desc="each_adj:"):
+    adj_10_emb={}
+    for feature,y,each_adj in tqdm((zip(features,y,all_adj)),total=len(features),desc="each_adj:"):
 
-            print("got inside each_adj. going to call model.zero grad")
+        #print("got inside each_adj. going to call model.zero grad")
 
-            model.zero_grad()
+        #model.zero_grad()
 
-            print("value of each_adj is:"+str(each_adj))
-            #convert adj into the right sequence
-            adj_variable=getIndex(each_adj,adj_index)
+        print("value of each_adj is:"+str(each_adj))
+        #convert adj into the right sequence
+        #adj_variable=getIndex(each_adj,adj_index)
 
-            print("value of adj_variable is:"+str(adj_variable))
+        #print("value of adj_variable is:"+str(adj_variable))
 
-            squished_emb=model(adj_variable)
+        squished_emb=model(each_adj)
+        print("squished_emb")
+        print(squished_emb)
+        squished_np=squished_emb.data.numpy()
 
-            #concatenate this squished embedding with turk one hot vector, and do linear regression
-            #todo: call linear regression code here, or concatenate these vectors
-            print(squished_emb)
+        #concatenate this squished embedding with turk one hot vector, and do linear regression
 
-            sys.exit(1)
+        featureV= convert_to_variable(feature)
 
-            #calculate the loss
-            loss=loss_function(squished_emb)
+        print("feature")
+        print(featureV)
 
-            loss.backward()
-            #rms.step()
+        #combined=np.concatenate(feature,squished_np)
+        feature_squished=torch.cat((featureV,squished_emb.data))
+
+        print("feature_squished:")
+        print(feature_squished)
+
+        batch_x=feature_squished
 
 
 
+
+
+
+        adj_10_emb[each_adj]=squished_emb
+
+
+        #the complete linear regression code- only thing is features here will include the squished_emb
+        # Reset gradients
+        fc.zero_grad()
+
+        batch_y = convert_scalar_to_variable( y)
+
+        loss_fn = nn.MSELoss(size_average=True)
+        rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+        print("batch_x")
+        print(batch_x)
+
+        #multiply weight with input vector
+        affine=fc(batch_x)
+
+        #this is the actual prediction of the intercept
+        pred_y=affine.data.cpu().numpy()
+
+
+
+
+        loss = loss_fn(affine, batch_y)
+
+
+
+
+        # Backward pass
+        loss.backward()
+
+
+
+        # optimizer.step()
+        # adam.step()
+        rms.step()
+
+
+
+
+
+
+    print("loss")
+
+    print(loss)
+    sys.exit(1)
+
+    #todo: return the entire new 98x10 hashtable to regression code
+    print(adj_10_emb)
+    sys.exit(1)
 
     print('Loss: after all epochs'+str((loss.data)))
 

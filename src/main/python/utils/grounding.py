@@ -157,9 +157,9 @@ def get_features_y(cwd, turkFile, useOneHot):
         dev=dev_test[0]
         test=dev_test[1]
         print("going to load glove:")
-        vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
-        print(vec.size())
-        emb=vec[vocab["apple"]].numpy()
+        #vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
+        #print(vec.size())
+        #emb=vec[vocab["apple"]].numpy()
         #print(emb)
 
 
@@ -167,12 +167,16 @@ def get_features_y(cwd, turkFile, useOneHot):
         y=np.array([],dtype="float32")
         features = []
 
+
+        #list of all adjectives in the training data, including repeats
+        all_adj=[]
         # #for each of the adjective create a one hot vector
         for rowCounter, eachTurkRow in tqdm(enumerate(trainingData),total=len(trainingData), desc="readV:"):
 
             ########create a one hot vector for adjective
             # give this index to the actual data frame
             adj=df_raw_turk_data["adjective"][eachTurkRow]
+            all_adj.append(adj)
 
             #get the index of the adjective
             adjIndex=uniq_adj[adj]
@@ -193,8 +197,9 @@ def get_features_y(cwd, turkFile, useOneHot):
 
             else:
                 #pick the corresponding embedding from glove
-                emb = vec[vocab[adj]].numpy()
-                embV=emb
+                #emb = vec[vocab[adj]].numpy()
+                embV=embV
+                #embV=emb
 
             ################to create a one hot vector for turker data also
             #get the id number of of the turker
@@ -225,7 +230,7 @@ def get_features_y(cwd, turkFile, useOneHot):
             localFeatures=[]
             #print("one hot shape:"+str(len(one_hot_adj)))
             #print(" localFeatures shape:"+str(len(localFeatures)))
-            localFeatures.extend(embV)
+            #localFeatures.extend(embV)
 
             #print(" mean :"+str(type(mean.item())))
             #print(" localFeatures shape:"+str(len(localFeatures)))
@@ -267,12 +272,26 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         print("size of big features 1is:")
         print(len(features))
-        #print("size of big y is:")
-        #print((y.shape))
+
         npfeatures=np.asarray(features, dtype="float32")
-        print("size of big features 2is:")
-        print((npfeatures.shape))
-        return npfeatures,y, uniq_adj
+        # print("size of big features 2is:")
+        # print((npfeatures.shape))
+        # print("size of big y is:")
+        # print((y.shape))
+        #
+        # print("size of uniq_adj is:")
+        # print(len(uniq_adj))
+        #
+        # print("size of all_adj is:")
+        # print(len(all_adj))
+        # total=len(all_adj)
+        #
+        # print(all_adj[0])
+        # print(all_adj[total-1])
+
+
+
+        return npfeatures,y, uniq_adj, all_adj
 
 
 

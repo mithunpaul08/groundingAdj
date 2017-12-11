@@ -53,6 +53,7 @@ def poly_desc(W, b):
     return result
 
 
+
 def convert_variable(features, labels):
     """Builds a batch i.e. (x, f(x)) pair."""
 

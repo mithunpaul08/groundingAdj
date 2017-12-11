@@ -33,12 +33,12 @@ if __name__ == "__main__":
 
 
 
-        features, y, adj_lexicon= get_features_y(cwd, turkFile,False)
+        features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
 
-
+        print(features.shape)
 
         #get the 300 embedding vector from glove for an adj
-        run_adj_emb(adj_lexicon)
+        run_adj_emb(features,y,adj_lexicon,all_adj)
 
 
         adj_lexicon_flipped = dict()
