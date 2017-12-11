@@ -44,11 +44,14 @@ class AdjEmb(nn.Module):
         vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
         print(vec.size())
         emb=vec[vocab[adj]].numpy()
+        embT =torch.from_numpy(emb)
+        embV=Variable(embT,requires_grad=True)
 
         #give that to the squishing layer
-        squished_layer=self.squish(emb,-1)
+        squished_layer=self.squish(embV,-1)
 
         return squished_layer
+
 
 
 #########################actual feed forward neural network related class and code ends here
