@@ -152,29 +152,29 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         print("feature_squished:")
         print(feature_squished)
 
-        
 
 
-        adj_10_emb[each_adj]=squished_emb
+
+        #adj_10_emb[each_adj]=squished_emb
 
 
         #the complete linear regression code- only thing is features here will include the squished_emb
         # Reset gradients
         fc.zero_grad()
 
-        batch_x, batch_y = convert_variable(features, y)
+        y_variable = convert_to_variable(y)
 
         loss_fn = nn.MSELoss(size_average=True)
         rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
         #multiply weight with input vector
-        affine=fc(batch_x)
+        affine=fc(feature_squished)
 
         #this is the actual prediction of the intercept
         pred_y=affine.data.cpu().numpy()
 
 
-        loss = loss_fn(affine, batch_y)
+        loss = loss_fn(affine, y_variable)
 
 
         # Backward pass
@@ -183,6 +183,10 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         # optimizer.step()
         # adam.step()
         rms.step()
+
+        print("loss")
+        print(loss)
+        sys.exit(1)
 
 
 
