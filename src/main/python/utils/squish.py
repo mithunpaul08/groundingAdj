@@ -152,7 +152,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         print("feature_squished:")
         print(feature_squished)
 
-        sys.exit(1)
+        
 
 
         adj_10_emb[each_adj]=squished_emb
