@@ -9,7 +9,7 @@ import torchwordemb
 from utils.linearReg import convert_variable
 from torch.autograd import Variable
 from tqdm import tqdm
-
+import numpy as np
 
 torch.manual_seed(1)
 
@@ -132,13 +132,13 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         #concatenate this squished embedding with turk one hot vector, and do linear regression
 
-        feature.extend(squished_np)
+        combined=np.concatenate(feature,squished_np)
 
         print("feature")
         print(feature)
 
 
-        print("total size of combined is:"+str(len(feature)))
+        print("total size of combined is:"+str(len(combined)))
 
         sys.exit(1)
 
