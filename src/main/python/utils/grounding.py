@@ -167,6 +167,8 @@ def get_features_y(cwd, turkFile, useOneHot):
         y=np.array([],dtype="float32")
         features = []
 
+
+        adj_same_order=[]
         # #for each of the adjective create a one hot vector
         for rowCounter, eachTurkRow in tqdm(enumerate(trainingData),total=len(trainingData), desc="readV:"):
 
@@ -225,7 +227,7 @@ def get_features_y(cwd, turkFile, useOneHot):
             localFeatures=[]
             #print("one hot shape:"+str(len(one_hot_adj)))
             #print(" localFeatures shape:"+str(len(localFeatures)))
-            localFeatures.extend(embV)
+            #localFeatures.extend(embV)
 
             #print(" mean :"+str(type(mean.item())))
             #print(" localFeatures shape:"+str(len(localFeatures)))
@@ -267,11 +269,16 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         print("size of big features 1is:")
         print(len(features))
-        #print("size of big y is:")
-        #print((y.shape))
+
         npfeatures=np.asarray(features, dtype="float32")
         print("size of big features 2is:")
         print((npfeatures.shape))
+        print("size of big y is:")
+        print((y.shape))
+
+        print("size of uniq_adj is:")
+        print(len(uniq_adj))
+        sys.exit(1)
         return npfeatures,y, uniq_adj
 
 

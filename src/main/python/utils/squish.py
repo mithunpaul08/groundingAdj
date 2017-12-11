@@ -92,13 +92,13 @@ def convert_adj_index(listOfAdj):
 
 
 #the actual trainign code. Basically create an object of the class above
-def run_adj_emb(list_Adj):
+def run_adj_emb(features,y,list_Adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
     print("got inside run_adj_emb. going to call model")
     model=AdjEmb()
-    loss_function= nn.MSELoss(size_average=True)
+
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
     #run through each epoch, feed forward, calculate loss, back propagate
@@ -106,11 +106,16 @@ def run_adj_emb(list_Adj):
     #no point having epoch if you are not back propagating
     #for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
 
+    #things needed for the linear regression phase
+    fc = torch.nn.Linear(featureShape[1],1)
+    rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    loss_fn = nn.MSELoss(size_average=True)
+
         #for each word in the list of adjectives
     adj_10_emb={}
     for each_adj in tqdm(list_Adj,total=len(list_Adj),desc="each_adj:"):
 
-        print("got inside each_adj. going to call model.zero grad")
+        #print("got inside each_adj. going to call model.zero grad")
 
         #model.zero_grad()
 
@@ -124,15 +129,35 @@ def run_adj_emb(list_Adj):
 
         #concatenate this squished embedding with turk one hot vector, and do linear regression
 
+        features=features.append(squished_emb)
         adj_10_emb[each_adj]=squished_emb
 
-        #sys.exit(1)
 
-        #calculate the loss
-        #loss=loss_function(squished_emb)
+        #the complete linear regression code- only thing is features here will include the squished_emb
+        # Reset gradients
+        fc.zero_grad()
 
-        #loss.backward()
-        #rms.step()
+        batch_x, batch_y = convert_variable(features, y)
+
+        loss_fn = nn.MSELoss(size_average=True)
+        rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+
+        #multiply weight with input vector
+        affine=fc(batch_x)
+
+        #this is the actual prediction of the intercept
+        pred_y=affine.data.cpu().numpy()
+
+
+        loss = loss_fn(affine, batch_y)
+
+
+        # Backward pass
+        loss.backward()
+
+        # optimizer.step()
+        # adam.step()
+        rms.step()
 
 
 
