@@ -1,3 +1,4 @@
+import sys
 import torch
 import torch.nn as nn
 import torch.autograd as autograd
@@ -101,37 +102,43 @@ def run_adj_emb(list_Adj):
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
     #run through each epoch, feed forward, calculate loss, back propagate
-    for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
+
+    #no point having epoch if you are not back propagating
+    #for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
 
         #for each word in the list of adjectives
-        for each_adj in tqdm(list_Adj,total=len(list_Adj),desc="each_adj:"):
+    adj_10_emb={}
+    for each_adj in tqdm(list_Adj,total=len(list_Adj),desc="each_adj:"):
 
-            print("got inside each_adj. going to call model.zero grad")
+        print("got inside each_adj. going to call model.zero grad")
 
-            model.zero_grad()
+        model.zero_grad()
 
-            print("value of each_adj is:"+str(each_adj))
-            #convert adj into the right sequence
-            #adj_variable=getIndex(each_adj,adj_index)
+        print("value of each_adj is:"+str(each_adj))
+        #convert adj into the right sequence
+        #adj_variable=getIndex(each_adj,adj_index)
 
-            #print("value of adj_variable is:"+str(adj_variable))
+        #print("value of adj_variable is:"+str(adj_variable))
 
-            squished_emb=model(each_adj)
+        squished_emb=model(each_adj)
 
-            #concatenate this squished embedding with turk one hot vector, and do linear regression
-            #todo: call linear regression code here, or concatenate these vectors
-            print(squished_emb)
+        #concatenate this squished embedding with turk one hot vector, and do linear regression
 
-            sys.exit(1)
+        adj_10_emb[each_adj]=squished_emb
 
-            #calculate the loss
-            loss=loss_function(squished_emb)
+        #sys.exit(1)
 
-            loss.backward()
-            #rms.step()
+        #calculate the loss
+        #loss=loss_function(squished_emb)
+
+        #loss.backward()
+        #rms.step()
 
 
 
+    #todo: return the entire new 98x10 hashtable to regression code
+    print(adj_10_emb)
+    sys.exit(1)
 
     print('Loss: after all epochs'+str((loss.data)))
 
