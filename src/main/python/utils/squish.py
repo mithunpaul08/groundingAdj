@@ -48,7 +48,7 @@ class AdjEmb(nn.Module):
         print(adj)
         emb=vec[vocab[adj]].numpy()
         embT =torch.from_numpy(emb)
-        embV=Variable(embT,requires_grad=True)
+        embV=Variable(embT,requires_grad=False)
 
         #give that to the squishing layer
         squished_layer=self.squish(embV)
@@ -102,7 +102,7 @@ def convert_to_variable(features):
 
     x2 =torch.from_numpy(features)
 
-    return Variable(x2,requires_grad=True)
+    return Variable(x2,requires_grad=False)
 
 #the actual trainign code. Basically create an object of the class above
 def run_adj_emb(features,y,list_Adj,all_adj):
