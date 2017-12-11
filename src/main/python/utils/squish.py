@@ -184,10 +184,14 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         #this is the actual prediction of the intercept
         pred_y=affine.data.cpu().numpy()
 
-        sys.exit(1)
+
 
 
         loss = loss_fn(affine, batch_y)
+
+        print("loss")
+        print(loss)
+        sys.exit(1)
 
 
         # Backward pass
@@ -196,6 +200,8 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         # optimizer.step()
         # adam.step()
         rms.step()
+
+
 
 
 
