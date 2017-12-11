@@ -168,13 +168,15 @@ def get_features_y(cwd, turkFile, useOneHot):
         features = []
 
 
-        adj_same_order=[]
+        #list of all adjectives in the training data, including repeats
+        all_adj=[]
         # #for each of the adjective create a one hot vector
         for rowCounter, eachTurkRow in tqdm(enumerate(trainingData),total=len(trainingData), desc="readV:"):
 
             ########create a one hot vector for adjective
             # give this index to the actual data frame
             adj=df_raw_turk_data["adjective"][eachTurkRow]
+            all_adj.append(adj)
 
             #get the index of the adjective
             adjIndex=uniq_adj[adj]
@@ -278,6 +280,15 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         print("size of uniq_adj is:")
         print(len(uniq_adj))
+
+        print("size of all_adj is:")
+        print(len(all_adj))
+        total=len(all_adj)
+
+        print(all_adj[0])
+        print(all_adj[total-1])
+
+
         sys.exit(1)
         return npfeatures,y, uniq_adj
 
