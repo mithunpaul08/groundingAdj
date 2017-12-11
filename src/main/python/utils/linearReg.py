@@ -93,10 +93,9 @@ def runLR(features, y):
 
     # create teh weight matrix. the dimensions must be transpose
     # of your features, since they are going to be dot producted
-
-
     fc = torch.nn.Linear(featureShape[1],1)#, bias=False)
-    #fc = torch.nn.Linear(3, 1)
+
+
 
 
     pred_y = None
