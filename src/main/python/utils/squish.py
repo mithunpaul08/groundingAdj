@@ -50,7 +50,7 @@ class AdjEmb(nn.Module):
         embV=Variable(embT,requires_grad=True)
 
         #give that to the squishing layer
-        squished_layer=self.squish(embV,-1)
+        squished_layer=self.squish(embV)
 
         return squished_layer
 
