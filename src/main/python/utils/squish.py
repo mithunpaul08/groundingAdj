@@ -201,13 +201,15 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         # adam.step()
         rms.step()
 
-        print("loss")
-        print(loss)
-        sys.exit(1)
 
 
 
 
+
+    print("loss")
+
+    print(loss)
+    sys.exit(1)
 
     #todo: return the entire new 98x10 hashtable to regression code
     print(adj_10_emb)
