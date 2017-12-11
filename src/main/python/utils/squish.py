@@ -1,8 +1,9 @@
+import torch
 import torch.nn as nn
 import torch.autograd as autograd
-import torch.nn.Functional as F
+import torch.nn.functional as F
 import torch.optim as optim
-import torchText.vocab as vocab
+import torchtext.vocab as vocab
 import torchwordemb
 
 
@@ -13,7 +14,7 @@ torch.manual_seed(1)
 
 dense_size=10
 no_of_epochs=1
-class AdjEmb(nn.module):
+class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self):
         super(AdjEmb,self).__init__()
