@@ -92,6 +92,11 @@ def convert_adj_index(listOfAdj):
 
 
 
+def convert_scalar_to_variable(features):
+
+    x2 =torch.from_numpy(np.array([features]))
+
+    return Variable(x2,requires_grad=True)
 
 def convert_to_variable(features):
 
@@ -141,7 +146,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         #concatenate this squished embedding with turk one hot vector, and do linear regression
 
-        featureV= convert_to_variable(feature)
+        featureV= convert_scalar_to_variable(feature)
 
         print("feature")
         print(featureV)
