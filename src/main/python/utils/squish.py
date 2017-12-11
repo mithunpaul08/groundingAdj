@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torchtext.vocab as vocab
 import torchwordemb
-
+from utils.linearReg import convert_variable
 from torch.autograd import Variable
 from tqdm import tqdm
 
@@ -128,11 +128,11 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         squished_emb=model(each_adj)
         print("squished_emb")
-        print(squished_emb.data.numpy())
+        squished_np=squished_emb.data.numpy()
 
         #concatenate this squished embedding with turk one hot vector, and do linear regression
         combined=[]
-        combined.append(squished_emb)
+        combined.append(squished_np)
         combined.append(feature)
         print("feature")
         print(feature)
