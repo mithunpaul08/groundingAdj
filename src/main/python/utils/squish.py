@@ -107,6 +107,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     #for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
 
     #things needed for the linear regression phase
+    featureShape=features.shape
     fc = torch.nn.Linear(featureShape[1],1)
     rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
