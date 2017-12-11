@@ -91,6 +91,14 @@ def convert_adj_index(listOfAdj):
     pk.dump(adj_Indices, fileObject2)
 
 
+
+
+def convert_to_variable(features):
+
+    x2 =torch.from_numpy(features)
+
+    return Variable(x2,requires_grad=True)
+
 #the actual trainign code. Basically create an object of the class above
 def run_adj_emb(features,y,list_Adj,all_adj):
     #take the list of adjectives and give it all an index
@@ -128,17 +136,19 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         squished_emb=model(each_adj)
         print("squished_emb")
+        print(squished_emb)
         squished_np=squished_emb.data.numpy()
 
         #concatenate this squished embedding with turk one hot vector, and do linear regression
 
-        combined=np.concatenate(feature,squished_np)
+        featureV= convert_to_variable(feature)
 
         print("feature")
-        print(feature)
+        print(featureV)
 
+        #combined=np.concatenate(feature,squished_np)
 
-        print("total size of combined is:"+str(len(combined)))
+        #print("total size of combined is:"+str(len(combined)))
 
         sys.exit(1)
 
