@@ -132,7 +132,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         combined=[]
         combined.append(squished_emb)
         combined.append(feature)
-        print("total size of combined is:"+str(combined.shape))
+        print("total size of combined is:"+str(len(combined)))
 
         sys.exit(1)
 
