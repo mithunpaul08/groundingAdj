@@ -139,9 +139,9 @@ def run_adj_emb(list_Adj):
     # print("rsquared_value2:")
     # print(str(rsquared_value2))
 
-    print(fc.weight.data.view(-1))
-    learned_weights = fc.weight.data
-    return(learned_weights.cpu().numpy())
+    # print(fc.weight.data.view(-1))
+    # learned_weights = fc.weight.data
+    # return(learned_weights.cpu().numpy())
 
 
 
