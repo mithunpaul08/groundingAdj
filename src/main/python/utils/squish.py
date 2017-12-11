@@ -112,11 +112,11 @@ def run_adj_emb(list_Adj):
 
             print("value of each_adj is:"+str(each_adj))
             #convert adj into the right sequence
-            adj_variable=getIndex(each_adj,adj_index)
+            #adj_variable=getIndex(each_adj,adj_index)
 
             print("value of adj_variable is:"+str(adj_variable))
 
-            squished_emb=model(adj_variable)
+            squished_emb=model(each_adj)
 
             #concatenate this squished embedding with turk one hot vector, and do linear regression
             #todo: call linear regression code here, or concatenate these vectors
