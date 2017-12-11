@@ -35,7 +35,7 @@ class AdjEmb(nn.Module):
     def forward(self,adj):
 
         #get the corresponding  embeddings of the adjective
-        emb_adj=self.embeddings(adj)
+        #emb_adj=self.embeddings(adj)
 
 
 
