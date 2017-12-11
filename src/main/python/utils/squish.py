@@ -92,7 +92,7 @@ def convert_adj_index(listOfAdj):
 
 
 #the actual trainign code. Basically create an object of the class above
-def run_adj_emb(features,y,list_Adj):
+def run_adj_emb(features,y,list_Adj,all_adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
@@ -113,7 +113,7 @@ def run_adj_emb(features,y,list_Adj):
 
         #for each word in the list of adjectives
     adj_10_emb={}
-    for each_adj in tqdm(list_Adj,total=len(list_Adj),desc="each_adj:"):
+    for feature,y,each_adj in tqdm((zip(features,y,all_adj)),total=len(features),desc="each_adj:"):
 
         #print("got inside each_adj. going to call model.zero grad")
 
@@ -128,8 +128,14 @@ def run_adj_emb(features,y,list_Adj):
         squished_emb=model(each_adj)
 
         #concatenate this squished embedding with turk one hot vector, and do linear regression
+        combined=[]
+        combined.append(squished_emb)
+        combined.append(feature)
+        print("total size of combined is:"+str(combined.shape))
 
-        features=features.append(squished_emb)
+        sys.exit(1)
+
+
         adj_10_emb[each_adj]=squished_emb
 
 

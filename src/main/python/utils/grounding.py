@@ -157,9 +157,9 @@ def get_features_y(cwd, turkFile, useOneHot):
         dev=dev_test[0]
         test=dev_test[1]
         print("going to load glove:")
-        vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
-        print(vec.size())
-        emb=vec[vocab["apple"]].numpy()
+        #vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
+        #print(vec.size())
+        #emb=vec[vocab["apple"]].numpy()
         #print(emb)
 
 
@@ -197,7 +197,7 @@ def get_features_y(cwd, turkFile, useOneHot):
 
             else:
                 #pick the corresponding embedding from glove
-                emb = vec[vocab[adj]].numpy()
+                #emb = vec[vocab[adj]].numpy()
                 embV=emb
 
             ################to create a one hot vector for turker data also
@@ -273,24 +273,24 @@ def get_features_y(cwd, turkFile, useOneHot):
         print(len(features))
 
         npfeatures=np.asarray(features, dtype="float32")
-        print("size of big features 2is:")
-        print((npfeatures.shape))
-        print("size of big y is:")
-        print((y.shape))
+        # print("size of big features 2is:")
+        # print((npfeatures.shape))
+        # print("size of big y is:")
+        # print((y.shape))
+        #
+        # print("size of uniq_adj is:")
+        # print(len(uniq_adj))
+        #
+        # print("size of all_adj is:")
+        # print(len(all_adj))
+        # total=len(all_adj)
+        #
+        # print(all_adj[0])
+        # print(all_adj[total-1])
 
-        print("size of uniq_adj is:")
-        print(len(uniq_adj))
-
-        print("size of all_adj is:")
-        print(len(all_adj))
-        total=len(all_adj)
-
-        print(all_adj[0])
-        print(all_adj[total-1])
 
 
-        sys.exit(1)
-        return npfeatures,y, uniq_adj
+        return npfeatures,y, uniq_adj, all_adj
 
 
 
