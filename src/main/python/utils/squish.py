@@ -55,7 +55,7 @@ class AdjEmb(nn.Module):
         return squished_layer
 
 
-   
+
 #########################actual feed forward neural network related class and code ends here
 #for each word  append its correesponding index, convert it to a long tensor, then to a variable and return
 def getIndex(w, to_ix):
@@ -114,7 +114,7 @@ def run_adj_emb(list_Adj):
             #convert adj into the right sequence
             #adj_variable=getIndex(each_adj,adj_index)
 
-            print("value of adj_variable is:"+str(adj_variable))
+            #print("value of adj_variable is:"+str(adj_variable))
 
             squished_emb=model(each_adj)
 
