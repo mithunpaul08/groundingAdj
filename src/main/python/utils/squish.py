@@ -92,7 +92,7 @@ def run_adj_emb(list_Adj):
 
 
     model=AdjEmb()
-    loss_function=nn.MSELoss(size_average=true)
+    loss_function= nn.MSELoss(size_average=True)
     rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
     #run through each epoch, feed forward, calculate loss, back propagate
