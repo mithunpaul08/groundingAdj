@@ -121,7 +121,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
     #things needed for the linear regression phase
     featureShape=features.shape
-    fc = torch.nn.Linear(featureShape[1],1)
+    fc = torch.nn.Linear(205,1)
     rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
@@ -175,7 +175,8 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         loss_fn = nn.MSELoss(size_average=True)
         rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-
+        print("batch_x")
+        print(batch_x)
 
         #multiply weight with input vector
         affine=fc(batch_x)
