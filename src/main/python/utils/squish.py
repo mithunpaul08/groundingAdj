@@ -214,6 +214,9 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     fileObject5 = open(file_Name5,'wb')
     pk.dump(model, fileObject5)
 
+    learned_weights = fc.weight.data
+    return(learned_weights.cpu().numpy())
+
 
    #save the weights to disk
     file_Name1 = "learned_weights.pkl"
@@ -250,8 +253,6 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     # print(str(rsquared_value2))
 
     # print(fc.weight.data.view(-1))
-    # learned_weights = fc.weight.data
-    # return(learned_weights.cpu().numpy())
 
 
 
