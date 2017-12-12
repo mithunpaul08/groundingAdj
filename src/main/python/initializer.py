@@ -45,10 +45,10 @@ if __name__ == "__main__":
 
 
                 myInput=input("what is your choice:")
-                myInput=2
+            
                 if(myInput=="2"):
 
-                    
+
 
                     features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
                     adj_lexicon_flipped = dict()
