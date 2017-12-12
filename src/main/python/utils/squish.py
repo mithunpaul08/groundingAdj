@@ -129,6 +129,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     loss_fn = nn.MSELoss(size_average=True)
 
         #for each word in the list of adjectives
+    pred_y_total=[]
     adj_10_emb={}
     for feature,y,each_adj in tqdm((zip(features,y,all_adj)),total=len(features),desc="each_adj:"):
 
@@ -186,6 +187,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         #this is the actual prediction of the intercept
         pred_y=affine.data.cpu().numpy()
+        pred_y_total.append(pred_y)
 
 
 
@@ -237,11 +239,11 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     #
     # print('Loss: after all epochs'+str((loss.data)))
     #
-    # print("y value:")
-    # print(y)
-    # print("predicted y value")
-    # print(pred_y)
-    rsquared_value=r2_score(y, pred_y, sample_weight=None, multioutput='uniform_average')
+    print("y value:")
+    print(y)
+    print("predicted y value")
+    print(pred_y_total)
+    rsquared_value=r2_score(y, pred_y_total, sample_weight=None, multioutput='uniform_average')
 
 
     print("rsquared_value:")
