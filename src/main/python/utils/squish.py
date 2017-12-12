@@ -28,6 +28,8 @@ class AdjEmb(nn.Module):
         #i.e it takes embeddings as input and returns a dense layer of size 10
         #note: this is also known as the weight vector to be used in an affine
         self.squish=nn.Linear(glove.vectors.size(1),dense_size)
+        #get the glove embeddings for this adjective
+        self.vocab, self.vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
 
         #the linear regression code which maps hidden layer to intercept value must come here
 
@@ -41,12 +43,11 @@ class AdjEmb(nn.Module):
 
 
 
-        #get the glove embeddings for this adjective
-        vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
-        print(vec.size())
+
+        print(self.vec.size())
         print("adj:")
         print(adj)
-        emb=vec[vocab[adj]].numpy()
+        emb=self.vec[self.vocab[adj]].numpy()
         embT =torch.from_numpy(emb)
         embV=Variable(embT,requires_grad=False)
 
