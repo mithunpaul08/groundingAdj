@@ -16,7 +16,7 @@ import numpy as np
 torch.manual_seed(1)
 
 dense_size=10
-no_of_epochs=1
+noOfEpochs=10000
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self):
@@ -128,85 +128,87 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
+
+    for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
         #for each word in the list of adjectives
-    pred_y_total=[]
-    y_total=[]
-    adj_10_emb={}
-    for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
+        pred_y_total=[]
+        y_total=[]
+        adj_10_emb={}
+        for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
 
-        #print("got inside each_adj. going to call model.zero grad")
+            #print("got inside each_adj. going to call model.zero grad")
 
-        #model.zero_grad()
+            #model.zero_grad()
 
-        #print("value of each_adj is:"+str(each_adj))
-        #convert adj into the right sequence
-        #adj_variable=getIndex(each_adj,adj_index)
+            #print("value of each_adj is:"+str(each_adj))
+            #convert adj into the right sequence
+            #adj_variable=getIndex(each_adj,adj_index)
 
-        #print("value of adj_variable is:"+str(adj_variable))
+            #print("value of adj_variable is:"+str(adj_variable))
 
-        squished_emb=model(each_adj)
-        #print("squished_emb")
-        #print(squished_emb)
-        squished_np=squished_emb.data.numpy()
+            squished_emb=model(each_adj)
+            #print("squished_emb")
+            #print(squished_emb)
+            squished_np=squished_emb.data.numpy()
 
-        #concatenate this squished embedding with turk one hot vector, and do linear regression
+            #concatenate this squished embedding with turk one hot vector, and do linear regression
 
-        featureV= convert_to_variable(feature)
+            featureV= convert_to_variable(feature)
 
-        #print("feature")
-        #print(featureV)
+            #print("feature")
+            #print(featureV)
 
-        #combined=np.concatenate(feature,squished_np)
-        feature_squished=torch.cat((featureV,squished_emb.data))
+            #combined=np.concatenate(feature,squished_np)
+            feature_squished=torch.cat((featureV,squished_emb.data))
 
-        #print("feature_squished:")
-        #print(feature_squished)
+            #print("feature_squished:")
+            #print(feature_squished)
 
-        batch_x=feature_squished
-
-
+            batch_x=feature_squished
 
 
 
 
-        adj_10_emb[each_adj]=squished_emb
 
 
-        #the complete linear regression code- only thing is features here will include the squished_emb
-        # Reset gradients
-        fc.zero_grad()
-
-        batch_y = convert_scalar_to_variable(y)
-        y_total.append(y)
-
-        loss_fn = nn.MSELoss(size_average=True)
-        rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-        #print("batch_x")
-        #print(batch_x)
-
-        #multiply weight with input vector
-        affine=fc(batch_x)
-
-        #this is the actual prediction of the intercept
-        pred_y=affine.data.cpu().numpy()
-        pred_y_total.append(pred_y)
+            adj_10_emb[each_adj]=squished_emb
 
 
+            #the complete linear regression code- only thing is features here will include the squished_emb
+            # Reset gradients
+            fc.zero_grad()
 
+            batch_y = convert_scalar_to_variable(y)
+            y_total.append(y)
 
-        loss = loss_fn(affine, batch_y)
+            loss_fn = nn.MSELoss(size_average=True)
+            rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            #print("batch_x")
+            #print(batch_x)
+
+            #multiply weight with input vector
+            affine=fc(batch_x)
+
+            #this is the actual prediction of the intercept
+            pred_y=affine.data.cpu().numpy()
+            pred_y_total.append(pred_y)
 
 
 
 
-        # Backward pass
-        loss.backward()
+            loss = loss_fn(affine, batch_y)
 
 
 
-        # optimizer.step()
-        # adam.step()
-        rms.step()
+
+            # Backward pass
+            loss.backward()
+
+
+
+            # optimizer.step()
+            # adam.step()
+            rms.step()
 
 
 
