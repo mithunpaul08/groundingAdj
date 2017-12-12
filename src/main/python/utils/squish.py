@@ -136,29 +136,29 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         #model.zero_grad()
 
-        print("value of each_adj is:"+str(each_adj))
+        #print("value of each_adj is:"+str(each_adj))
         #convert adj into the right sequence
         #adj_variable=getIndex(each_adj,adj_index)
 
         #print("value of adj_variable is:"+str(adj_variable))
 
         squished_emb=model(each_adj)
-        print("squished_emb")
-        print(squished_emb)
+        #print("squished_emb")
+        #print(squished_emb)
         squished_np=squished_emb.data.numpy()
 
         #concatenate this squished embedding with turk one hot vector, and do linear regression
 
         featureV= convert_to_variable(feature)
 
-        print("feature")
-        print(featureV)
+        #print("feature")
+        #print(featureV)
 
         #combined=np.concatenate(feature,squished_np)
         feature_squished=torch.cat((featureV,squished_emb.data))
 
-        print("feature_squished:")
-        print(feature_squished)
+        #print("feature_squished:")
+        #print(feature_squished)
 
         batch_x=feature_squished
 
@@ -178,8 +178,8 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         loss_fn = nn.MSELoss(size_average=True)
         rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-        print("batch_x")
-        print(batch_x)
+        #print("batch_x")
+        #print(batch_x)
 
         #multiply weight with input vector
         affine=fc(batch_x)
