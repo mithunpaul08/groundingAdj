@@ -108,7 +108,7 @@ def convert_to_variable(features):
     return Variable(x2,requires_grad=False)
 
 #the actual trainign code. Basically create an object of the class above
-def run_adj_emb(features,y,list_Adj,all_adj):
+def run_adj_emb(features, allY, list_Adj, all_adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
@@ -132,7 +132,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     pred_y_total=[]
     y_total=[]
     adj_10_emb={}
-    for feature,y,each_adj in tqdm((zip(features,y,all_adj)),total=len(features),desc="each_adj:"):
+    for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
 
         #print("got inside each_adj. going to call model.zero grad")
 
@@ -176,7 +176,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         # Reset gradients
         fc.zero_grad()
 
-        batch_y = convert_scalar_to_variable( y)
+        batch_y = convert_scalar_to_variable(y)
         y_total.append(y)
 
         loss_fn = nn.MSELoss(size_average=True)
@@ -241,18 +241,18 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     #
     # print('Loss: after all epochs'+str((loss.data)))
     #
-    print("y value:")
+    print("allY value:")
     print(len(y_total))
-    print("predicted y value")
+    print("predicted allY value")
     print(len(pred_y_total))
-    rsquared_value=r2_score(y, pred_y_total, sample_weight=None, multioutput='uniform_average')
+    rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
 
 
     print("rsquared_value:")
     print(str(rsquared_value))
     sys.exit(1)
 
-    # #rsquared_value2= rsquared(y, pred_y)
+    # #rsquared_value2= rsquared(allY, pred_y)
     # print("rsquared_value2:")
     # print(str(rsquared_value2))
 
