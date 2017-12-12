@@ -46,9 +46,9 @@ class AdjEmb(nn.Module):
 
 
 
-        print(self.vec.size())
-        print("adj:")
-        print(adj)
+        #print(self.vec.size())
+        #print("adj:")
+        #print(adj)
         emb=self.vec[self.vocab[adj]].numpy()
         embT =torch.from_numpy(emb)
         embV=Variable(embT,requires_grad=False)
@@ -112,7 +112,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
-    print("got inside run_adj_emb. going to call model")
+    print("got inside run_adj_emb. going to Load Glove:")
     model=AdjEmb()
 
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
