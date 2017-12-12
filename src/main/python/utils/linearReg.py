@@ -164,7 +164,7 @@ def runLR(features, y):
     # print("rsquared_value2:")
     # print(str(rsquared_value2))
 
-    print(fc.weight.data.view(-1))
+    #print(fc.weight.data.view(-1))
     learned_weights = fc.weight.data
     return(learned_weights.cpu().numpy())
    # print('==> Learned function:\t' + poly_desc(fc.weight.data.view(-1), fc.bias.data))
