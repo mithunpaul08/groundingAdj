@@ -35,7 +35,7 @@ if __name__ == "__main__":
                 print("                      ")
                 print("          ******            ")
 
-                print("Welcome to Grounding FOr Adjectives Tagger. Please pick one of the following:")
+                print("Welcome to Grounding For Adjectives. Please pick one of the following:")
 
                 print("To run the model with just linear regression Press:1")
                 print("To run the model with a dense NN, embeddings through linear regression Press:2")
