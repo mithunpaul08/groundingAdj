@@ -252,7 +252,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
     print("rsquared_value:")
     print(str(rsquared_value))
-    sys.exit(1)
+    return(learned_weights.cpu().numpy())
 
     # #rsquared_value2= rsquared(allY, pred_y)
     # print("rsquared_value2:")
