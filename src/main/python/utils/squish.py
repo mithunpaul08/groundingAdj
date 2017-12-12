@@ -240,9 +240,9 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     # print('Loss: after all epochs'+str((loss.data)))
     #
     print("y value:")
-    print(y)
+    print(len(y))
     print("predicted y value")
-    print(pred_y_total)
+    print(len(pred_y_total))
     rsquared_value=r2_score(y, pred_y_total, sample_weight=None, multioutput='uniform_average')
 
 
