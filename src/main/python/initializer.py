@@ -31,6 +31,13 @@ if __name__ == "__main__":
 
 
         features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
+        adj_lexicon_flipped = dict()
+        #total number of unique adjectives
+        num_adj = len(adj_lexicon)
+
+        #key=index value=adjective
+        for a, idx in adj_lexicon.items():
+            adj_lexicon_flipped[idx] = a
 
         learned_weights=run_adj_emb(features,y,adj_lexicon,all_adj)
         adj_intercepts_learned = learned_weights[:num_adj]
