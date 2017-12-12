@@ -16,7 +16,7 @@ import numpy as np
 torch.manual_seed(1)
 
 dense_size=10
-noOfEpochs=100
+noOfEpochs=10
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self):
@@ -252,6 +252,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
     print("rsquared_value:")
     print(str(rsquared_value))
+    learned_weights = fc.weight.data
     return(learned_weights.cpu().numpy())
 
     # #rsquared_value2= rsquared(allY, pred_y)
