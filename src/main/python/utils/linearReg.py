@@ -150,10 +150,10 @@ def runLR(features, y):
 
     print('Loss: after all epochs'+str((loss.data)))
 
-    print("y value:")
-    print(y)
-    print("predicted y value")
-    print(pred_y)
+    #print("y value:")
+    #print(y)
+    #print("predicted y value")
+    #print(pred_y)
     rsquared_value=r2_score(y, pred_y, sample_weight=None, multioutput='uniform_average')
 
 

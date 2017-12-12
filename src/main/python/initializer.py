@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
 
                 myInput=input("what is your choice:")
-            
+
                 if(myInput=="2"):
 
 
@@ -101,7 +101,7 @@ if __name__ == "__main__":
                             #will be of size 1x100=98 adj, one mean and variance
                             learned_weights = runLR(features, y)
 
-                            print(str(learned_weights.shape))
+                            #print(str(learned_weights.shape))
                             #sys.exit(1)
                             #print("NumUniqueAdj: ", num_adj)
                             # Get the weights that correspond to the individual adjs
