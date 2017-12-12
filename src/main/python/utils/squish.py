@@ -130,6 +130,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
         #for each word in the list of adjectives
     pred_y_total=[]
+    y_total=[]
     adj_10_emb={}
     for feature,y,each_adj in tqdm((zip(features,y,all_adj)),total=len(features),desc="each_adj:"):
 
@@ -176,6 +177,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
         fc.zero_grad()
 
         batch_y = convert_scalar_to_variable( y)
+        y_total.append(y)
 
         loss_fn = nn.MSELoss(size_average=True)
         rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
@@ -240,7 +242,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
     # print('Loss: after all epochs'+str((loss.data)))
     #
     print("y value:")
-    print(len(y))
+    print(len(y_total))
     print("predicted y value")
     print(len(pred_y_total))
     rsquared_value=r2_score(y, pred_y_total, sample_weight=None, multioutput='uniform_average')
