@@ -32,7 +32,17 @@ if __name__ == "__main__":
 
         features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
 
-        run_adj_emb(features,y,adj_lexicon,all_adj)
+        learned_weights=run_adj_emb(features,y,adj_lexicon,all_adj)
+        adj_intercepts_learned = learned_weights[:num_adj]
+        #pairing weights with adjectives.
+        adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
+
+        sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
+
+        #print highest 20 intercepts and lowest 20 intercepts
+        print(sorted_adjs[:20])
+        print(sorted_adjs[-20:])
+        sys.exit(1)
 
         while True:
                 print("                      ")
@@ -51,22 +61,7 @@ if __name__ == "__main__":
 
                     #get the 300 embedding vector from glove for an adj
                     learned_weights=run_adj_emb(features,y,adj_lexicon,all_adj)
-                    #print(str(learned_weights.shape))
-                    #sys.exit(1)
-                    #print("NumUniqueAdj: ", num_adj)
-                    # Get the weights that correspond to the individual adjs
-                    adj_intercepts_learned = learned_weights[:num_adj]
-                    #pairing weights with adjectives.
-                    adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
 
-                    #print(adj_pairs[:2])
-
-                    #sorting them by their weight
-                    sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
-
-                    #print highest 20 intercepts and lowest 20 intercepts
-                    print(sorted_adjs[:20])
-                    print(sorted_adjs[-20:])
 
                 else:
                     if(myInput=="0"):
