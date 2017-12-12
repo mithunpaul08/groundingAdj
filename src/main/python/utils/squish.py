@@ -206,7 +206,7 @@ def run_adj_emb(features,y,list_Adj,all_adj):
 
 
 
-
+    print("done with all training data")
 
     #the model is trained by now-store it to disk
     file_Name5 = "squish.pkl"

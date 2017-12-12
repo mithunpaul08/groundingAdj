@@ -31,6 +31,9 @@ if __name__ == "__main__":
 
 
         features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
+
+        run_adj_emb(features,y,adj_lexicon,all_adj)
+
         while True:
                 print("                      ")
                 print("          ******            ")
@@ -43,6 +46,7 @@ if __name__ == "__main__":
 
 
                 myInput=input("what is your choice:")
+                myInput=2
                 if(myInput=="2"):
 
                     #get the 300 embedding vector from glove for an adj
