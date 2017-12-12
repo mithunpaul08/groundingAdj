@@ -78,15 +78,8 @@ if __name__ == "__main__":
                     else:
                         if(myInput=="1"):
 
-
-
-
-
-
+                            features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
                             print(features.shape)
-
-
-
 
                             adj_lexicon_flipped = dict()
                             #total number of unique adjectives
