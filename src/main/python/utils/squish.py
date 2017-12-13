@@ -29,14 +29,18 @@ class AdjEmb(nn.Module):
         # get teh glove vectors
         print("just loaded glove for per adj. going to load glove for entire embeddings.")
 
-        print("self.vec.shape")
-        print(self.vec.shape)
-        self.embeddings = nn.Embedding(self.vec.shape[0], glove.vectors.size(1))
+        print(".self.vec.shape[0]")
+        print(self.vec.shape[0])
+        print(".self.vec.shape[1]")
+        print(self.vec.shape[1])
+        self.embeddings = nn.Embedding(self.vec.shape[0], self.vec.shape[1])
         self.word_embeddings.weight.data.copy_((self.vec))
         # the layer where you squish the 300 embeddings to a dense layer of 10
         # i.e it takes embeddings as input and returns a dense layer of size 10
         # note: this is also known as the weight vector to be used in an affine
         self.squish = nn.Linear(self.vec.size(1), dense_size)
+
+        print("done loading all gloves")
 
         #glove = vocab.GloVe(name='6B', dim=300)
         #the linear regression code which maps hidden layer to intercept value must come here
