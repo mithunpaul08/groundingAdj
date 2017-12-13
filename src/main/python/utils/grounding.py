@@ -158,11 +158,11 @@ def get_features_y(cwd, turkFile, useOneHot):
         dev=dev_test[0]
         test=dev_test[1]
 
-        writeToFile(dev,cwd, "dev.csv")
-        writeToFile(test,cwd, "test.csv")
-        writeToFile(trainingData, "trainingData.csv")
-
-        sys.exit(1)
+        # writeToFile(dev,cwd, "dev.csv")
+        # writeToFile(test,cwd, "test.csv")
+        # writeToFile(trainingData, "trainingData.csv")
+        #
+        # sys.exit(1)
 
         print("going to load glove:")
         #vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
