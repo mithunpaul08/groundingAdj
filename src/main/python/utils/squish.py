@@ -19,12 +19,12 @@ dense_size=10
 noOfEpochs=100
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
-    def __init__(self):
+    def __init__(self,turkCount):
         super(AdjEmb,self).__init__()
 
         # get the glove embeddings for this adjective
         self.vocab, self.vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
-
+        self.noOfTurkers=turkCount
 
         # get teh glove vectors
         print("just loaded glove for per adj. going to load glove for entire embeddings.")
@@ -39,6 +39,7 @@ class AdjEmb(nn.Module):
         # i.e it takes embeddings as input and returns a dense layer of size 10
         # note: this is also known as the weight vector to be used in an affine
         self.squish = nn.Linear(self.vec.size(1), dense_size)
+        self.fc = torch.nn.Linear(dense_size+turkCount+2, 1)
 
         print("done loading all gloves")
 
@@ -47,7 +48,7 @@ class AdjEmb(nn.Module):
 
 
     #init was where you where just defining what embeddings meant. Here we actually use it
-    def forward(self,adj):
+    def forward(self, adj, feats):
 
         #get the corresponding  embeddings of the adjective
         #emb_adj=self.embeddings(adj)
@@ -59,13 +60,14 @@ class AdjEmb(nn.Module):
         #print(self.vec.size())
         #print("adj:")
         #print(adj)
-        emb=self.vec[self.vocab[adj]].numpy()
-        embT =torch.from_numpy(emb)
-        embV=Variable(embT,requires_grad=False)
+        emb=self.vec[self.vocab[adj]]#.numpy()
+        #embT =torch.from_numpy(emb)
+        embV=Variable(emb,requires_grad=False)
 
         #give that to the squishing layer
         squished_layer=self.squish(embV)
 
+        feature_squished = torch.cat((feats, squished_layer))  # .data))
         return squished_layer
 
 
@@ -123,7 +125,8 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     adj_index=convert_adj_index(list_Adj)
 
     print("got inside run_adj_emb. going to Load Glove:")
-    model=AdjEmb()
+
+    model=AdjEmb(193)
 
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
@@ -134,13 +137,14 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
     #things needed for the linear regression phase
     featureShape=features.shape
-    fc = torch.nn.Linear(205,1)
-    rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-    loss_fn = nn.MSELoss(size_average=True)
 
+    rms = optim.RMSprop(model.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    loss_fn = nn.MSELoss(size_average=True)
 
     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
         #for each word in the list of adjectives
+        model.zero_grad()
+
         pred_y_total=[]
         y_total=[]
         adj_10_emb={}
@@ -156,57 +160,56 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
             #print("value of adj_variable is:"+str(adj_variable))
 
-            squished_emb=model(each_adj)
+
             #print("squished_emb")
             #print(squished_emb)
-            squished_np=squished_emb.data.numpy()
+            #squished_np=squished_emb.data.numpy()
 
             #concatenate this squished embedding with turk one hot vector, and do linear regression
 
             featureV= convert_to_variable(feature)
+            pred_y = model(each_adj, featureV)
 
             #print("feature")
             #print(featureV)
 
             #combined=np.concatenate(feature,squished_np)
-            feature_squished=torch.cat((featureV,squished_emb.data))
+            #feature_squished=torch.cat((featureV,squished_emb))#.data))
 
             #print("feature_squished:")
             #print(feature_squished)
 
-            batch_x=feature_squished
+            #batch_x=feature_squished
 
 
 
 
 
 
-            adj_10_emb[each_adj]=squished_emb
+            adj_10_emb[each_adj]=pred_y
 
 
             #the complete linear regression code- only thing is features here will include the squished_emb
             # Reset gradients
-            fc.zero_grad()
 
             batch_y = convert_scalar_to_variable(y)
             y_total.append(y)
 
-            loss_fn = nn.MSELoss(size_average=True)
-            rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
             #print("batch_x")
             #print(batch_x)
 
             #multiply weight with input vector
-            affine=fc(batch_x)
-
-            #this is the actual prediction of the intercept
-            pred_y=affine.data.cpu().numpy()
+            # affine=fc(batch_x)
+            #
+            # #this is the actual prediction of the intercept
+            # pred_y=affine.data.cpu().numpy()
             pred_y_total.append(pred_y)
 
 
 
 
-            loss = loss_fn(affine, batch_y)
+            loss = loss_fn(pred_y, batch_y)
 
 
 
@@ -262,7 +265,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
     print("rsquared_value:")
     print(str(rsquared_value))
-    learned_weights = fc.weight.data
+    learned_weights = model.weight.data
     return(learned_weights.cpu().numpy())
 
     # #rsquared_value2= rsquared(allY, pred_y)
