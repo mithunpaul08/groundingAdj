@@ -41,6 +41,11 @@ def readRawTurkDataFile(cwd, inputFile):
 
     return data;
 
+def writeToFile(pd, cwd, inputFile):
+    path = cwd + "/data/"
+    data = pd.to_csv(path + inputFile, sep=',')
+
+
 
 #use pytorch to read demarneffe matrix.
 def loadEmbeddings(gloveFile):

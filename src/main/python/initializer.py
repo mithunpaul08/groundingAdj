@@ -7,9 +7,9 @@ import csv;
 import collections
 import numpy as np
 import itertools
-from utils.read_data import readAdjInterceptFile
-from utils.read_data import readRawTurkDataFile
-from utils.read_data import readWithSpace
+from utils.read_write_data import readAdjInterceptFile
+from utils.read_write_data import readRawTurkDataFile
+from utils.read_write_data import readWithSpace
 import pickle as pk
 from scipy.stats import kendalltau, spearmanr
 from utils.linearReg import runLR

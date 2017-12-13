@@ -7,7 +7,7 @@ import csv;
 import collections
 import numpy as np
 import itertools
-from utils.read_data import readFile
+from utils.read_write_data import readFile
 import pickle as pk
 from scipy.stats import kendalltau, spearmanr
 
@@ -40,9 +40,9 @@ if __name__ == "__main__":
 
         #read the output produced by the scala code
         # #glove_data = utils.read_data.readFile(cwd, glove)
-        turk_data = utils.read_data.readFile(cwd, turk)
+        turk_data = utils.read_write_data.readFile(cwd, turk)
         #w2v_data = utils.read_data.readFile(cwd, w2v)
-        marneffe_data= utils.read_data.readFile(cwd, paragram1)
+        marneffe_data= utils.read_write_data.readFile(cwd, paragram1)
 
         #print(w2v_data)
 

@@ -1,5 +1,6 @@
-from utils.read_data import readRawTurkDataFile
-from utils.read_data import loadEmbeddings
+from utils.read_write_data import readRawTurkDataFile
+from utils.read_write_data import loadEmbeddings
+from utils.read_write_data import writeToFile
 from utils.linearReg import runLR
 from tqdm import tqdm
 import numpy as np
@@ -156,6 +157,13 @@ def get_features_y(cwd, turkFile, useOneHot):
         dev_test=np.array_split(rest,2)
         dev=dev_test[0]
         test=dev_test[1]
+
+        writeToFile(dev,cwd, "dev.csv")
+        writeToFile(test,cwd, "test.csv")
+        writeToFile(trainingData, "trainingData.csv")
+
+        sys.exit(1)
+
         print("going to load glove:")
         #vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
         #print(vec.size())
