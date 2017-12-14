@@ -35,6 +35,7 @@ class AdjEmb(nn.Module):
         print(self.vec.shape[1])
         self.embeddings = nn.Embedding(self.vec.shape[0], self.vec.shape[1])
         self.embeddings.weight.data.copy_(self.vec)
+        self.embeddings.weight.requires_grad=False
         # the layer where you squish the 300 embeddings to a dense layer of 10
         # i.e it takes embeddings as input and returns a dense layer of size 10
         # note: this is also known as the weight vector to be used in an affine
@@ -138,7 +139,8 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     #things needed for the linear regression phase
     featureShape=features.shape
 
-    rms = optim.RMSprop(model.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
+    rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
