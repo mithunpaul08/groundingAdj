@@ -4,6 +4,7 @@ from utils.read_write_data import writeToFile
 from utils.linearReg import runLR
 from tqdm import tqdm
 import numpy as np
+import math
 import sys
 import torchtext.vocab as vocab
 import torchwordemb
@@ -146,17 +147,23 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         #now shuffle it and split
         np.random.shuffle(allIndex)
-        splitTurk=np.array_split(allIndex,2)
+        eighty=math.ceil(noOfRows*80/100)
+        print(eighty)
+        trainingData=allIndex[:eighty]
+        #print(trainingData)
+        #sys.exit(1)
+
+        #splitTurk=np.array_split(allIndex,2)
 
         #print(df_raw_turk_data["logrespdev"][0])
 
-        trainingData=splitTurk[0]
-        rest=splitTurk[1]
+        #trainingData=splitTurk[0]
+        #rest=splitTurk[1]
 
         #split the rest into half as dev and test
-        dev_test=np.array_split(rest,2)
-        dev=dev_test[0]
-        test=dev_test[1]
+        #dev_test=np.array_split(rest,2)
+        #dev=dev_test[0]
+        #test=dev_test[1]
 
         # writeToFile(dev,cwd, "dev.csv")
         # writeToFile(test,cwd, "test.csv")
