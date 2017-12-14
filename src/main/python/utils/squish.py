@@ -68,7 +68,7 @@ class AdjEmb(nn.Module):
         squished_layer=self.squish(embV)
 
         feature_squished = torch.cat((feats, squished_layer))  # .data))
-        return squished_layer
+        return self.fc(feature_squished)
 
 
 
