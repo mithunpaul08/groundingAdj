@@ -59,16 +59,16 @@ if __name__ == "__main__":
                     for a, idx in adj_lexicon.items():
                         adj_lexicon_flipped[idx] = a
 
-                    learned_weights=run_adj_emb(features,y,adj_lexicon,all_adj)
-                    adj_intercepts_learned = learned_weights[:num_adj]
-                    #pairing weights with adjectives.
-                    adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
-
-                    sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
-
-                    #print highest 20 intercepts and lowest 20 intercepts
-                    print(sorted_adjs[:20])
-                    print(sorted_adjs[-20:])
+                    # learned_weights=run_adj_emb(features,y,adj_lexicon,all_adj)
+                    # adj_intercepts_learned = learned_weights[:num_adj]
+                    # #pairing weights with adjectives.
+                    # adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
+                    #
+                    # sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
+                    #
+                    # #print highest 20 intercepts and lowest 20 intercepts
+                    # print(sorted_adjs[:20])
+                    # print(sorted_adjs[-20:])
 
 
                 else:
