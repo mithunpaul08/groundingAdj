@@ -40,6 +40,7 @@ class AdjEmb(nn.Module):
         # i.e it takes embeddings as input and returns a dense layer of size 10
         # note: this is also known as the weight vector to be used in an affine
         self.squish = nn.Linear(self.vec.size(1), dense_size)
+        #self.tanned=nn.Tanh(self.squish)
         self.fc = torch.nn.Linear(dense_size+turkCount+2, 1)
 
         print("done loading all gloves")
@@ -66,7 +67,7 @@ class AdjEmb(nn.Module):
         embV=Variable(emb,requires_grad=False)
 
         #give that to the squishing layer
-        squished_layer=self.squish(embV)
+        squished_layer=F.Tanh(self.squish(embV))
 
         feature_squished = torch.cat((feats, squished_layer))  # .data))
         return self.fc(feature_squished)
