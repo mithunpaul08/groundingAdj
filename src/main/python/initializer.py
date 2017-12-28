@@ -70,6 +70,8 @@ if __name__ == "__main__":
                     # #print highest 20 intercepts and lowest 20 intercepts
                     # print(sorted_adjs[:20])
                     # print(sorted_adjs[-20:])
+                    elapsed_time = time.time() - start_time
+                    print("time taken:" + str(elapsed_time))
 
 
                 else:

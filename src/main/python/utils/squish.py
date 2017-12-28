@@ -16,7 +16,7 @@ import numpy as np
 torch.manual_seed(1)
 
 dense_size=10
-noOfEpochs=30
+noOfEpochs=100
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount):
@@ -67,8 +67,8 @@ class AdjEmb(nn.Module):
         embV=Variable(emb,requires_grad=False)
 
         #give that to the squishing layer
-        #squished_layer=F.tanh(self.squish(embV))
-        squished_layer = F.relu(self.squish(embV))
+        squished_layer=F.tanh(self.squish(embV))
+        #squished_layer = F.relu(self.squish(embV))
 
         feature_squished = torch.cat((feats, squished_layer))  # .data))
         return self.fc(feature_squished)

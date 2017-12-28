@@ -1,6 +1,13 @@
 #use Conda to install all the below packages
 python 3+
 
+#to run
+cd src/main/python
+source activate condaName
+python initializer.py
+Press 2 for dense layer
+
+Takes around 4 mins
 
 # These are the packages you need to run this code:
 #
