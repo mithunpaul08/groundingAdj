@@ -241,7 +241,6 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
             # optimizer.step()
             # adam.step()
             rms.step()
-            sys.exit(1)
 
 
 
