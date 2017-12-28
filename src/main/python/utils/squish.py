@@ -67,7 +67,7 @@ class AdjEmb(nn.Module):
         embV=Variable(emb,requires_grad=False)
 
         #give that to the squishing layer
-        squished_layer=F.Tanh(self.squish(embV))
+        squished_layer=F.tanh(self.squish(embV))
 
         feature_squished = torch.cat((feats, squished_layer))  # .data))
         return self.fc(feature_squished)
