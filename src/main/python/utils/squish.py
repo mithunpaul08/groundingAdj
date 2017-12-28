@@ -164,7 +164,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
         for eachRow in tqdm(allIndex, total=len(features), desc="each_adj:"):
         #for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
 
-            print("got inside epoch 1. value of eachRow is:"+str(eachRow))
+            #print("got inside epoch 1. value of eachRow is:"+str(eachRow))
 
             #model.zero_grad()
 
