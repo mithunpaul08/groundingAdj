@@ -15,8 +15,8 @@ import numpy as np
 
 torch.manual_seed(1)
 
-dense_size=10
-noOfEpochs=100
+dense_size=20
+noOfEpochs=30
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount):
