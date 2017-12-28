@@ -147,6 +147,8 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         #now shuffle it and split
         np.random.shuffle(allIndex)
+
+        #take 80% of the total data as training data
         eighty=math.ceil(noOfRows*80/100)
         print(eighty)
         trainingData=allIndex[:eighty]

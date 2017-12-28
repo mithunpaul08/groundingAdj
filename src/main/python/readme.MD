@@ -7,7 +7,12 @@ source activate condaName
 python initializer.py
 Press 2 for dense layer
 
-Takes around 4 mins
+Takes around 1/10 mins per epochs. i.e 100 epochs =10 mins
+
+
+#conda environments to use
+in clara: mithunhw3
+in MBP laptop:myPytorch
 
 # These are the packages you need to run this code:
 #

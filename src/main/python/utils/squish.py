@@ -16,7 +16,7 @@ import numpy as np
 torch.manual_seed(1)
 
 dense_size=10
-noOfEpochs=100
+noOfEpochs=30
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount):
@@ -145,6 +145,11 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
+    allIndex = np.arange(len(features))
+
+
+
+
     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
         #for each word in the list of adjectives
         model.zero_grad()
@@ -152,9 +157,14 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
         pred_y_total=[]
         y_total=[]
         adj_10_emb={}
-        for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
 
-            #print("got inside each_adj. going to call model.zero grad")
+        #shuffle for each epoch
+        np.random.shuffle(allIndex)
+
+        for eachRow in tqdm(allIndex, total=len(features), desc="each_adj:"):
+        #for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
+
+            print("got inside epoch 1. value of eachRow is:"+str(eachRow))
 
             #model.zero_grad()
 
@@ -170,6 +180,11 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
             #squished_np=squished_emb.data.numpy()
 
             #concatenate this squished embedding with turk one hot vector, and do linear regression
+
+            #using shuffling
+            feature=features[eachRow]
+            y = allY[eachRow]
+            each_adj = all_adj[eachRow]
 
             featureV= convert_to_variable(feature)
             pred_y = model(each_adj, featureV)
@@ -226,6 +241,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
             # optimizer.step()
             # adam.step()
             rms.step()
+            sys.exit(1)
 
 
 
