@@ -1,3 +1,7 @@
+#use Conda to install all the below packages
+python 3+
+
+
 # These are the packages you need to run this code:
 #
 ca-certificates           2017.08.26           h1d4fec5_0
