@@ -15,8 +15,8 @@ import numpy as np
 
 torch.manual_seed(1)
 
-dense_size=20
-noOfEpochs=40
+dense_size=25
+noOfEpochs=30
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount):
@@ -266,7 +266,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
     print("loss")
 
-    print(loss)
+    #print(loss)
     #
     #
     # #todo: return the entire new 98x10 hashtable to regression code
@@ -275,10 +275,10 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     #
     # print('Loss: after all epochs'+str((loss.data)))
     #
-    print("allY value:")
-    print(len(y_total))
-    print("predicted allY value")
-    print(len(pred_y_total))
+    #print("allY value:")
+    #print(len(y_total))
+    #print("predicted allY value")
+    #print(len(pred_y_total))
     rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
 
 
