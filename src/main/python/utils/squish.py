@@ -379,57 +379,24 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
             featureV= convert_to_variable(feature)
             pred_y = model(each_adj, featureV)
 
-            #print("feature")
-            #print(featureV)
-
-            #combined=np.concatenate(feature,squished_np)
-            #feature_squished=torch.cat((featureV,squished_emb))#.data))
-
-            #print("feature_squished:")
-            #print(feature_squished)
-
-            #batch_x=feature_squished
-
 
 
 
 
 
             adj_10_emb[each_adj]=pred_y
-
-
-            #the complete linear regression code- only thing is features here will include the squished_emb
-            # Reset gradients
-
             batch_y = convert_scalar_to_variable(y)
-            y_total.append(y)
-
-            #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-            #print("batch_x")
-            #print(batch_x)
-
-            #multiply weight with input vector
-            # affine=fc(batch_x)
-            #
-            # #this is the actual prediction of the intercept
-            # pred_y=affine.data.cpu().numpy()
-            pred_y_total.append(pred_y.data.cpu().numpy())
+            #y_total.append(y)
+            #pred_y_total.append(pred_y.data.cpu().numpy())
 
 
 
 
             loss = loss_fn(pred_y, batch_y)
 
-
-
-
             # Backward pass
             loss.backward()
 
-
-
-            # optimizer.step()
-            # adam.step()
             rms.step()
 
 
@@ -439,15 +406,22 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
     #for loocv use the trained model to predict on the left over value
 
     feature = features[minusOne]
-    print(feature)
+    #print(feature)
     y = allY[minusOne]
-    print(feature)
+    print(y)
     each_adj = all_adj[minusOne]
     print(each_adj)
     pred_y = model(each_adj, featureV)
     print("pred_Y;")
     print(pred_y)
+    adj_10_emb[each_adj] = pred_y
+    batch_y = convert_scalar_to_variable(y)
+    y_total.append(y)
+    #for each of the entry in training data, predict and store it in a bigger table
+    pred_y_total.append(pred_y.data.cpu().numpy())
 
+
+    #the LOOCV ends here do this for all the training data
     sys.exit(1)
 
    #  #the model is trained by now-store it to disk
