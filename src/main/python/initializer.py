@@ -19,6 +19,7 @@ import time
 from utils.grounding import predict_grounding
 from utils.grounding import get_features_y
 from utils.squish import run_adj_emb
+from utils.squish import run_adj_emb_loocv
 
 start_time = time.time()
 
