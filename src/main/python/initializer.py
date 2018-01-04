@@ -60,7 +60,7 @@ if __name__ == "__main__":
                         adj_lexicon_flipped[idx] = a
 
                     #learned_weights=\
-                    run_adj_emb(features,y,adj_lexicon,all_adj)
+                    run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
                     # adj_intercepts_learned = learned_weights[:num_adj]
                     # #pairing weights with adjectives.
                     # adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
