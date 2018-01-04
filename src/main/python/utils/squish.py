@@ -16,7 +16,7 @@ import numpy as np
 torch.manual_seed(1)
 
 dense_size=25
-noOfEpochs=30
+noOfEpochs=1
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount):
@@ -148,7 +148,9 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     allIndex = np.arange(len(features))
 
 
+    #keep one out
 
+    #train on the rest, test on this one, add it to the
 
     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
         #for each word in the list of adjectives
@@ -293,6 +295,193 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
     # print(fc.weight.data.view(-1))
 
+#same create FNN model, but using loocv for cross validation
+def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
+    #take the list of adjectives and give it all an index
+    adj_index=convert_adj_index(list_Adj)
+
+    print("got inside run_adj_emb. going to Load Glove:")
+
+    model=AdjEmb(193)
+
+    #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+
+    #run through each epoch, feed forward, calculate loss, back propagate
+
+    #no point having epoch if you are not back propagating
+    #for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
+
+    #things needed for the linear regression phase
+    featureShape=features.shape
+
+    params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
+    rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    loss_fn = nn.MSELoss(size_average=True)
+
+    allIndex = np.arange(len(features))
+
+
+    #keep one out
+
+    noOfRows=len(features)
+    minusOne=noOfRows-1
+
+    print("minusOne:")
+    print(minusOne)
+
+
+    allIndex_loocv=allIndex[:minusOne]
+
+    print("len(trainingData):")
+    print(len(allIndex_loocv))
+
+    print("the value that was left out was")
+    print(allIndex[minusOne])
+    sys.exit(1)
+    #train on the rest, test on this one, add it to the
+
+    for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+        #for each word in the list of adjectives
+        model.zero_grad()
+
+        pred_y_total=[]
+        y_total=[]
+        adj_10_emb={}
+
+        #shuffle for each epoch
+        np.random.shuffle(allIndex_loocv)
+
+        for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
+        #for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
+
+            #print("got inside epoch 1. value of eachRow is:"+str(eachRow))
+
+            #model.zero_grad()
+
+            #print("value of each_adj is:"+str(each_adj))
+            #convert adj into the right sequence
+            #adj_variable=getIndex(each_adj,adj_index)
+
+            #print("value of adj_variable is:"+str(adj_variable))
+
+
+            #print("squished_emb")
+            #print(squished_emb)
+            #squished_np=squished_emb.data.numpy()
+
+            #concatenate this squished embedding with turk one hot vector, and do linear regression
+
+            #using shuffling
+            feature=features[eachRow]
+            y = allY[eachRow]
+            each_adj = all_adj[eachRow]
+
+            featureV= convert_to_variable(feature)
+            pred_y = model(each_adj, featureV)
+
+            #print("feature")
+            #print(featureV)
+
+            #combined=np.concatenate(feature,squished_np)
+            #feature_squished=torch.cat((featureV,squished_emb))#.data))
+
+            #print("feature_squished:")
+            #print(feature_squished)
+
+            #batch_x=feature_squished
+
+
+
+
+
+
+            adj_10_emb[each_adj]=pred_y
+
+
+            #the complete linear regression code- only thing is features here will include the squished_emb
+            # Reset gradients
+
+            batch_y = convert_scalar_to_variable(y)
+            y_total.append(y)
+
+            #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            #print("batch_x")
+            #print(batch_x)
+
+            #multiply weight with input vector
+            # affine=fc(batch_x)
+            #
+            # #this is the actual prediction of the intercept
+            # pred_y=affine.data.cpu().numpy()
+            pred_y_total.append(pred_y.data.cpu().numpy())
+
+
+
+
+            loss = loss_fn(pred_y, batch_y)
+
+
+
+
+            # Backward pass
+            loss.backward()
+
+
+
+            # optimizer.step()
+            # adam.step()
+            rms.step()
+
+
+
+    print("done with all training data")
+
+   #  #the model is trained by now-store it to disk
+   #  file_Name5 = "squish.pkl"
+   #  # open the file for writing
+   #  fileObject5 = open(file_Name5,'wb')
+   #  pk.dump(model, fileObject5)
+   #
+   #  learned_weights = fc.weight.data
+   #  #return(learned_weights.cpu().numpy())
+   #
+   #
+   # #save the weights to disk
+   #  file_Name1 = "learned_weights.pkl"
+   #  # open the file for writing
+   #  fileObject1 = open(file_Name1,'wb')
+   #  pk.dump(learned_weights.cpu().numpy(), fileObject1)
+
+
+
+    print("loss")
+
+    #print(loss)
+    #
+    #
+    # #todo: return the entire new 98x10 hashtable to regression code
+    # print(adj_10_emb)
+    # sys.exit(1)
+    #
+    # print('Loss: after all epochs'+str((loss.data)))
+    #
+    #print("allY value:")
+    #print(len(y_total))
+    #print("predicted allY value")
+    #print(len(pred_y_total))
+    rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+
+
+    print("rsquared_value:")
+    print(str(rsquared_value))
+    #learned_weights = model.affine.weight.data
+    #return(learned_weights.cpu().numpy())
+
+    # #rsquared_value2= rsquared(allY, pred_y)
+    # print("rsquared_value2:")
+    # print(str(rsquared_value2))
+
+    # print(fc.weight.data.view(-1))
 
 
 

@@ -148,12 +148,20 @@ def get_features_y(cwd, turkFile, useOneHot):
         #now shuffle it and split
         np.random.shuffle(allIndex)
 
-        #take 80% of the total data as training data
+        #take 80% of the total data as training data- rest as testing
         eighty=math.ceil(noOfRows*80/100)
         print(eighty)
+
+        #eighty= number of rows
+
         trainingData=allIndex[:eighty]
-        #print(trainingData)
-        #sys.exit(1)
+
+        #leave one out cross validation.
+
+        #run this loop total of len(trainingData) times
+
+        #for index in tqdm(len(trainingData_loocv))
+
 
         #splitTurk=np.array_split(allIndex,2)
 
