@@ -337,7 +337,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
     print("the value that was left out was")
     print(allIndex[minusOne])
-    sys.exit(1)
+
     #train on the rest, test on this one, add it to the
 
     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
@@ -435,6 +435,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
     print("done with all training data")
+    sys.exit(1)
 
    #  #the model is trained by now-store it to disk
    #  file_Name5 = "squish.pkl"
