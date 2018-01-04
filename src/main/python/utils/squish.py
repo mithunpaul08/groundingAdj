@@ -435,6 +435,19 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
     print("done with all training data")
+
+    #for loocv use the trained model to predict on the left over value
+
+    feature = features[minusOne]
+    print(feature)
+    y = allY[minusOne]
+    print(feature)
+    each_adj = all_adj[minusOne]
+    print(each_adj)
+    pred_y = model(each_adj, featureV)
+    print("pred_Y;")
+    print(pred_y)
+
     sys.exit(1)
 
    #  #the model is trained by now-store it to disk
@@ -455,7 +468,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
 
-    print("loss")
+    #print("loss")
 
     #print(loss)
     #
@@ -470,6 +483,8 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
     #print(len(y_total))
     #print("predicted allY value")
     #print(len(pred_y_total))
+
+
     rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
 
 
