@@ -316,6 +316,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
         #train on the rest, test on this one left out, add it to the
 
         for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
             #for each word in the list of adjectives
             model.zero_grad()
 
@@ -324,8 +325,9 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
             #shuffle for each epoch
             np.random.shuffle(allIndex_loocv)
 
+            '''for each row in the training data, predict y value for itself, and then back
+            propagate the loss'''
             for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
-            #for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
 
 
                 #using shuffling

@@ -146,6 +146,7 @@ def get_features_y(cwd, turkFile, useOneHot):
         allIndex=np.arange(noOfRows)
 
         #now shuffle it and split
+        np.random.seed(1)
         np.random.shuffle(allIndex)
 
         #take 80% of the total data as training data- rest as testing
