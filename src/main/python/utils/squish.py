@@ -264,8 +264,10 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
     # print(fc.weight.data.view(-1))
 
-#same create FNN model, but using loocv for cross validation
+
 def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
+    ''' same create feed forward NN model, but using loocv for cross validation'''
+
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
@@ -302,15 +304,14 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
         #for each element in the training data, keep that one out, and train on the rest
         #i.e create a list of all the indices except the one you are keeping out
         allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
+
+
         print("eachElement:")
-        print(eachElement)
-
-
-        print("len(trainingData):")
-        print(len(allIndex_loocv))
-
-        print("the value that was left out was")
-        print(allIndex[eachElement])
+        # print(eachElement)
+        # print("len(trainingData):")
+        # print(len(allIndex_loocv))
+        # print("the value that was left out was")
+        # print(allIndex[eachElement])
 
         #train on the rest, test on this one left out, add it to the
 
