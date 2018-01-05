@@ -290,8 +290,13 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
     allIndex = np.arange(len(features))
 
 
-    #do loocv len(trainingData) times
 
+
+    pred_y_total = []
+    y_total = []
+    adj_10_emb = {}
+
+    # do loocv len(trainingData) times
     for eachElement in tqdm(allIndex,total=len(allIndex), desc="eachTrngData:"):
 
         #for each element in the training data, keep that one out, and train on the rest
@@ -313,9 +318,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
             #for each word in the list of adjectives
             model.zero_grad()
 
-            pred_y_total=[]
-            y_total=[]
-            adj_10_emb={}
+
 
             #shuffle for each epoch
             np.random.shuffle(allIndex_loocv)
@@ -339,11 +342,6 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
                 adj_10_emb[each_adj]=pred_y
                 batch_y = convert_scalar_to_variable(y)
-                #y_total.append(y)
-                #pred_y_total.append(pred_y.data.cpu().numpy())
-
-
-
 
                 loss = loss_fn(pred_y, batch_y)
 
@@ -354,7 +352,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
 
-        print("done with all training data")
+
 
         #for loocv use the trained model to predict on the left over value
         feature = features[eachElement]
@@ -372,11 +370,11 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
         #for each of the entry in training data, predict and store it in a bigger table
         pred_y_total.append(pred_y.data.cpu().numpy())
         # the LOOCV ends here do this for each element as "THE LEAVE ONE OUT" the training data
-        sys.exit(1)
 
 
 
 
+    print("done with all training data")
    #  #the model is trained by now-store it to disk
    #  file_Name5 = "squish.pkl"
    #  # open the file for writing
@@ -396,20 +394,13 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
     #print("loss")
-
     #print(loss)
-    #
-    #
-    # #todo: return the entire new 98x10 hashtable to regression code
     # print(adj_10_emb)
-    # sys.exit(1)
-    #
     # print('Loss: after all epochs'+str((loss.data)))
-    #
-    #print("allY value:")
-    #print(len(y_total))
-    #print("predicted allY value")
-    #print(len(pred_y_total))
+    print("allY value length (must be 2648):")
+    print(len(y_total))
+    print("predicted allY value length (must be 2648):")
+    print(len(pred_y_total))
 
 
     rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
@@ -417,6 +408,8 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
     print("rsquared_value:")
     print(str(rsquared_value))
+
+    sys.exit(1)
     #learned_weights = model.affine.weight.data
     #return(learned_weights.cpu().numpy())
 

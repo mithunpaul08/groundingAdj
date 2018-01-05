@@ -133,8 +133,8 @@ def get_features_y(cwd, turkFile, useOneHot):
         uniq_turker_count=len(uniq_turker)
 
 
-        print("total number of unique adjectives is "+str(len(uniq_adj)))
-        print("total number of unique turkers is "+str(len(uniq_turker)))
+        #print("total number of unique adjectives is "+str(len(uniq_adj)))
+        #print("total number of unique turkers is "+str(len(uniq_turker)))
 
 
 
@@ -181,7 +181,7 @@ def get_features_y(cwd, turkFile, useOneHot):
         #
         # sys.exit(1)
 
-        print("going to load glove:")
+        #print("going to load glove:")
         #vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
         #print(vec.size())
         #emb=vec[vocab["apple"]].numpy()
