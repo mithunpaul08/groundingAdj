@@ -306,7 +306,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
         allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
 
 
-        print("eachElement:")
+        #print("eachElement:")
         # print(eachElement)
         # print("len(trainingData):")
         # print(len(allIndex_loocv))
@@ -361,17 +361,19 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
         feature = features[eachElement]
         #print(feature)
         y = allY[eachElement]
-        print(y)
         each_adj = all_adj[eachElement]
-        print(each_adj)
         pred_y = model(each_adj, featureV)
-        print("pred_Y;")
-        print(pred_y)
         adj_10_emb[each_adj] = pred_y
         batch_y = convert_scalar_to_variable(y)
         y_total.append(y)
         #for each of the entry in training data, predict and store it in a bigger table
         pred_y_total.append(pred_y.data.cpu().numpy())
+
+        # print(y)
+        # print(each_adj)
+        # print("pred_Y;")
+        # print(pred_y)
+
         # the LOOCV ends here do this for each element as "THE LEAVE ONE OUT" the training data
 
 

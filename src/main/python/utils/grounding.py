@@ -76,12 +76,12 @@ def predict_grounding(cwd,turkFile):
                 ylabelLocal=np.array([logRespDev])
                 featuresLocal = np.asarray(withstd)
                 featuresLocal=featuresLocal.transpose()
-                print("size of featuresLocal is:")
-                print((featuresLocal.shape))
-                print("size of ylabelLocal is:")
-                print((ylabelLocal.shape))
-                print("size of big features is:")
-                print((features.shape))
+                # print("size of featuresLocal is:")
+                # print((featuresLocal.shape))
+                # print("size of ylabelLocal is:")
+                # print((ylabelLocal.shape))
+                # print("size of big features is:")
+                # print((features.shape))
 
                 #print("logrespdev")
                 combinedY=np.append(y,ylabelLocal)
@@ -89,10 +89,10 @@ def predict_grounding(cwd,turkFile):
                 features=combinedFeatures
                 y=combinedY
 
-                print("size of big features is:")
-                print((features.shape))
-                print("size of big y is:")
-                print((y.shape))
+                # print("size of big features is:")
+                # print((features.shape))
+                # print("size of big y is:")
+                # print((y.shape))
                 sys.exit(1)
 
 
@@ -296,8 +296,8 @@ def get_features_y(cwd, turkFile, useOneHot):
             #features=combinedFeatures
             y=combinedY
 
-        print("size of big features 1is:")
-        print(len(features))
+        # print("size of big features 1is:")
+        # print(len(features))
 
         npfeatures=np.asarray(features, dtype="float32")
         # print("size of big features 2is:")
