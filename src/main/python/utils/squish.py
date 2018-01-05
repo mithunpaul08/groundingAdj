@@ -164,44 +164,13 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
         np.random.shuffle(allIndex)
 
         for eachRow in tqdm(allIndex, total=len(features), desc="each_adj:"):
-        #for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
 
-            #print("got inside epoch 1. value of eachRow is:"+str(eachRow))
-
-            #model.zero_grad()
-
-            #print("value of each_adj is:"+str(each_adj))
-            #convert adj into the right sequence
-            #adj_variable=getIndex(each_adj,adj_index)
-
-            #print("value of adj_variable is:"+str(adj_variable))
-
-
-            #print("squished_emb")
-            #print(squished_emb)
-            #squished_np=squished_emb.data.numpy()
-
-            #concatenate this squished embedding with turk one hot vector, and do linear regression
-
-            #using shuffling
             feature=features[eachRow]
             y = allY[eachRow]
             each_adj = all_adj[eachRow]
 
             featureV= convert_to_variable(feature)
             pred_y = model(each_adj, featureV)
-
-            #print("feature")
-            #print(featureV)
-
-            #combined=np.concatenate(feature,squished_np)
-            #feature_squished=torch.cat((featureV,squished_emb))#.data))
-
-            #print("feature_squished:")
-            #print(feature_squished)
-
-            #batch_x=feature_squished
-
 
 
 
@@ -321,108 +290,92 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
     allIndex = np.arange(len(features))
 
 
-    #keep one out
+    #do loocv len(trainingData) times
 
-    noOfRows=len(features)
-    minusOne=noOfRows-1
+    for eachElement in tqdm(allIndex,total=len(allIndex), desc="eachTrngData:"):
 
-    print("minusOne:")
-    print(minusOne)
-
-
-    allIndex_loocv=allIndex[:minusOne]
-
-    print("len(trainingData):")
-    print(len(allIndex_loocv))
-
-    print("the value that was left out was")
-    print(allIndex[minusOne])
-
-    #train on the rest, test on this one, add it to the
-
-    for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
-        #for each word in the list of adjectives
-        model.zero_grad()
-
-        pred_y_total=[]
-        y_total=[]
-        adj_10_emb={}
-
-        #shuffle for each epoch
-        np.random.shuffle(allIndex_loocv)
-
-        for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
-        #for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
-
-            #print("got inside epoch 1. value of eachRow is:"+str(eachRow))
-
-            #model.zero_grad()
-
-            #print("value of each_adj is:"+str(each_adj))
-            #convert adj into the right sequence
-            #adj_variable=getIndex(each_adj,adj_index)
-
-            #print("value of adj_variable is:"+str(adj_variable))
+        #for each element in the training data, keep that one out, and train on the rest
+        #i.e create a list of all the indices except the one you are keeping out
+        allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
+        print("eachElement:")
+        print(eachElement)
 
 
-            #print("squished_emb")
-            #print(squished_emb)
-            #squished_np=squished_emb.data.numpy()
+        print("len(trainingData):")
+        print(len(allIndex_loocv))
 
-            #concatenate this squished embedding with turk one hot vector, and do linear regression
+        print("the value that was left out was")
+        print(allIndex[eachElement])
 
-            #using shuffling
-            feature=features[eachRow]
-            y = allY[eachRow]
-            each_adj = all_adj[eachRow]
+        #train on the rest, test on this one left out, add it to the
 
-            featureV= convert_to_variable(feature)
-            pred_y = model(each_adj, featureV)
+        for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+            #for each word in the list of adjectives
+            model.zero_grad()
+
+            pred_y_total=[]
+            y_total=[]
+            adj_10_emb={}
+
+            #shuffle for each epoch
+            np.random.shuffle(allIndex_loocv)
+
+            for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
+            #for feature, y, each_adj in tqdm((zip(features, allY, all_adj)), total=len(features), desc="each_adj:"):
+
+
+                #using shuffling
+                feature=features[eachRow]
+                y = allY[eachRow]
+                each_adj = all_adj[eachRow]
+
+                featureV= convert_to_variable(feature)
+                pred_y = model(each_adj, featureV)
 
 
 
 
 
 
-            adj_10_emb[each_adj]=pred_y
-            batch_y = convert_scalar_to_variable(y)
-            #y_total.append(y)
-            #pred_y_total.append(pred_y.data.cpu().numpy())
+                adj_10_emb[each_adj]=pred_y
+                batch_y = convert_scalar_to_variable(y)
+                #y_total.append(y)
+                #pred_y_total.append(pred_y.data.cpu().numpy())
 
 
 
 
-            loss = loss_fn(pred_y, batch_y)
+                loss = loss_fn(pred_y, batch_y)
 
-            # Backward pass
-            loss.backward()
+                # Backward pass
+                loss.backward()
 
-            rms.step()
-
-
-
-    print("done with all training data")
-
-    #for loocv use the trained model to predict on the left over value
-
-    feature = features[minusOne]
-    #print(feature)
-    y = allY[minusOne]
-    print(y)
-    each_adj = all_adj[minusOne]
-    print(each_adj)
-    pred_y = model(each_adj, featureV)
-    print("pred_Y;")
-    print(pred_y)
-    adj_10_emb[each_adj] = pred_y
-    batch_y = convert_scalar_to_variable(y)
-    y_total.append(y)
-    #for each of the entry in training data, predict and store it in a bigger table
-    pred_y_total.append(pred_y.data.cpu().numpy())
+                rms.step()
 
 
-    #the LOOCV ends here do this for all the training data
-    sys.exit(1)
+
+        print("done with all training data")
+
+        #for loocv use the trained model to predict on the left over value
+        feature = features[eachElement]
+        #print(feature)
+        y = allY[eachElement]
+        print(y)
+        each_adj = all_adj[eachElement]
+        print(each_adj)
+        pred_y = model(each_adj, featureV)
+        print("pred_Y;")
+        print(pred_y)
+        adj_10_emb[each_adj] = pred_y
+        batch_y = convert_scalar_to_variable(y)
+        y_total.append(y)
+        #for each of the entry in training data, predict and store it in a bigger table
+        pred_y_total.append(pred_y.data.cpu().numpy())
+        # the LOOCV ends here do this for each element as "THE LEAVE ONE OUT" the training data
+        sys.exit(1)
+
+
+
 
    #  #the model is trained by now-store it to disk
    #  file_Name5 = "squish.pkl"
