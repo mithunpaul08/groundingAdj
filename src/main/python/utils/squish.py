@@ -377,7 +377,15 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
         # the LOOCV ends here do this for each element as "THE LEAVE ONE OUT" the training data
 
 
-
+        #print loss at the end of every element left out
+        print("loss")
+        print(loss)
+        print(adj_10_emb)
+        # print('Loss: after all epochs'+str((loss.data)))
+        print("allY value length (must be 2648):")
+        print(len(y_total))
+        print("predicted allY value length (must be 2648):")
+        print(len(pred_y_total))
 
     print("done with all training data")
    #  #the model is trained by now-store it to disk
