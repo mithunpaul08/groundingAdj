@@ -15,7 +15,7 @@ import numpy as np
 
 torch.manual_seed(1)
 
-dense_size=25
+dense_size=20
 noOfEpochs=1
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
@@ -362,8 +362,8 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
         #print(feature)
         y = allY[eachElement]
         each_adj = all_adj[eachElement]
-        pred_y = model(each_adj, featureV)
-        adj_10_emb[each_adj] = pred_y
+        pred_y = model(each_adj, feature)
+        #adj_10_emb[each_adj] = pred_y
         batch_y = convert_scalar_to_variable(y)
         y_total.append(y)
         #for each of the entry in training data, predict and store it in a bigger table
