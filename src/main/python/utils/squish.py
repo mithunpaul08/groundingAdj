@@ -306,8 +306,13 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
         allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
 
 
-        #print("eachElement:")
-        # print(eachElement)
+        print("eachElement:")
+        print(eachElement)
+
+        feature = features[eachElement]
+        print("feature of held out one:")
+        print(feature)
+
         # print("len(trainingData):")
         # print(len(allIndex_loocv))
         # print("the value that was left out was")
@@ -328,10 +333,18 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
             '''for each row in the training data, predict y value for itself, and then back
             propagate the loss'''
             for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
+                print("eachRow:")
+                print(eachRow)
 
 
                 #using shuffling
                 feature=features[eachRow]
+                print("feature using rest of training data:")
+                print(feature)
+
+
+                sys.exit(1)
+
                 y = allY[eachRow]
                 each_adj = all_adj[eachRow]
 
