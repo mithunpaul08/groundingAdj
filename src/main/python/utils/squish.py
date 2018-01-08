@@ -306,12 +306,12 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
         allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
 
 
-        print("eachElement:")
-        print(eachElement)
+        # print("eachElement:")
+        # print(eachElement)
 
         feature = features[eachElement]
-        print("feature of held out one:")
-        print(feature)
+        # print("feature of held out one:")
+        # print(feature)
 
         # print("len(trainingData):")
         # print(len(allIndex_loocv))
@@ -333,17 +333,15 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
             '''for each row in the training data, predict y value for itself, and then back
             propagate the loss'''
             for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
-                print("eachRow:")
-                print(eachRow)
+                # print("eachRow:")
+                # print(eachRow)
 
 
                 #using shuffling
                 feature=features[eachRow]
-                print("feature using rest of training data:")
-                print(feature)
 
 
-                sys.exit(1)
+
 
                 y = allY[eachRow]
                 each_adj = all_adj[eachRow]
@@ -371,11 +369,12 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
         #for loocv use the trained model to predict on the left over value
-        feature = features[eachElement]
+        feature_loo = features[eachElement]
+        featureV_loo= convert_to_variable(feature_loo)
         #print(feature)
         y = allY[eachElement]
         each_adj = all_adj[eachElement]
-        pred_y = model(each_adj, feature)
+        pred_y = model(each_adj, featureV_loo)
         #adj_10_emb[each_adj] = pred_y
         batch_y = convert_scalar_to_variable(y)
         y_total.append(y)
