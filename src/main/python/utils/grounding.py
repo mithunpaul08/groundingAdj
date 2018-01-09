@@ -106,13 +106,6 @@ def predict_grounding(cwd,turkFile):
 def get_features_y(cwd, turkFile, useOneHot):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
 
-        #writeToFileWithPd(df_raw_turk_data, cwd, "trainingData.csv")
-        df_raw_turk_data.to_csv("trainingData", header=False)
-        sys.exit(1)
-
-        df_raw_turk_data.to_csv(path + inputFile, sep=',')
-        ##print(df_raw_turk_data["adjective"][0])
-
         #create a hash table to store unique adj
         uniq_adj={}
         counter=0
@@ -166,15 +159,15 @@ def get_features_y(cwd, turkFile, useOneHot):
 
 
 
-        trainingData=[]
-        print()
-
-        for eachline in allIndex:
-            results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
-                       df_raw_turk_data["onestdev"][eachline],
-                       df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
-
-            trainingData.append(results )
+        #
+        # print()
+        #
+        # for eachline in allIndex:
+        #     results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+        #                df_raw_turk_data["onestdev"][eachline],
+        #                df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
+        #
+        #     trainingData.append(results )
 
 
 
@@ -193,9 +186,9 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         # writeToFile(dev,cwd, "dev.csv")
         # writeToFile(test,cwd, "test.csv")
-        writeToFileWithPd(trainingData,cwd, "trainingData.csv")
+        #writeToFileWithPd(trainingData,cwd, "trainingData.csv")
 
-        sys.exit(1)
+
 
         ##print("going to load glove:")
         #vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
@@ -208,108 +201,132 @@ def get_features_y(cwd, turkFile, useOneHot):
         y=np.array([],dtype="float32")
         features = []
 
+        trainingData = []
 
         #list of all adjectives in the training data, including repeats
         all_adj=[]
+
+        with open("trainingData.csv", 'w') as f:
+            df_raw_turk_data.iloc[1].to_csv(f,header=False)
+            df_raw_turk_data.iloc[2].to_csv(f, sep=',', header=False, index=False, index_label=False)
+
+        sys.exit(1)
+
+
         # #for each of the adjective create a one hot vector
-        for rowCounter, eachTurkRow in tqdm(enumerate(trainingData_indices),total=len(trainingData_indices), desc="readV:"):
+        with open("trainingData.csv", 'a') as f:
+            for rowCounter, eachTurkRow in tqdm(enumerate(trainingData_indices),total=len(trainingData_indices), desc="readV:"):
 
-            ########create a one hot vector for adjective
-            # give this index to the actual data frame
-            adj=df_raw_turk_data["adjective"][eachTurkRow]
-            all_adj.append(adj)
+                #write the training data to a file
+                slice = df_raw_turk_data.iloc[eachTurkRow]
+                #trainingData.append(slice)
+                slice.to_csv(f, sep=',',header=False,index=False,index_label=False)
+                slice = df_raw_turk_data.iloc[eachTurkRow+1]
+                slice.to_csv(f, sep=',', header=False, index=False, index_label=False)
+                sys.exit(1)
 
-            #get the index of the adjective
-            adjIndex=uniq_adj[adj]
-            ##print("adjIndex:"+str(adjIndex))
-            ##print("uniq_adj_count:"+str(uniq_adj_count))
-
-            embV=[]
-            if(useOneHot):
-                #####create a one hot vector for all adjectives
-                # one_hot_adj=np.zeros(uniq_adj_count)
-                one_hot_adj = [0] * uniq_adj_count
-                # #print(one_hot_adj)
-                # #print("one hot shape:"+str((one_hot_adj.shape)))
-                one_hot_adj[adjIndex] = 1
-                # #print(one_hot_adj)
-                #todo : extend/append this new vector
-                embV=one_hot_adj
-
-            else:
-                #pick the corresponding embedding from glove
-                #emb = vec[vocab[adj]].numpy()
-                embV=embV
-                #embV=emb
-
-            ################to create a one hot vector for turker data also
-            #get the id number of of the turker
-            turkerId=df_raw_turk_data["turker"][eachTurkRow]
-            turkerIndex=uniq_turker[turkerId]
-            ##print("turkerIndex:"+str(turkerIndex))
-
-            #create a one hot vector for all turkers
-            one_hotT=[0]*(uniq_turker_count)
-            ##print(one_hotT)
-            ##print("one one_hotT shape:"+str((one_hotT.shape)))
-            one_hotT[turkerIndex]=1
-            ##print(one_hotT)
+                # writeToFileWithPd(df_raw_turk_data, cwd, "trainingData.csv")
 
 
-            ################get the mean and variance for this row and attach to this one hot
-            #give this index to the actual data frame
-            adj=df_raw_turk_data["adjective"][eachTurkRow]
-            mean=df_raw_turk_data["mean"][eachTurkRow]
-            stddev=df_raw_turk_data["onestdev"][eachTurkRow]
-            logRespDev=df_raw_turk_data["respdev"][eachTurkRow]
-            ##print("index:"+str(eachTurkRow))
-            ##print("mean"+str(mean))
-            ##print("adjective:"+str(adj))
+                ########create a one hot vector for adjective
+                # give this index to the actual data frame
+                adj=df_raw_turk_data["adjective"][eachTurkRow]
+                all_adj.append(adj)
 
-            #############combine adj-1-hot to mean , variance and turker-one-hot
+                #get the index of the adjective
+                adjIndex=uniq_adj[adj]
+                ##print("adjIndex:"+str(adjIndex))
+                ##print("uniq_adj_count:"+str(uniq_adj_count))
 
-            localFeatures=[]
-            ##print("one hot shape:"+str(len(one_hot_adj)))
-            ##print(" localFeatures shape:"+str(len(localFeatures)))
-            #localFeatures.extend(embV)
+                embV=[]
+                if(useOneHot):
+                    #####create a one hot vector for all adjectives
+                    # one_hot_adj=np.zeros(uniq_adj_count)
+                    one_hot_adj = [0] * uniq_adj_count
+                    # #print(one_hot_adj)
+                    # #print("one hot shape:"+str((one_hot_adj.shape)))
+                    one_hot_adj[adjIndex] = 1
+                    # #print(one_hot_adj)
+                    #todo : extend/append this new vector
+                    embV=one_hot_adj
 
-            ##print(" mean :"+str(type(mean.item())))
-            ##print(" localFeatures shape:"+str(len(localFeatures)))
-            localFeatures.append(mean.item())
-            ##print(localFeatures)
-            ##print(" localFeatures shape:"+str(len(localFeatures)))
-            ##print(" stddev :"+str((stddev)))
-            localFeatures.append(stddev)
-            localFeatures.extend(one_hotT)
-            ##print(" localFeatures shape:"+str(len(localFeatures)))
+                else:
+                    #pick the corresponding embedding from glove
+                    #emb = vec[vocab[adj]].numpy()
+                    embV=embV
+                    #embV=emb
+
+                ################to create a one hot vector for turker data also
+                #get the id number of of the turker
+                turkerId=df_raw_turk_data["turker"][eachTurkRow]
+                turkerIndex=uniq_turker[turkerId]
+                ##print("turkerIndex:"+str(turkerIndex))
+
+                #create a one hot vector for all turkers
+                one_hotT=[0]*(uniq_turker_count)
+                ##print(one_hotT)
+                ##print("one one_hotT shape:"+str((one_hotT.shape)))
+                one_hotT[turkerIndex]=1
+                ##print(one_hotT)
 
 
-            ##print("size of adj_mean_stddev_turk is:")
-            ##print((adj_mean_stddev_turk.shape))
+                ################get the mean and variance for this row and attach to this one hot
+                #give this index to the actual data frame
+                adj=df_raw_turk_data["adjective"][eachTurkRow]
+                mean=df_raw_turk_data["mean"][eachTurkRow]
+                stddev=df_raw_turk_data["onestdev"][eachTurkRow]
+                logRespDev=df_raw_turk_data["respdev"][eachTurkRow]
+                ##print("index:"+str(eachTurkRow))
+                ##print("mean"+str(mean))
+                ##print("adjective:"+str(adj))
+
+                #############combine adj-1-hot to mean , variance and turker-one-hot
+
+                localFeatures=[]
+                ##print("one hot shape:"+str(len(one_hot_adj)))
+                ##print(" localFeatures shape:"+str(len(localFeatures)))
+                #localFeatures.extend(embV)
+
+                ##print(" mean :"+str(type(mean.item())))
+                ##print(" localFeatures shape:"+str(len(localFeatures)))
+                localFeatures.append(mean.item())
+                ##print(localFeatures)
+                ##print(" localFeatures shape:"+str(len(localFeatures)))
+                ##print(" stddev :"+str((stddev)))
+                localFeatures.append(stddev)
+                localFeatures.extend(one_hotT)
+                ##print(" localFeatures shape:"+str(len(localFeatures)))
+
+
+                ##print("size of adj_mean_stddev_turk is:")
+                ##print((adj_mean_stddev_turk.shape))
 
 
 
-            ############feed this combined vector as a feature vector to the linear regression
-            # #print(len(withstd))
-            ##print(logRespDev)
+                ############feed this combined vector as a feature vector to the linear regression
+                # #print(len(withstd))
+                ##print(logRespDev)
 
-            ##print("size of y is:")
-            ##print((y.shape))
+                ##print("size of y is:")
+                ##print((y.shape))
 
-            ylabelLocal=np.array([logRespDev], dtype="float32")
-            #featuresLocal = np.array([adj_mean_stddev_turk])
-            #featuresLocal=featuresLocal.transpose()
-            ##print("size of featuresLocal is:")
-            ##print((featuresLocal.shape))
-            ##print("size of ylabelLocal is:")
-            ##print((ylabelLocal.shape))
-            features.append(localFeatures)
+                ylabelLocal=np.array([logRespDev], dtype="float32")
+                #featuresLocal = np.array([adj_mean_stddev_turk])
+                #featuresLocal=featuresLocal.transpose()
+                ##print("size of featuresLocal is:")
+                ##print((featuresLocal.shape))
+                ##print("size of ylabelLocal is:")
+                ##print((ylabelLocal.shape))
+                features.append(localFeatures)
 
-            ##print("logrespdev")
-            combinedY=np.append(y,ylabelLocal)
-            #combinedFeatures=np.append(features,featuresLocal,axis=0)
-            #features=combinedFeatures
-            y=combinedY
+                ##print("logrespdev")
+                combinedY=np.append(y,ylabelLocal)
+                #combinedFeatures=np.append(features,featuresLocal,axis=0)
+                #features=combinedFeatures
+                y=combinedY
+
+
+        sys.exit(1)
 
         # #print("size of big features 1is:")
         # #print(len(features))
