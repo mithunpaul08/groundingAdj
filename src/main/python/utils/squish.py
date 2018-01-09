@@ -43,9 +43,11 @@ class AdjEmb(nn.Module):
         # note: this is also known as the weight vector to be used in an affine
         self.linear1 = nn.Linear(self.vec.size(1), dense1_size)
         #self.tanned=nn.Tanh(self.squish)
-        self.linear2 = torch.nn.Linear(dense1_size+turkCount+2, dense2_size+turkCount+2)
-        self.linear3 = torch.nn.Linear(dense2_size+turkCount+2, dense3_size+turkCount+2)
-        self.linear4 = torch.nn.Linear(dense3_size+turkCount+2, 1)
+        self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
+        self.linear3 = torch.nn.Linear(dense2_size, dense3_size)
+        self.fc = torch.nn.Linear(dense3_size+turkCount+2, 1)
+
+
 
         print("done loading all gloves")
 
@@ -73,7 +75,7 @@ class AdjEmb(nn.Module):
         out=F.tanh(self.linear1(embV))
         out=F.tanh(self.linear2(out))
         out=F.tanh(self.linear3(out))
-        out=F.tanh(self.linear4(out))
+
 
 
 
@@ -137,6 +139,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
     print("got inside run_adj_emb. going to Load Glove:")
 
+    #there are 193 unique turkers
     model=AdjEmb(193)
 
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
