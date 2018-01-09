@@ -1,6 +1,7 @@
 from utils.read_write_data import readRawTurkDataFile
 from utils.read_write_data import loadEmbeddings
 from utils.read_write_data import writeToFile
+from utils.read_write_data import writeToFileWithPd
 from utils.linearReg import runLR
 from tqdm import tqdm
 import numpy as np
@@ -104,6 +105,12 @@ def predict_grounding(cwd,turkFile):
 
 def get_features_y(cwd, turkFile, useOneHot):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
+
+        #writeToFileWithPd(df_raw_turk_data, cwd, "trainingData.csv")
+        df_raw_turk_data.to_csv("trainingData", header=False)
+        sys.exit(1)
+
+        df_raw_turk_data.to_csv(path + inputFile, sep=',')
         ##print(df_raw_turk_data["adjective"][0])
 
         #create a hash table to store unique adj
@@ -155,7 +162,19 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         #eighty= number of rows
 
-        trainingData=allIndex[:eighty]
+        trainingData_indices=allIndex[:eighty]
+
+
+
+        trainingData=[]
+        print()
+
+        for eachline in allIndex:
+            results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+                       df_raw_turk_data["onestdev"][eachline],
+                       df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
+
+            trainingData.append(results )
 
 
 
@@ -164,7 +183,7 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         ##print(df_raw_turk_data["logrespdev"][0])
 
-        #trainingData=splitTurk[0]
+        #trainingData_indices=splitTurk[0]
         #rest=splitTurk[1]
 
         #split the rest into half as dev and test
@@ -174,9 +193,9 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         # writeToFile(dev,cwd, "dev.csv")
         # writeToFile(test,cwd, "test.csv")
-        # writeToFile(trainingData, "trainingData.csv")
-        #
-        # sys.exit(1)
+        writeToFileWithPd(trainingData,cwd, "trainingData.csv")
+
+        sys.exit(1)
 
         ##print("going to load glove:")
         #vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
@@ -193,7 +212,7 @@ def get_features_y(cwd, turkFile, useOneHot):
         #list of all adjectives in the training data, including repeats
         all_adj=[]
         # #for each of the adjective create a one hot vector
-        for rowCounter, eachTurkRow in tqdm(enumerate(trainingData),total=len(trainingData), desc="readV:"):
+        for rowCounter, eachTurkRow in tqdm(enumerate(trainingData_indices),total=len(trainingData_indices), desc="readV:"):
 
             ########create a one hot vector for adjective
             # give this index to the actual data frame

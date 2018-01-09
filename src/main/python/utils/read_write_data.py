@@ -41,9 +41,20 @@ def readRawTurkDataFile(cwd, inputFile):
 
     return data;
 
-def writeToFile(pd, cwd, inputFile):
+def writeToFileWithPd( trainingData,cwd, inputFile):
     path = cwd + "/data/"
-    data = pd.to_csv(path + inputFile, sep=',')
+    trainingData.to_csv(path + inputFile, sep=',')
+
+
+def writeToFile(data, cwd, inputFile):
+    with open(inputFile, 'w', newline='') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=' ',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+        for line in data:
+            spamwriter.writerow(line)
+
+
 
 
 
