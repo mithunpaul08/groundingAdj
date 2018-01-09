@@ -37,7 +37,7 @@ class AdjEmb(nn.Module):
         print(self.vec.shape[1])
         self.embeddings = nn.Embedding(self.vec.shape[0], self.vec.shape[1])
         self.embeddings.weight.data.copy_(self.vec)
-        self.embeddings.weight.requires_grad=False
+        self.embeddings.weight.requires_grad=True
         # the layer where you squish the 300 embeddings to a dense layer of 10
         # i.e it takes embeddings as input and returns a dense layer of size 10
         # note: this is also known as the weight vector to be used in an affine
