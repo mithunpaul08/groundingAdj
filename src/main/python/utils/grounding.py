@@ -206,11 +206,11 @@ def get_features_y(cwd, turkFile, useOneHot):
         #list of all adjectives in the training data, including repeats
         all_adj=[]
 
-        with open("trainingData.csv", 'w') as f:
-            df_raw_turk_data.iloc[1].to_csv(f,header=False)
-            df_raw_turk_data.iloc[2].to_csv(f, sep=',', header=False, index=False, index_label=False)
-
-        sys.exit(1)
+        # with open("trainingData.csv", 'w') as f:
+        #     df_raw_turk_data.iloc[1].to_csv(f,header=False)
+        #     df_raw_turk_data.iloc[2].to_csv(f, sep=',', header=False, index=False, index_label=False)
+        #
+        # sys.exit(1)
 
 
         # #for each of the adjective create a one hot vector
@@ -218,12 +218,12 @@ def get_features_y(cwd, turkFile, useOneHot):
             for rowCounter, eachTurkRow in tqdm(enumerate(trainingData_indices),total=len(trainingData_indices), desc="readV:"):
 
                 #write the training data to a file
-                slice = df_raw_turk_data.iloc[eachTurkRow]
-                #trainingData.append(slice)
-                slice.to_csv(f, sep=',',header=False,index=False,index_label=False)
-                slice = df_raw_turk_data.iloc[eachTurkRow+1]
-                slice.to_csv(f, sep=',', header=False, index=False, index_label=False)
-                sys.exit(1)
+                # slice = df_raw_turk_data.iloc[eachTurkRow]
+                # #trainingData.append(slice)
+                # slice.to_csv(f, sep=',',header=False,index=False,index_label=False)
+                # slice = df_raw_turk_data.iloc[eachTurkRow+1]
+                # slice.to_csv(f, sep=',', header=False, index=False, index_label=False)
+                #
 
                 # writeToFileWithPd(df_raw_turk_data, cwd, "trainingData.csv")
 
@@ -326,7 +326,7 @@ def get_features_y(cwd, turkFile, useOneHot):
                 y=combinedY
 
 
-        sys.exit(1)
+
 
         # #print("size of big features 1is:")
         # #print(len(features))
