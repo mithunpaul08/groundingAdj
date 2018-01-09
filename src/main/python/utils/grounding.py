@@ -157,11 +157,7 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         trainingData=allIndex[:eighty]
 
-        #leave one out cross validation.
 
-        #run this loop total of len(trainingData) times
-
-        #for index in tqdm(len(trainingData_loocv))
 
 
         #splitTurk=np.array_split(allIndex,2)
