@@ -15,7 +15,9 @@ import numpy as np
 
 torch.manual_seed(1)
 
-dense_size=20
+dense1_size=20
+dense2_size=10
+dense3_size=1
 noOfEpochs=30
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
@@ -39,9 +41,11 @@ class AdjEmb(nn.Module):
         # the layer where you squish the 300 embeddings to a dense layer of 10
         # i.e it takes embeddings as input and returns a dense layer of size 10
         # note: this is also known as the weight vector to be used in an affine
-        self.squish = nn.Linear(self.vec.size(1), dense_size)
+        self.linear1 = nn.Linear(self.vec.size(1), dense1_size)
         #self.tanned=nn.Tanh(self.squish)
-        self.fc = torch.nn.Linear(dense_size+turkCount+2, 1)
+        self.linear2 = torch.nn.Linear(dense1_size+turkCount+2, dense2_size+turkCount+2)
+        self.linear3 = torch.nn.Linear(dense2_size+turkCount+2, dense3_size+turkCount+2)
+        self.linear4 = torch.nn.Linear(dense3_size+turkCount+2, 1)
 
         print("done loading all gloves")
 
@@ -58,7 +62,6 @@ class AdjEmb(nn.Module):
 
 
 
-
         #print(self.vec.size())
         #print("adj:")
         #print(adj)
@@ -66,11 +69,16 @@ class AdjEmb(nn.Module):
         #embT =torch.from_numpy(emb)
         embV=Variable(emb,requires_grad=False)
 
-        #give that to the squishing layer
-        squished_layer=F.tanh(self.squish(embV))
-        #squished_layer = F.relu(self.squish(embV))
 
-        feature_squished = torch.cat((feats, squished_layer))  # .data))
+        out=F.tanh(self.linear1(embV))
+        out=F.tanh(self.linear2(out))
+        out=F.tanh(self.linear3(out))
+        out=F.tanh(self.linear4(out))
+
+
+
+
+        feature_squished = torch.cat((feats, out))
         return self.fc(feature_squished)
 
 
