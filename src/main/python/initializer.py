@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
 
                     #run with leae one out cross validation
-                    run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
+                    #run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
 
                     #run just with a classic train-dev-test partition
                     run_adj_emb(features,y,adj_lexicon,all_adj)
