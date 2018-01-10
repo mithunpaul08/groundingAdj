@@ -288,7 +288,7 @@ def get_features_y(cwd, turkFile, useOneHot):
                 adj=df_raw_turk_data["adjective"][eachTurkRow]
                 mean=df_raw_turk_data["mean"][eachTurkRow]
                 stddev=df_raw_turk_data["onestdev"][eachTurkRow]
-                logRespDev=df_raw_turk_data["respdev"][eachTurkRow]
+                logRespDev=df_raw_turk_data["logrespdev"][eachTurkRow]
                 ##print("index:"+str(eachTurkRow))
                 ##print("mean"+str(mean))
                 ##print("adjective:"+str(adj))

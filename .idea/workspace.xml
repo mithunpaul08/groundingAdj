@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbc88f83-8607-4f52-b4c3-b86a46b449ce" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/data/trainingData.csv" afterPath="$PROJECT_DIR$/src/main/python/data/trainingData.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/initializer.py" afterPath="$PROJECT_DIR$/src/main/python/initializer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/trainingData.csv" afterPath="$PROJECT_DIR$/src/main/python/trainingData.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/utils/grounding.py" afterPath="$PROJECT_DIR$/src/main/python/utils/grounding.py" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -43,10 +39,10 @@
       <file leaf-file-name="grounding.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/python/utils/grounding.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="690">
-              <caret line="210" column="21" lean-forward="false" selection-start-line="166" selection-start-column="10" selection-end-line="210" selection-end-column="21" />
+            <state relative-caret-position="540">
+              <caret line="308" column="11" lean-forward="false" selection-start-line="308" selection-start-column="10" selection-end-line="308" selection-end-column="11" />
               <folding>
-                <marker date="1515626252204" expanded="true" signature="8252:8579" ph="..." />
+                <marker date="1515626339711" expanded="true" signature="8252:8579" ph="..." />
               </folding>
             </state>
           </provider>
@@ -115,6 +111,7 @@
       <find>rms</find>
       <find>loss_fn</find>
       <find>seed</find>
+      <find>respdev</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -808,10 +805,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/python/utils/grounding.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="210" column="21" lean-forward="false" selection-start-line="166" selection-start-column="10" selection-end-line="210" selection-end-column="21" />
+        <state relative-caret-position="540">
+          <caret line="308" column="11" lean-forward="false" selection-start-line="308" selection-start-column="10" selection-end-line="308" selection-end-column="11" />
           <folding>
-            <marker date="1515626252204" expanded="true" signature="8252:8579" ph="..." />
+            <marker date="1515626339711" expanded="true" signature="8252:8579" ph="..." />
           </folding>
         </state>
       </provider>
