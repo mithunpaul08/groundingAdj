@@ -226,7 +226,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
             rms.step()
 
         print("zip")
-        print(list[zip(y_total,pred_y_total)])
+        print(list(zip(y_total,pred_y_total)))
         # print("y_total:")
         # print(y_total)
         # print("pred_y_total:")
