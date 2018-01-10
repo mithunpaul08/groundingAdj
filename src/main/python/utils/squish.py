@@ -225,6 +225,12 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
             # adam.step()
             rms.step()
 
+        print("zip")
+        print(list[zip(y_total,pred_y_total)])
+        # print("y_total:")
+        # print(y_total)
+        # print("pred_y_total:")
+        # print(pred_y_total)
         rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
         print("rsquared_value")
         print(rsquared_value)
