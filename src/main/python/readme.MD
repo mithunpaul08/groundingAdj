@@ -1,21 +1,29 @@
-#use Conda to install all the below packages
-python 3+
+conda create --name turkCompare python scipy pandas
 
+#use Conda to install all the below packages
+conda create --name turkCompare python scipy pandas
+source activate turkCompare
+pip install sklearn
+conda install pytorch-cpu torchvision -c pytorch
+pip install tqdm
+pip install torchtext
+pip install torchwordemb
 #to run
 cd src/main/python
-source activate condaName
 python initializer.py
 Press 2 for dense layer
-
 Takes around 1/10 mins per epochs. i.e 100 epochs =10 mins
 
 
 #conda environments to use
 in clara: mithunhw3
 in MBP laptop:myPytorch
+in chung: turkCompare
 
-# These are the packages you need to run this code:
+# FYI These are the complete list of packages you need to run this code:
 #
+python 3+
+
 ca-certificates           2017.08.26           h1d4fec5_0
 certifi                   2017.7.27.1      py36h8b7b77e_0
 cffi                      1.10.0           py36had8d393_1

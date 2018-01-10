@@ -159,17 +159,17 @@ def get_features_y(cwd, turkFile, useOneHot):
 
 
 
-        #
+        trainingData=[]
         # print()
         #
-        # for eachline in allIndex:
-        #     results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
-        #                df_raw_turk_data["onestdev"][eachline],
-        #                df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
-        #
-        #     trainingData.append(results )
+        for eachline in allIndex:
+            results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+                       df_raw_turk_data["onestdev"][eachline],
+                       df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
 
+            trainingData.append(results )
 
+        writeToFileWithPd(trainingData,cwd, "trainingData.csv")
 
 
         #splitTurk=np.array_split(allIndex,2)
@@ -218,14 +218,14 @@ def get_features_y(cwd, turkFile, useOneHot):
             for rowCounter, eachTurkRow in tqdm(enumerate(trainingData_indices),total=len(trainingData_indices), desc="readV:"):
 
                 #write the training data to a file
-                # slice = df_raw_turk_data.iloc[eachTurkRow]
-                # #trainingData.append(slice)
-                # slice.to_csv(f, sep=',',header=False,index=False,index_label=False)
-                # slice = df_raw_turk_data.iloc[eachTurkRow+1]
-                # slice.to_csv(f, sep=',', header=False, index=False, index_label=False)
-                #
+                slice = df_raw_turk_data.iloc[eachTurkRow]
+                #trainingData.append(slice)
+                slice.to_csv(f, sep=',',header=False,index=False,index_label=False)
+                slice = df_raw_turk_data.iloc[eachTurkRow+1]
+                slice.to_csv(f, sep=',', header=False, index=False, index_label=False)
 
-                # writeToFileWithPd(df_raw_turk_data, cwd, "trainingData.csv")
+
+                writeToFileWithPd(df_raw_turk_data, cwd, "trainingData.csv")
 
 
                 ########create a one hot vector for adjective
