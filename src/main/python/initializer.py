@@ -24,7 +24,8 @@ from utils.squish import run_adj_emb_loocv
 start_time = time.time()
 
 cwd=os.getcwd()
-turkFile="adjectiveData.csv"
+#turkFile="adjectiveData.csv"
+turkFile="trainingData.csv"
 turkInterceptFile="turk_with_intercept.txt"
 
 if __name__ == "__main__":

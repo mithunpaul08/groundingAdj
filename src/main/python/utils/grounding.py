@@ -112,7 +112,6 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         #create a total list of unique adj in this collection
         for a in df_raw_turk_data["adjective"]:
-
             if(a) not in uniq_adj:
                 #if its not there already add it as the latest element
                 uniq_adj[a]=counter
@@ -141,6 +140,9 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         #Split data in to train-dev-test
         noOfRows=df_raw_turk_data.shape[0]
+        #print("noOfRows")
+        #print(noOfRows)
+
 
         #create an numpy array of that range
         allIndex=np.arange(noOfRows)
@@ -151,51 +153,62 @@ def get_features_y(cwd, turkFile, useOneHot):
 
         #take 80% of the total data as training data- rest as testing
         eighty=math.ceil(noOfRows*80/100)
+        #twenty_index=math.ceil(noOfRows*80/100)
+        #print("eighty")
         #print(eighty)
 
         #eighty= number of rows
-
         trainingData_indices=allIndex[:eighty]
+        rest=allIndex[eighty:]
 
 
 
         trainingData=[]
-        # print()
+        # # write training data to a separate file. This should happen only once.
+        # for eachline in trainingData_indices:
+        #     results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+        #                df_raw_turk_data["onestdev"][eachline],
+        #                df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
         #
-        for eachline in allIndex:
-            results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
-                       df_raw_turk_data["onestdev"][eachline],
-                       df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
-
-            trainingData.append(results )
-
-        #writeToFileWithPd(trainingData,cwd, "trainingData.csv")
-        writeToFile(trainingData,cwd, "trainingData.csv")
-
-        #splitTurk=np.array_split(allIndex,2)
-
-        ##print(df_raw_turk_data["logrespdev"][0])
-
-        #trainingData_indices=splitTurk[0]
-        #rest=splitTurk[1]
-
-        #split the rest into half as dev and test
-        #dev_test=np.array_split(rest,2)
-        #dev=dev_test[0]
-        #test=dev_test[1]
-
-        # writeToFile(dev,cwd, "dev.csv")
-        # writeToFile(test,cwd, "test.csv")
-        #writeToFileWithPd(trainingData,cwd, "trainingData.csv")
-
-
-
-        ##print("going to load glove:")
-        #vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
-        ##print(vec.size())
-        #emb=vec[vocab["apple"]].numpy()
-        ##print(emb)
-
+        #     trainingData.append(results )
+        #
+        # writeToFile(trainingData,cwd, "trainingData.csv")
+        #
+        #
+        #
+        #
+        # #split the rest into half as dev and test
+        # dev_test_indices=np.array_split(rest,2)
+        # #print(len(rest))
+        #
+        #
+        # dev_indices=dev_test_indices[0]
+        # test_indices=dev_test_indices[1]
+        #
+        #
+        # # write dev data to a separate file. This should happen only once.
+        # dev_list=[]
+        # for eachline in dev_indices:
+        #     results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+        #                df_raw_turk_data["onestdev"][eachline],
+        #                df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
+        #
+        #     dev_list.append(results)
+        # writeToFile(dev_list,cwd, "dev.csv")
+        #
+        # # write test data to a separate file. This should happen only once.
+        # test_list=[]
+        # for eachline in test_indices:
+        #     results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+        #                df_raw_turk_data["onestdev"][eachline],
+        #                df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
+        #
+        #     test_list.append(results )
+        #
+        #
+        #
+        # writeToFile(test_list,cwd, "test.csv")
+        # sys.exit(1)
 
 
         y=np.array([],dtype="float32")
@@ -218,14 +231,14 @@ def get_features_y(cwd, turkFile, useOneHot):
             for rowCounter, eachTurkRow in tqdm(enumerate(trainingData_indices),total=len(trainingData_indices), desc="readV:"):
 
                 #write the training data to a file
-                slice = df_raw_turk_data.iloc[eachTurkRow]
-                #trainingData.append(slice)
-                slice.to_csv(f, sep=',',header=False,index=False,index_label=False)
-                slice = df_raw_turk_data.iloc[eachTurkRow+1]
-                slice.to_csv(f, sep=',', header=False, index=False, index_label=False)
-
-
-                writeToFileWithPd(df_raw_turk_data, cwd, "trainingData.csv")
+                # slice = df_raw_turk_data.iloc[eachTurkRow]
+                # #trainingData.append(slice)
+                # slice.to_csv(f, sep=',',header=False,index=False,index_label=False)
+                # slice = df_raw_turk_data.iloc[eachTurkRow+1]
+                # slice.to_csv(f, sep=',', header=False, index=False, index_label=False)
+                #
+                #
+                # writeToFileWithPd(df_raw_turk_data, cwd, "trainingData.csv")
 
 
                 ########create a one hot vector for adjective
