@@ -124,13 +124,13 @@ def convert_scalar_to_variable(features):
 
     x2 =torch.from_numpy(np.array([features]))
 
-    return Variable(x2,requires_grad=True)
+    return Variable(x2)
 
 def convert_to_variable(features):
 
     x2 =torch.from_numpy(features)
 
-    return Variable(x2,requires_grad=True)
+    return Variable(x2)
 
 #the actual trainign code. Basically create an object of the class above
 def run_adj_emb(features, allY, list_Adj, all_adj):
@@ -162,6 +162,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     #keep one out
 
     #train on the rest, test on this one, add it to the
+    print(w2v.vec[ w2v.words["large"] ] )
 
     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
         #for each word in the list of adjectives
@@ -223,6 +224,12 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
             # optimizer.step()
             # adam.step()
             rms.step()
+
+        rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+        print("rsquared_value")
+        print(rsquared_value)
+        print("loss:")
+        print(loss)
 
 
 
