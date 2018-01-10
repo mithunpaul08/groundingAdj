@@ -162,7 +162,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     #keep one out
 
     #train on the rest, test on this one, add it to the
-    print(w2v.vec[ w2v.words["large"] ] )
+    #print(w2v.vec[ w2v.words["large"] ] )
 
     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
         #for each word in the list of adjectives

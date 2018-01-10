@@ -51,8 +51,8 @@
       <file leaf-file-name="squish.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/python/utils/squish.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="233" column="0" lean-forward="true" selection-start-line="233" selection-start-column="0" selection-end-line="233" selection-end-column="0" />
+            <state relative-caret-position="270">
+              <caret line="164" column="23" lean-forward="false" selection-start-line="164" selection-start-column="20" selection-end-line="164" selection-end-column="23" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -86,6 +86,7 @@
     <findStrings>
       <find>requires_grad</find>
       <find>requires</find>
+      <find>w2v</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -760,8 +761,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/python/utils/squish.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="233" column="0" lean-forward="true" selection-start-line="233" selection-start-column="0" selection-end-line="233" selection-end-column="0" />
+        <state relative-caret-position="270">
+          <caret line="164" column="23" lean-forward="false" selection-start-line="164" selection-start-column="20" selection-end-line="164" selection-end-column="23" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
