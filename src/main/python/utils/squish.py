@@ -206,7 +206,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
             #
             # #this is the actual prediction of the intercept
             # pred_y=affine.data.cpu().numpy()
-            pred_y_total.append(pred_y.data.cpu().numpy())
+            pred_y_total.append(pred_y.data.cpu().numpy()[0])
 
 
 
