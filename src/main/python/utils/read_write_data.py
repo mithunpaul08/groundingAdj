@@ -47,12 +47,14 @@ def writeToFileWithPd( trainingData,cwd, inputFile):
 
 
 def writeToFile(data, cwd, inputFile):
-    with open(inputFile, 'w', newline='') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=' ',
+    with open(cwd+"/data/"+inputFile, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
+        writer.writerow(["turker", "adjective", "mean","onestdev","had_negative","logrespdev"])
+
         for line in data:
-            spamwriter.writerow(line)
+            writer.writerow(line)
 
 
 

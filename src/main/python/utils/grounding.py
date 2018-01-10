@@ -169,8 +169,8 @@ def get_features_y(cwd, turkFile, useOneHot):
 
             trainingData.append(results )
 
-        writeToFileWithPd(trainingData,cwd, "trainingData.csv")
-
+        #writeToFileWithPd(trainingData,cwd, "trainingData.csv")
+        writeToFile(trainingData,cwd, "trainingData.csv")
 
         #splitTurk=np.array_split(allIndex,2)
 
