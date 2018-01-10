@@ -18,7 +18,7 @@ torch.manual_seed(1)
 dense1_size=20
 dense2_size=10
 dense3_size=1
-noOfEpochs=30
+noOfEpochs=100
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount):
@@ -166,7 +166,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
         #for each word in the list of adjectives
-        model.zero_grad()
+
 
         pred_y_total=[]
         y_total=[]
@@ -176,6 +176,8 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
         np.random.shuffle(allIndex)
 
         for eachRow in tqdm(allIndex, total=len(features), desc="each_adj:"):
+
+            model.zero_grad()
 
             feature=features[eachRow]
             y = allY[eachRow]
@@ -194,7 +196,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
             #the complete linear regression code- only thing is features here will include the squished_emb
             # Reset gradients
 
-            batch_y = convert_scalar_to_variable(y)
+            true_variable_y = convert_scalar_to_variable(y)
             y_total.append(y)
 
             #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
@@ -211,7 +213,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
 
 
-            loss = loss_fn(pred_y, batch_y)
+            loss = loss_fn(pred_y, true_variable_y)
 
 
 
