@@ -274,7 +274,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
             all_adj.append(adj)
             print("adjective value in dev:")
             print(adj)
-            sys.exit(1)
+
 
 
             #get the index of the adjective

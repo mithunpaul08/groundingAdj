@@ -24,7 +24,7 @@ from utils.squish import run_adj_emb_loocv
 start_time = time.time()
 
 cwd=os.getcwd()
-#turkFile="adjectiveData.csv"
+dev="dev.csv"
 turkFile="trainingData.csv"
 turkInterceptFile="turk_with_intercept.txt"
 
@@ -51,7 +51,10 @@ if __name__ == "__main__":
 
                 if(myInput=="2"):
 
+                    #testing dev data
+                    features, y, adj_lexicon,all_adj= get_features_y(cwd, dev,False)
 
+                    sys.exit(1)
 
                     features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
                     adj_lexicon_flipped = dict()

@@ -17,6 +17,8 @@ def readAdjInterceptFile(cwd, inputFile):
     return data;
 
 
+
+
 def readWithSpace(cwd, inputFile):
 
     path = cwd+"/data/"
