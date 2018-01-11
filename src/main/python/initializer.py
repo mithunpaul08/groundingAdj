@@ -10,6 +10,7 @@ import itertools
 from utils.read_write_data import readAdjInterceptFile
 from utils.read_write_data import readRawTurkDataFile
 from utils.read_write_data import readWithSpace
+from utils.squish import calculateRSq
 import pickle as pk
 from scipy.stats import kendalltau, spearmanr
 from utils.linearReg import runLR
@@ -25,7 +26,7 @@ start_time = time.time()
 
 cwd=os.getcwd()
 dev="dev.csv"
-turkFile="trainingData.csv"
+training_data="trainingData.csv"
 turkInterceptFile="turk_with_intercept.txt"
 
 if __name__ == "__main__":
@@ -52,14 +53,7 @@ if __name__ == "__main__":
                 if(myInput=="2"):
 
                     #testing dev data
-                    features, y, adj_lexicon,all_adj= get_features_y(cwd, dev,False)
-                    print((features.shape))
-                    print(adj_lexicon)
-                    print(all_adj)
-                    print(len(all_adj))
-                    sys.exit(1)
-
-                    features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
+                    features, y, adj_lexicon,all_adj= get_features_y(cwd, training_data,False)
                     adj_lexicon_flipped = dict()
                     #total number of unique adjectives
                     num_adj = len(adj_lexicon)
@@ -73,7 +67,18 @@ if __name__ == "__main__":
                     #run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
 
                     #run just with a classic train-dev-test partition
-                    run_adj_emb(features,y,adj_lexicon,all_adj)
+                    trained_model=run_adj_emb(features,y,adj_lexicon,all_adj)
+
+                    #read dev data
+                    features, y, adj_lexicon,all_adj= get_features_y(cwd, dev,False)
+
+                    #calculate rsquared
+                    rsquared_value=r2_score(features)
+                    print("rsquared_value:")
+                    print(str(rsquared_value))
+
+
+
                     # adj_intercepts_learned = learned_weights[:num_adj]
                     # #pairing weights with adjectives.
                     # adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]

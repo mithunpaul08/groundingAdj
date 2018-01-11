@@ -260,114 +260,8 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     fileObject1 = open(file_Name1,'wb')
     pk.dump(learned_weights.cpu().numpy(), fileObject1)
 
+    return model
 
-    #make it predict on dev data
-    cwd=os.getcwd()
-    turkFile="dev.csv"
-    dev_data=readRawTurkDataFile(cwd, turkFile)
-
-    for rowCounter, eachTurkRow in tqdm(enumerate(dev_data),total=len(trainingData_indices), desc="readV:"):
-
-            ########create a one hot vector for adjective
-            # give this index to the actual data frame
-            adj=eachTurkRow["adjective"]
-            all_adj.append(adj)
-            print("adjective value in dev:")
-            print(adj)
-
-
-
-            #get the index of the adjective
-            adjIndex=uniq_adj[adj]
-            ##print("adjIndex:"+str(adjIndex))
-            ##print("uniq_adj_count:"+str(uniq_adj_count))
-
-            embV=[]
-            if(useOneHot):
-                #####create a one hot vector for all adjectives
-                # one_hot_adj=np.zeros(uniq_adj_count)
-                one_hot_adj = [0] * uniq_adj_count
-                # #print(one_hot_adj)
-                # #print("one hot shape:"+str((one_hot_adj.shape)))
-                one_hot_adj[adjIndex] = 1
-                # #print(one_hot_adj)
-                #todo : extend/append this new vector
-                embV=one_hot_adj
-
-            else:
-                #pick the corresponding embedding from glove
-                #emb = vec[vocab[adj]].numpy()
-                embV=embV
-                #embV=emb
-
-            ################to create a one hot vector for turker data also
-            #get the id number of of the turker
-            turkerId=df_raw_turk_data["turker"][eachTurkRow]
-            turkerIndex=uniq_turker[turkerId]
-            ##print("turkerIndex:"+str(turkerIndex))
-
-            #create a one hot vector for all turkers
-            one_hotT=[0]*(uniq_turker_count)
-            ##print(one_hotT)
-            ##print("one one_hotT shape:"+str((one_hotT.shape)))
-            one_hotT[turkerIndex]=1
-            ##print(one_hotT)
-
-
-            ################get the mean and variance for this row and attach to this one hot
-            #give this index to the actual data frame
-            adj=df_raw_turk_data["adjective"][eachTurkRow]
-            mean=df_raw_turk_data["mean"][eachTurkRow]
-            stddev=df_raw_turk_data["onestdev"][eachTurkRow]
-            logRespDev=df_raw_turk_data["logrespdev"][eachTurkRow]
-            ##print("index:"+str(eachTurkRow))
-            ##print("mean"+str(mean))
-            ##print("adjective:"+str(adj))
-
-            #############combine adj-1-hot to mean , variance and turker-one-hot
-
-            localFeatures=[]
-            ##print("one hot shape:"+str(len(one_hot_adj)))
-            ##print(" localFeatures shape:"+str(len(localFeatures)))
-            #localFeatures.extend(embV)
-
-            ##print(" mean :"+str(type(mean.item())))
-            ##print(" localFeatures shape:"+str(len(localFeatures)))
-            localFeatures.append(mean.item())
-            ##print(localFeatures)
-            ##print(" localFeatures shape:"+str(len(localFeatures)))
-            ##print(" stddev :"+str((stddev)))
-            localFeatures.append(stddev)
-            localFeatures.extend(one_hotT)
-            ##print(" localFeatures shape:"+str(len(localFeatures)))
-
-
-            ##print("size of adj_mean_stddev_turk is:")
-            ##print((adj_mean_stddev_turk.shape))
-
-
-
-            ############feed this combined vector as a feature vector to the linear regression
-            # #print(len(withstd))
-            ##print(logRespDev)
-
-            ##print("size of y is:")
-            ##print((y.shape))
-
-            ylabelLocal=np.array([logRespDev], dtype="float32")
-            #featuresLocal = np.array([adj_mean_stddev_turk])
-            #featuresLocal=featuresLocal.transpose()
-            ##print("size of featuresLocal is:")
-            ##print((featuresLocal.shape))
-            ##print("size of ylabelLocal is:")
-            ##print((ylabelLocal.shape))
-            features.append(localFeatures)
-
-            ##print("logrespdev")
-            combinedY=np.append(y,ylabelLocal)
-            #combinedFeatures=np.append(features,featuresLocal,axis=0)
-            #features=combinedFeatures
-            y=combinedY
 
 
     print("loss")
@@ -583,3 +477,16 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
 
+def calculateRSq(features):
+    for eachRow in tqdm(allIndex, total=len(features), desc="predict:"):
+            feature=features[eachRow]
+            y = allY[eachRow]
+            each_adj = all_adj[eachRow]
+            featureV= convert_to_variable(feature)
+            pred_y = model(each_adj, featureV)
+            y_total.append(y)
+            pred_y_total.append(pred_y.data.cpu().numpy()[0])
+
+
+    rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+    return rsquared_value
