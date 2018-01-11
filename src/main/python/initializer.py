@@ -54,6 +54,9 @@ if __name__ == "__main__":
                     #testing dev data
                     features, y, adj_lexicon,all_adj= get_features_y(cwd, dev,False)
                     print(len(features))
+                    print(adj_lexicon)
+                    print(all_adj)
+                    print(len(all_adj))
                     sys.exit(1)
 
                     features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
