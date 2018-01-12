@@ -477,16 +477,20 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
 
+
 def calculateRSq(allY, features,all_adj,trained_model):
     pred_y_total = []
     y_total = []
 
 
     print("allY value length (must be 331):")
-    print(len(allY))
+    print((allY.shape))
+    print("each_adj value length (must be 331):")
+    print(len(all_adj))
     print("features length (must be 331):")
-    print(len(features))
+    print((features.shape))
 
+    sys.exit(1)
     for index,feature in tqdm(enumerate(features), total=len(features), desc="predict:"):
 
             featureV= convert_to_variable(feature)

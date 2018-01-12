@@ -18,7 +18,8 @@ from utils.linearReg import runLR
 import time
 
 from utils.grounding import predict_grounding
-from utils.grounding import get_features_y
+from utils.grounding import get_features_dev
+from utils.grounding import get_features_training_data
 from utils.squish import run_adj_emb
 from utils.squish import run_adj_emb_loocv
 from sklearn.metrics import r2_score
@@ -53,13 +54,16 @@ if __name__ == "__main__":
 
                 if(myInput=="2"):
 
+                    #readtraining data
+                    uniq_turker={}
 
-                    features, y, adj_lexicon,all_adj= get_features_y(cwd, dev,False)
+                    features, y, adj_lexicon,all_adj,uniq_turker= get_features_training_data (cwd, training_data,False,uniq_turker)
 
 
 
-                    #testing dev data
-                    features, y, adj_lexicon,all_adj= get_features_y(cwd, training_data,False)
+
+
+
 
 
                     adj_lexicon_flipped = dict()
@@ -78,7 +82,10 @@ if __name__ == "__main__":
                     trained_model=run_adj_emb(features,y,adj_lexicon,all_adj)
 
                     #read dev data
-                    features, y, adj_lexicon,all_adj= get_features_y(cwd, dev,False)
+                    features, y, adj_lexicon,all_adj=   get_features_dev(cwd, dev,False,uniq_turker)
+                    print("done reading dev data:")
+                    rsquared_value=calculateRSq(y,features,all_adj,trained_model)
+
 
                     #calculate rsquared
                     rsquared_value=calculateRSq(y,features,all_adj,trained_model)
