@@ -41,7 +41,7 @@ class AdjEmb(nn.Module):
         self.vocab, self.vec = torchwordemb.load_glove_text(path+"glove_our_adj")
 
         emb=self.vec[self.vocab["intense"]]
-        print(emb)
+        #print(emb)
 
 
         self.noOfTurkers=turkCount
@@ -51,7 +51,7 @@ class AdjEmb(nn.Module):
         # df_raw_turk_data=readRawTurkDataFile(cwd,"glove_our_adj")
         # print(df_raw_turk_data)
         # print(df_raw_turk_data["mithun"])
-        sys.exit(1)
+        #sys.exit(1)
 
         # get teh glove vectors
         print("just loaded glove for per adj. going to load glove for entire embeddings.")
@@ -164,7 +164,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
-    print("got inside run_adj_emb. going to Load Glove:")
+    print("got inside run_adj_emb. going to Load embeddings:")
 
     #there are 193 unique turkers
     model=AdjEmb(193)
