@@ -525,7 +525,7 @@ def cutGlove(adj_lexicon):
         print("size of adj_lexicon")
         print(len(adj_lexicon))
         for index, adj in enumerate(adj_lexicon):
-            emb=vec[vocab["apple"]]
+            emb=vec[vocab[adj]]
             adj_glove_emb[adj]=emb
 
 
