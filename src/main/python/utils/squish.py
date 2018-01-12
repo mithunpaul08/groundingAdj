@@ -490,7 +490,8 @@ def calculateRSq(allY, features,all_adj,trained_model):
     print("features length (must be 331):")
     print((features.shape))
 
-    sys.exit(1)
+
+    
     for index,feature in tqdm(enumerate(features), total=len(features), desc="predict:"):
 
             featureV= convert_to_variable(feature)
