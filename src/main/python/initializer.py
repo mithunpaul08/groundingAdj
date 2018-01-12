@@ -81,6 +81,8 @@ if __name__ == "__main__":
                     #run just with a classic train-dev-test partition
                     trained_model=run_adj_emb(features,y,adj_lexicon,all_adj)
 
+                    print("done training . Going to  read dev data")
+
                     #read dev data
                     features, y, adj_lexicon,all_adj=   get_features_dev(cwd, dev,False,uniq_turker)
                     print("done reading dev data:")

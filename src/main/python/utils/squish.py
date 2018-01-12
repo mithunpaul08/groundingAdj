@@ -241,7 +241,7 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
 
 
-    print("done with all training data")
+    print("done training the model. Going to  write it to disk")
 
 
     #the model is trained by now-store it to disk
@@ -491,7 +491,7 @@ def calculateRSq(allY, features,all_adj,trained_model):
     print((features.shape))
 
 
-    
+
     for index,feature in tqdm(enumerate(features), total=len(features), desc="predict:"):
 
             featureV= convert_to_variable(feature)
