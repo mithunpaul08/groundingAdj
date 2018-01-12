@@ -529,7 +529,7 @@ def cutGlove(adj_lexicon):
             adj_glove_emb[adj]=emb
 
 
-        print("shape of embeddings for all adj")
+        print("length of embeddings for all adj")
 
-        print(emb.shape)
+        print(len(emb))
         sys.exit(1)
