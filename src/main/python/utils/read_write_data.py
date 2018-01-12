@@ -70,7 +70,10 @@ def writeCsvToFile(data, cwd, inputFile):
 def writeDictToFile(data, cwd, inputFile):
     with open(cwd+"/data/"+inputFile, 'w', newline='') as dictfile:
         for k,v in data.items():
-            dictfile.write(str(k),str(v))
+            dictfile.write(str(k)+" ")
+            for eachValue in v:
+                dictfile.write(str(eachValue)+" ")
+            dictfile.write(str("\n"))
 
     dictfile.close()
 

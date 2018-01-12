@@ -62,18 +62,13 @@ if __name__ == "__main__":
                     #readtraining data
                     uniq_turker={}
 
-                    uniq_turker["mithun"]=[1.0,2.0]
-                    uniq_turker["deepa"]=[2.9,0.9]
-                    writeDictToFile(uniq_turker)
-                    sys.exit(1)
-
 
                     features, y, adj_lexicon,all_adj,uniq_turker= get_features_training_data (cwd, training_data,False,uniq_turker)
                     cut_glove=cutGlove(adj_lexicon);
 
-                    writeCsvToFile(cut_glove,cwd,"glove_our_adj")
+                    writeDictToFile(cut_glove,cwd,"glove_our_adj")
 
-
+                    sys.exit(1)
 
 
 
