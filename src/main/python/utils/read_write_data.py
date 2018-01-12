@@ -48,7 +48,7 @@ def writeToFileWithPd( trainingData,cwd, inputFile):
     trainingData.to_csv(path + inputFile, sep=',')
 
 
-def writeToFile(data, cwd, inputFile):
+def writeToFileWithHeader(data, cwd, inputFile):
     with open(cwd+"/data/"+inputFile, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -58,6 +58,12 @@ def writeToFile(data, cwd, inputFile):
         for line in data:
             writer.writerow(line)
 
+def writeCsvToFile(data, cwd, inputFile):
+    with open(cwd+"/data/"+inputFile, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',',
+                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for line in data:
+            writer.writerow(line)
 
 
 

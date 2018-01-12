@@ -1,6 +1,6 @@
 from utils.read_write_data import readRawTurkDataFile
 from utils.read_write_data import loadEmbeddings
-from utils.read_write_data import writeToFile
+from utils.read_write_data import writeCsvToFile
 from utils.read_write_data import writeToFileWithPd
 from utils.linearReg import runLR
 from tqdm import tqdm

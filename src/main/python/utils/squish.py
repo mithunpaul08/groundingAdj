@@ -522,14 +522,14 @@ def cutGlove(adj_lexicon):
         #for each unique adjective in teh training data, get its embedding and add it to another vector file
 
         adj_glove_emb={}
-        print("size of adj_lexicon")
-        print(len(adj_lexicon))
+        # print("size of adj_lexicon")
+        # print(len(adj_lexicon))
         for index, adj in enumerate(adj_lexicon):
             emb=vec[vocab[adj]]
             adj_glove_emb[adj]=emb
 
 
-        print("length of embeddings for all adj")
-
-        print(len(adj_glove_emb))
-        sys.exit(1)
+        # print("length of embeddings for all adj")
+        #
+        # print(len(adj_glove_emb))
+        return adj_glove_emb
