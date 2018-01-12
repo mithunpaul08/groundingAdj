@@ -526,10 +526,8 @@ def cutGlove(adj_lexicon):
             emb=vec[vocab["apple"]]
             adj_glove_emb[adj]=emb
 
-        print("embeddings for apple")
-        print(vec[vocab["apple"] ] )
+        
+        print("shape of embeddings for all adj")
 
-        print("embeddings for all adj")
-        print(emb)
-        print(len(emb))
+        print((emb.shape))
         sys.exit(1)
