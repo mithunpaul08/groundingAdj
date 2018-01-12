@@ -531,5 +531,5 @@ def cutGlove(adj_lexicon):
 
         print("length of embeddings for all adj")
 
-        print(len(emb))
+        print(len(adj_glove_emb))
         sys.exit(1)
