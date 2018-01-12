@@ -21,6 +21,7 @@ from utils.grounding import predict_grounding
 from utils.grounding import get_features_y
 from utils.squish import run_adj_emb
 from utils.squish import run_adj_emb_loocv
+from sklearn.metrics import r2_score
 
 start_time = time.time()
 
@@ -52,8 +53,15 @@ if __name__ == "__main__":
 
                 if(myInput=="2"):
 
+
+                    features, y, adj_lexicon,all_adj= get_features_y(cwd, dev,False)
+
+
+
                     #testing dev data
                     features, y, adj_lexicon,all_adj= get_features_y(cwd, training_data,False)
+
+
                     adj_lexicon_flipped = dict()
                     #total number of unique adjectives
                     num_adj = len(adj_lexicon)
@@ -73,7 +81,7 @@ if __name__ == "__main__":
                     features, y, adj_lexicon,all_adj= get_features_y(cwd, dev,False)
 
                     #calculate rsquared
-                    rsquared_value=r2_score(features)
+                    rsquared_value=calculateRSq(y,features,all_adj,trained_model)
                     print("rsquared_value:")
                     print(str(rsquared_value))
 
@@ -89,7 +97,7 @@ if __name__ == "__main__":
                     # print(sorted_adjs[:20])
                     # print(sorted_adjs[-20:])
                     elapsed_time = time.time() - start_time
-                    print("time taken:" + str(elapsed_time))
+                    print("time taken:" + str(elapsed_time/60)+"minutes")
 
                 else:
                     if(myInput=="3"):

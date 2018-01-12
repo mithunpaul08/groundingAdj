@@ -264,26 +264,26 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
 
 
 
-    print("loss")
-
-    #print(loss)
+    # print("loss")
+    #
+    # #print(loss)
+    # #
+    # #
+    # # #todo: return the entire new 98x10 hashtable to regression code
+    # # print(adj_10_emb)
+    # # sys.exit(1)
+    # #
+    # # print('Loss: after all epochs'+str((loss.data)))
+    # #
+    # #print("allY value:")
+    # #print(len(y_total))
+    # #print("predicted allY value")
+    # #print(len(pred_y_total))
+    # rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
     #
     #
-    # #todo: return the entire new 98x10 hashtable to regression code
-    # print(adj_10_emb)
-    # sys.exit(1)
-    #
-    # print('Loss: after all epochs'+str((loss.data)))
-    #
-    #print("allY value:")
-    #print(len(y_total))
-    #print("predicted allY value")
-    #print(len(pred_y_total))
-    rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
-
-
-    print("rsquared_value:")
-    print(str(rsquared_value))
+    # print("rsquared_value:")
+    # print(str(rsquared_value))
     #learned_weights = model.affine.weight.data
     #return(learned_weights.cpu().numpy())
 
@@ -477,16 +477,30 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
 
-def calculateRSq(features):
-    for eachRow in tqdm(allIndex, total=len(features), desc="predict:"):
-            feature=features[eachRow]
-            y = allY[eachRow]
-            each_adj = all_adj[eachRow]
+def calculateRSq(allY, features,all_adj,trained_model):
+    pred_y_total = []
+    y_total = []
+
+
+    print("allY value length (must be 331):")
+    print(len(allY))
+    print("features length (must be 331):")
+    print(len(features))
+
+    for index,feature in tqdm(enumerate(features), total=len(features), desc="predict:"):
+
             featureV= convert_to_variable(feature)
-            pred_y = model(each_adj, featureV)
+            y = allY[index]
+            each_adj = all_adj[index]
+            pred_y = trained_model(each_adj, featureV)
             y_total.append(y)
             pred_y_total.append(pred_y.data.cpu().numpy()[0])
 
+
+    print("allY value length (must be 331):")
+    print(len(y_total))
+    print("predicted allY value length (must be 331):")
+    print(len(pred_y_total))
 
     rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
     return rsquared_value
