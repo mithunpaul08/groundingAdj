@@ -62,10 +62,17 @@ def writeCsvToFile(data, cwd, inputFile):
     with open(cwd+"/data/"+inputFile, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        for line in data:
-            writer.writerow(line)
+        for k,v in data.items():
+            writer.writerow(str(k),str(v))
 
+    csvfile.close()
 
+def writeDictToFile(data, cwd, inputFile):
+    with open(cwd+"/data/"+inputFile, 'w', newline='') as dictfile:
+        for k,v in data.items():
+            dictfile.write(str(k),str(v))
+
+    dictfile.close()
 
 
 #use pytorch to read demarneffe matrix.

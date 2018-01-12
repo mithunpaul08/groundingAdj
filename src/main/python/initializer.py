@@ -24,6 +24,8 @@ from utils.squish import run_adj_emb
 from utils.squish import run_adj_emb_loocv
 from utils.squish import cutGlove
 from utils.read_write_data import writeCsvToFile
+
+from utils.read_write_data import writeDictToFile
 from sklearn.metrics import r2_score
 
 start_time = time.time()
@@ -59,6 +61,12 @@ if __name__ == "__main__":
 
                     #readtraining data
                     uniq_turker={}
+
+                    uniq_turker["mithun"]=[1.0,2.0]
+                    uniq_turker["deepa"]=[2.9,0.9]
+                    writeDictToFile(uniq_turker)
+                    sys.exit(1)
+
 
                     features, y, adj_lexicon,all_adj,uniq_turker= get_features_training_data (cwd, training_data,False,uniq_turker)
                     cut_glove=cutGlove(adj_lexicon);
