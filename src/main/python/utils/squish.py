@@ -40,7 +40,7 @@ class AdjEmb(nn.Module):
         path = cwd+"/data/"
         self.vocab, self.vec = torchwordemb.load_glove_text(path+"glove_our_adj")
 
-        emb=self.vec[self.vocab["large"]]
+        emb=self.vec[self.vocab["intense"]]
         print(emb)
 
 
