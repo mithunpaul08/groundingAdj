@@ -524,7 +524,7 @@ def cutGlove(adj_lexicon):
         adj_glove_emb={}
         for adj in adj_lexicon:
             emb=vec[vocab["apple"]]
-            adj_glove_emb{adj}=emb
+            adj_glove_emb[adj]=emb
 
         print("embeddings for apple")
         print(vec[vocab["apple"] ] )
