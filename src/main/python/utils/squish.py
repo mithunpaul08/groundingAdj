@@ -132,6 +132,8 @@ def convert_to_variable(features):
 
     return Variable(x2)
 
+
+
 #the actual trainign code. Basically create an object of the class above
 def run_adj_emb(features, allY, list_Adj, all_adj):
     #take the list of adjectives and give it all an index
@@ -301,7 +303,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
-    print("got inside run_adj_emb. going to Load Glove:")
+    print("got inside run_adj_emb. going to call model:")
 
     model=AdjEmb(193)
 
@@ -509,3 +511,16 @@ def calculateRSq(allY, features,all_adj,trained_model):
 
     rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
     return rsquared_value
+
+
+'''splice the glove embeddings to get the embeddings for only the adjectives you need.'''
+def cutGlove(adj_lexicon):
+        # load the glove embeddings for this adjective
+        self.vocab, self.vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
+
+
+        #for each unique adjective in teh training data, get its embedding and add it to another vector file
+        print("embeddings for apple")
+        print(self.vec[self.vocab["apple"] ] )
+
+        sys.exit(1)
