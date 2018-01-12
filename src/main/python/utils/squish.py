@@ -519,9 +519,17 @@ def cutGlove(adj_lexicon):
         # load the glove embeddings for this adjective
         vocab, vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
 
-
         #for each unique adjective in teh training data, get its embedding and add it to another vector file
+
+        adj_glove_emb={}
+        for adj in adj_lexicon:
+            emb=vec[vocab["apple"]]
+            adj_glove_emb{adj}=emb
+
         print("embeddings for apple")
         print(vec[vocab["apple"] ] )
 
+        print("embeddings for all adj")
+        print(emb)
+        print(len(emb))
         sys.exit(1)
