@@ -54,12 +54,13 @@ if __name__ == "__main__":
                 myInput=input("what is your choice:")
 
                 if(myInput=="2"):
-                    cutGlove()
+
 
                     #readtraining data
                     uniq_turker={}
 
                     features, y, adj_lexicon,all_adj,uniq_turker= get_features_training_data (cwd, training_data,False,uniq_turker)
+                    cutGlove(adj_lexicon)
 
 
 
