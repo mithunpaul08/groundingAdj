@@ -64,12 +64,10 @@ if __name__ == "__main__":
 
 
                     features, y, adj_lexicon,all_adj,uniq_turker= get_features_training_data (cwd, training_data,False,uniq_turker)
-                    cut_glove=cutGlove(adj_lexicon);
 
-                    writeDictToFile(cut_glove,cwd,"glove_our_adj")
+                    #cut_glove=cutGlove(adj_lexicon);
 
-                    sys.exit(1)
-
+                    #writeDictToFile(cut_glove,cwd,"glove_our_adj")
 
 
 

@@ -24,9 +24,18 @@ class AdjEmb(nn.Module):
     def __init__(self,turkCount):
         super(AdjEmb,self).__init__()
 
+
+        # get teh glove vectors
+        print("going to load glove for per adj.")
+
         # get the glove embeddings for this adjective
-        self.vocab, self.vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
-        self.noOfTurkers=turkCount
+        # self.vocab, self.vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
+        # self.noOfTurkers=turkCount
+
+        #load a subset of glove which contains embeddings for the adjectives we have
+        df_raw_turk_data=readRawTurkDataFile(glove_our_adj)
+        print(df_raw_turk_data)
+        sys.exit(1)
 
         # get teh glove vectors
         print("just loaded glove for per adj. going to load glove for entire embeddings.")
