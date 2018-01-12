@@ -7,14 +7,7 @@ import csv;
 import collections
 import numpy as np
 import itertools
-from utils.read_write_data import readAdjInterceptFile
-from utils.read_write_data import readRawTurkDataFile
-from utils.read_write_data import readWithSpace
-from utils.squish import calculateRSq
 import pickle as pk
-from scipy.stats import kendalltau, spearmanr
-from utils.linearReg import runLR
-
 import time
 
 from utils.grounding import predict_grounding
@@ -24,9 +17,15 @@ from utils.squish import run_adj_emb
 from utils.squish import run_adj_emb_loocv
 from utils.squish import cutGlove
 from utils.read_write_data import writeCsvToFile
-
 from utils.read_write_data import writeDictToFile
 from sklearn.metrics import r2_score
+from utils.read_write_data import readAdjInterceptFile
+from utils.read_write_data import readRawTurkDataFile
+from utils.read_write_data import readWithSpace
+from utils.squish import calculateRSq
+from scipy.stats import kendalltau, spearmanr
+from utils.linearReg import runLR
+
 
 start_time = time.time()
 

@@ -1,5 +1,4 @@
 import pickle as pk
-from sklearn.metrics import r2_score
 import sys
 import torch
 import torch.nn as nn
@@ -8,10 +7,14 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torchtext.vocab as vocab
 import torchwordemb
+import numpy as np
+import os
+
 from utils.linearReg import convert_variable
+from utils.read_write_data import readRawTurkDataFile
+from sklearn.metrics import r2_score
 from torch.autograd import Variable
 from tqdm import tqdm
-import numpy as np
 
 torch.manual_seed(1)
 
@@ -29,12 +32,25 @@ class AdjEmb(nn.Module):
         print("going to load glove for per adj.")
 
         # get the glove embeddings for this adjective
-        # self.vocab, self.vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
-        # self.noOfTurkers=turkCount
+        #self.vocab, self.vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
 
         #load a subset of glove which contains embeddings for the adjectives we have
-        df_raw_turk_data=readRawTurkDataFile(glove_our_adj)
-        print(df_raw_turk_data)
+
+        cwd=os.getcwd()
+        path = cwd+"/data/"
+        self.vocab, self.vec = torchwordemb.load_glove_text(path+"glove_our_adj")
+
+        emb=self.vec[self.vocab["large"]]
+        print(emb)
+
+
+        self.noOfTurkers=turkCount
+
+
+
+        # df_raw_turk_data=readRawTurkDataFile(cwd,"glove_our_adj")
+        # print(df_raw_turk_data)
+        # print(df_raw_turk_data["mithun"])
         sys.exit(1)
 
         # get teh glove vectors
