@@ -250,15 +250,15 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     fileObject5 = open(file_Name5,'wb')
     pk.dump(model, fileObject5)
 
-    learned_weights = fc.weight.data
-    #return(learned_weights.cpu().numpy())
-
-
-   #save the weights to disk
-    file_Name1 = "learned_weights.pkl"
-    # open the file for writing
-    fileObject1 = open(file_Name1,'wb')
-    pk.dump(learned_weights.cpu().numpy(), fileObject1)
+   #  learned_weights = fc.weight.data
+   #  #return(learned_weights.cpu().numpy())
+   #
+   #
+   # #save the weights to disk
+   #  file_Name1 = "learned_weights.pkl"
+   #  # open the file for writing
+   #  fileObject1 = open(file_Name1,'wb')
+   #  pk.dump(learned_weights.cpu().numpy(), fileObject1)
 
     return model
 
