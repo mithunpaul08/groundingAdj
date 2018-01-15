@@ -23,6 +23,8 @@ dense1_size=20
 dense2_size=10
 dense3_size=1
 noOfEpochs=100
+
+rsq_file="rsq_file.txt"
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount):
@@ -348,92 +350,92 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
 
     allIndex = np.arange(len(features))
 
+    cwd = os.getcwd()
 
-    #keep one out
+    #empty out the existing file
+    with open(cwd + "/outputs/" + rsq_file, "w+")as rsq_values:
+        rsq_values.write("")
+    rsq_values.close()
 
-    #train on the rest, test on this one, add it to the
-    #print(w2v.vec[ w2v.words["large"] ] )
+    #append the rest of the values
+    with open(cwd+"/outputs/" +rsq_file,"a")as rsq_values:
+        for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+            pred_y_total=[]
+            y_total=[]
+            adj_10_emb={}
 
-    for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
-        #for each word in the list of adjectives
+            #shuffle for each epoch
+            np.random.shuffle(allIndex)
 
+            for eachRow in tqdm(allIndex, total=len(features), desc="each_adj:"):
 
-        pred_y_total=[]
-        y_total=[]
-        adj_10_emb={}
+                model.zero_grad()
 
-        #shuffle for each epoch
-        np.random.shuffle(allIndex)
+                feature=features[eachRow]
+                y = allY[eachRow]
+                each_adj = all_adj[eachRow]
 
-        for eachRow in tqdm(allIndex, total=len(features), desc="each_adj:"):
-
-            model.zero_grad()
-
-            feature=features[eachRow]
-            y = allY[eachRow]
-            each_adj = all_adj[eachRow]
-
-            featureV= convert_to_variable(feature)
-            pred_y = model(each_adj, featureV)
-
-
-            adj_10_emb[each_adj]=pred_y
-
-            #the complete linear regression code- only thing is features here will include the squished_emb
-            # Reset gradients
-
-            true_variable_y = convert_scalar_to_variable(y)
-            y_total.append(y)
-
-            #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-            #print("batch_x")
-            #print(batch_x)
-
-            #multiply weight with input vector
-            # affine=fc(batch_x)
-            #
-            # #this is the actual prediction of the intercept
-            # pred_y=affine.data.cpu().numpy()
-            pred_y_total.append(pred_y.data.cpu().numpy()[0])
+                featureV= convert_to_variable(feature)
+                pred_y = model(each_adj, featureV)
 
 
+                adj_10_emb[each_adj]=pred_y
 
+                #the complete linear regression code- only thing is features here will include the squished_emb
+                # Reset gradients
 
-            loss = loss_fn(pred_y, true_variable_y)
+                true_variable_y = convert_scalar_to_variable(y)
+                y_total.append(y)
+
+                #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+                #print("batch_x")
+                #print(batch_x)
+
+                #multiply weight with input vector
+                # affine=fc(batch_x)
+                #
+                # #this is the actual prediction of the intercept
+                # pred_y=affine.data.cpu().numpy()
+                pred_y_total.append(pred_y.data.cpu().numpy()[0])
 
 
 
 
-            # Backward pass
-            loss.backward()
+                loss = loss_fn(pred_y, true_variable_y)
 
 
 
-            # optimizer.step()
-            # adam.step()
-            rms.step()
 
-        # print("zip")
-        # print(list(zip(y_total,pred_y_total)))
-        # # print("y_total:")
-        # # print(y_total)
-        # # print("pred_y_total:")
-        # # print(pred_y_total)
-        rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
-        print("rsquared_value_training")
-        print(rsquared_value)
-        # print("loss:")
-        # print(loss)
-
-
-        #test on dev and print the rsquared value after each epoch
-        cwd = os.getcwd()
+                # Backward pass
+                loss.backward()
 
 
 
-        tuneOnDev(model,dev,cwd, uniq_turker)
+                # optimizer.step()
+                # adam.step()
+                rms.step()
 
-        sys.exit(1)
+            # print("zip")
+            # print(list(zip(y_total,pred_y_total)))
+            # # print("y_total:")
+            # # print(y_total)
+            # # print("pred_y_total:")
+            # # print(pred_y_total)
+            rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+            print("rsquared_value_training")
+            print(rsquared_value)
+            rsq_values.write(str(rsquared_value))
+            # print("loss:")
+            # print(loss)
+
+
+
+
+
+
+            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values)
+
+            sys.exit(1)
 
 
 
@@ -721,7 +723,7 @@ def cutGlove(adj_lexicon):
         return adj_glove_emb
 
 
-def tuneOnDev(trained_model,dev,cwd, uniq_turker):
+def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values):
     # test on dev data
     features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker)
     #print("done reading dev data:")
@@ -730,3 +732,4 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker):
     rsquared_value = calculateRSq(y, features, all_adj, trained_model)
     print("rsquared_value_dev:")
     print(str(rsquared_value))
+    rsq_values.write(str(rsquared_value))
