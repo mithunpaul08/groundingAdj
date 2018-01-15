@@ -13,8 +13,10 @@ import time
 from utils.grounding import predict_grounding
 from utils.grounding import get_features_dev
 from utils.grounding import get_features_training_data
-from utils.squish import run_adj_emb
+from utils.squish import do_training
 from utils.squish import run_adj_emb_loocv
+from utils.squish import tuneOnDev
+from utils.squish import train_dev_print_rsq
 from utils.squish import cutGlove
 from utils.read_write_data import writeCsvToFile
 from utils.read_write_data import writeDictToFile
@@ -58,17 +60,36 @@ if __name__ == "__main__":
                 if(myInput=="2"):
 
 
-                    #readtraining data
-                    uniq_turker={}
-
-
-                    features, y, adj_lexicon,all_adj,uniq_turker= get_features_training_data (cwd, training_data,False,uniq_turker)
-
 
                     #get the embeddings for only the adjectives we need and write it to a file
                     # cut_glove=cutGlove(adj_lexicon);
                     # writeDictToFile(cut_glove,cwd,"glove_our_adj")
                     # sys.exit(1)
+
+
+
+
+                    #run1: run with leave one out cross validation
+                    #run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
+
+                    #run 2 : do training and dev tuning separately.
+                    # readtraining data
+                    # uniq_turker = {}
+                    # features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_data,
+                    #                                                                             False, uniq_turker)
+                    # trained_model=do_training(features, y, adj_lexicon, all_adj)
+                    # # test on dev data
+                    # tuneOnDev(cwd, dev, False, uniq_turker)
+
+
+
+                    # run 3: run both dev and training together and print rsq after each epoch
+                    # mutual exclusive with run 2 above
+                    uniq_turker = {}
+                    features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_data,
+                                                                                               False, uniq_turker)
+                    trained_model = train_dev_print_rsq(features, y, adj_lexicon, all_adj)
+                    print("done training . Going to  read dev data")
 
 
 
@@ -82,24 +103,11 @@ if __name__ == "__main__":
                         adj_lexicon_flipped[idx] = a
 
 
-                    #run with leae one out cross validation
-                    #run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
-
-                    #run just with a classic train-dev-test partition
-                    trained_model=run_adj_emb(features,y,adj_lexicon,all_adj)
-
-                    print("done training . Going to  read dev data")
-
-                    #read dev data
-                    features, y, adj_lexicon,all_adj=   get_features_dev(cwd, dev,False,uniq_turker)
-                    print("done reading dev data:")
-                    rsquared_value=calculateRSq(y,features,all_adj,trained_model)
+                    # features, y, adj_lexicon,all_adj=  get_features_dev(cwd, dev,False,uniq_turker)
+                    # print("done reading dev data:")
 
 
-                    #calculate rsquared
-                    rsquared_value=calculateRSq(y,features,all_adj,trained_model)
-                    print("rsquared_value:")
-                    print(str(rsquared_value))
+
 
 
 

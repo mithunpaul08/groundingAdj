@@ -16,6 +16,7 @@ from sklearn.metrics import r2_score
 from torch.autograd import Variable
 from tqdm import tqdm
 
+from utils.grounding import get_features_dev
 torch.manual_seed(1)
 
 dense1_size=20
@@ -160,11 +161,11 @@ def convert_to_variable(features):
 
 
 #the actual trainign code. Basically create an object of the class above
-def run_adj_emb(features, allY, list_Adj, all_adj):
+def do_training(features, allY, list_Adj, all_adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
-    print("got inside run_adj_emb. going to Load embeddings:")
+    print("got inside do_training. going to Load embeddings:")
 
     #there are 193 unique turkers
     model=AdjEmb(193)
@@ -321,6 +322,172 @@ def run_adj_emb(features, allY, list_Adj, all_adj):
     # print(fc.weight.data.view(-1))
 
 
+#the actual trainign code. Basically create an object of the class above
+def  train_dev_print_rsq(features, allY, list_Adj, all_adj):
+    #take the list of adjectives and give it all an index
+    adj_index=convert_adj_index(list_Adj)
+
+    print("got inside do_training. going to Load embeddings:")
+
+    #there are 193 unique turkers
+    model=AdjEmb(193)
+
+    #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+
+    #run through each epoch, feed forward, calculate loss, back propagate
+
+    #no point having epoch if you are not back propagating
+    #for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
+
+    #things needed for the linear regression phase
+    featureShape=features.shape
+
+    params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
+    rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    loss_fn = nn.MSELoss(size_average=True)
+
+    allIndex = np.arange(len(features))
+
+
+    #keep one out
+
+    #train on the rest, test on this one, add it to the
+    #print(w2v.vec[ w2v.words["large"] ] )
+
+    for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+        #for each word in the list of adjectives
+
+
+        pred_y_total=[]
+        y_total=[]
+        adj_10_emb={}
+
+        #shuffle for each epoch
+        np.random.shuffle(allIndex)
+
+        for eachRow in tqdm(allIndex, total=len(features), desc="each_adj:"):
+
+            model.zero_grad()
+
+            feature=features[eachRow]
+            y = allY[eachRow]
+            each_adj = all_adj[eachRow]
+
+            featureV= convert_to_variable(feature)
+            pred_y = model(each_adj, featureV)
+
+
+
+
+
+            adj_10_emb[each_adj]=pred_y
+
+
+            #the complete linear regression code- only thing is features here will include the squished_emb
+            # Reset gradients
+
+            true_variable_y = convert_scalar_to_variable(y)
+            y_total.append(y)
+
+            #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            #print("batch_x")
+            #print(batch_x)
+
+            #multiply weight with input vector
+            # affine=fc(batch_x)
+            #
+            # #this is the actual prediction of the intercept
+            # pred_y=affine.data.cpu().numpy()
+            pred_y_total.append(pred_y.data.cpu().numpy()[0])
+
+
+
+
+            loss = loss_fn(pred_y, true_variable_y)
+
+
+
+
+            # Backward pass
+            loss.backward()
+
+
+
+            # optimizer.step()
+            # adam.step()
+            rms.step()
+
+        # print("zip")
+        # print(list(zip(y_total,pred_y_total)))
+        # # print("y_total:")
+        # # print(y_total)
+        # # print("pred_y_total:")
+        # # print(pred_y_total)
+        rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+        print("rsquared_value_training")
+        print(rsquared_value)
+        # print("loss:")
+        # print(loss)
+
+
+        tuneOnDev(cwd, dev, False, uniq_turker)
+
+
+
+    print("done training the model. Going to  write it to disk")
+
+
+    #the model is trained by now-store it to disk
+    file_Name5 = "squish.pkl"
+    # open the file for writing
+    fileObject5 = open(file_Name5,'wb')
+    pk.dump(model, fileObject5)
+
+   #  learned_weights = fc.weight.data
+   #  #return(learned_weights.cpu().numpy())
+   #
+   #
+   # #save the weights to disk
+   #  file_Name1 = "learned_weights.pkl"
+   #  # open the file for writing
+   #  fileObject1 = open(file_Name1,'wb')
+   #  pk.dump(learned_weights.cpu().numpy(), fileObject1)
+
+    return model
+
+
+
+    # print("loss")
+    #
+    # #print(loss)
+    # #
+    # #
+    # # #todo: return the entire new 98x10 hashtable to regression code
+    # # print(adj_10_emb)
+    # # sys.exit(1)
+    # #
+    # # print('Loss: after all epochs'+str((loss.data)))
+    # #
+    # #print("allY value:")
+    # #print(len(y_total))
+    # #print("predicted allY value")
+    # #print(len(pred_y_total))
+    # rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+    #
+    #
+    # print("rsquared_value:")
+    # print(str(rsquared_value))
+    #learned_weights = model.affine.weight.data
+    #return(learned_weights.cpu().numpy())
+
+    # #rsquared_value2= rsquared(allY, pred_y)
+    # print("rsquared_value2:")
+    # print(str(rsquared_value2))
+
+    # print(fc.weight.data.view(-1))
+
+
+
 
 def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
     ''' same create feed forward NN model, but using loocv for cross validation'''
@@ -328,7 +495,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
-    print("got inside run_adj_emb. going to call model:")
+    print("got inside do_training. going to call model:")
 
     model=AdjEmb(193)
 
@@ -558,3 +725,14 @@ def cutGlove(adj_lexicon):
         #
         # print(len(adj_glove_emb))
         return adj_glove_emb
+
+
+def tuneOnDev(trained_model,cwd, dev, uniq_turker):
+    # test on dev data
+    features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker)
+    print("done reading dev data:")
+
+    # calculate rsquared
+    rsquared_value = calculateRSq(y, features, all_adj, trained_model)
+    print("rsquared_value:")
+    print(str(rsquared_value))
