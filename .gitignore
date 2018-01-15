@@ -1,4 +1,3 @@
 target/
 project/
 src/main/resources/marneffe/*
-src/main/python/data/glove_our_adj*

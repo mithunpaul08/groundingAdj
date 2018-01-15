@@ -323,7 +323,7 @@ def do_training(features, allY, list_Adj, all_adj):
 
 
 #the actual trainign code. Basically create an object of the class above
-def  train_dev_print_rsq(features, allY, list_Adj, all_adj):
+def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
@@ -426,7 +426,7 @@ def  train_dev_print_rsq(features, allY, list_Adj, all_adj):
         # print(loss)
 
 
-        tuneOnDev(cwd, dev, False, uniq_turker)
+        #tuneOnDev(cwd, dev, False, uniq_turker)
 
 
 

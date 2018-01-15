@@ -88,7 +88,7 @@ if __name__ == "__main__":
                     uniq_turker = {}
                     features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_data,
                                                                                                False, uniq_turker)
-                    trained_model = train_dev_print_rsq(features, y, adj_lexicon, all_adj)
+                    trained_model = train_dev_print_rsq(dev,features, y, adj_lexicon, all_adj)
                     print("done training . Going to  read dev data")
 
 
