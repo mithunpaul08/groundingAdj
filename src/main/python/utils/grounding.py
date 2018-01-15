@@ -280,7 +280,7 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker):
 
 
 
-        print("size of big features 1is:")
+        #print("size of big features 1is:")
         # #print(len(features))
 
         npfeatures=np.asarray(features, dtype="float32")

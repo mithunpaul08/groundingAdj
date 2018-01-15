@@ -413,8 +413,8 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
             # # print("pred_y_total:")
             # # print(pred_y_total)
             rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
-            print("rsquared_value_training")
-            print(rsquared_value)
+            # print("rsquared_value_training")
+            # print(rsquared_value)
             rsq_values.write(str(epoch)+"\t"+str(rsquared_value)+"\t")
             # print("loss:")
             # print(loss)
@@ -721,6 +721,6 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values):
 
     # calculate rsquared
     rsquared_value = calculateRSq(y, features, all_adj, trained_model)
-    print("rsquared_value_dev:")
-    print(str(rsquared_value))
+    # print("rsquared_value_dev:")
+    # print(str(rsquared_value))
     rsq_values.write(str(rsquared_value)+"\n")
