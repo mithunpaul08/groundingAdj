@@ -334,15 +334,6 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
     #there are 193 unique turkers
     model=AdjEmb(193)
 
-    #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-
-    #run through each epoch, feed forward, calculate loss, back propagate
-
-    #no point having epoch if you are not back propagating
-    #for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
-
-    #things needed for the linear regression phase
-    featureShape=features.shape
 
     params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
     rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
@@ -354,7 +345,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
 
     #empty out the existing file
     with open(cwd + "/outputs/" + rsq_file, "w+")as rsq_values:
-        rsq_values.write("")
+        rsq_values.write("Epoch \t Train \t\t Dev \n")
     rsq_values.close()
 
     #append the rest of the values
@@ -424,7 +415,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
             rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
             print("rsquared_value_training")
             print(rsquared_value)
-            rsq_values.write(str(rsquared_value))
+            rsq_values.write(str(epoch)+"\t"+str(rsquared_value)+"\t")
             # print("loss:")
             # print(loss)
 
@@ -732,4 +723,4 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values):
     rsquared_value = calculateRSq(y, features, all_adj, trained_model)
     print("rsquared_value_dev:")
     print(str(rsquared_value))
-    rsq_values.write(str(rsquared_value))
+    rsq_values.write(str(rsquared_value)+"\n")
