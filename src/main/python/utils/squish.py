@@ -426,7 +426,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
 
             tuneOnDev(model,dev,cwd, uniq_turker,rsq_values)
 
-            sys.exit(1)
+
 
 
 
