@@ -428,7 +428,10 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
 
         #test on dev and print the rsquared value after each epoch
         cwd = os.getcwd()
-        tuneOnDev(cwd, dev, False, uniq_turker)
+
+
+
+        tuneOnDev(model,dev,cwd, uniq_turker)
 
         sys.exit(1)
 
@@ -667,13 +670,13 @@ def calculateRSq(allY, features,all_adj,trained_model):
     pred_y_total = []
     y_total = []
 
-
-    print("allY value length (must be 331):")
-    print((allY.shape))
-    print("each_adj value length (must be 331):")
-    print(len(all_adj))
-    print("features length (must be 331):")
-    print((features.shape))
+    # #a bunch of debug statements
+    # print("allY value length (must be 331):")
+    # print((allY.shape))
+    # print("each_adj value length (must be 331):")
+    # print(len(all_adj))
+    # print("features length (must be 331):")
+    # print((features.shape))
 
 
 
@@ -687,10 +690,10 @@ def calculateRSq(allY, features,all_adj,trained_model):
             pred_y_total.append(pred_y.data.cpu().numpy()[0])
 
 
-    print("allY value length (must be 331):")
-    print(len(y_total))
-    print("predicted allY value length (must be 331):")
-    print(len(pred_y_total))
+    # print("allY value length (must be 331):")
+    # print(len(y_total))
+    # print("predicted allY value length (must be 331):")
+    # print(len(pred_y_total))
 
     rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
     return rsquared_value
@@ -721,7 +724,7 @@ def cutGlove(adj_lexicon):
 def tuneOnDev(trained_model,dev,cwd, uniq_turker):
     # test on dev data
     features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker)
-    print("done reading dev data:")
+    #print("done reading dev data:")
 
     # calculate rsquared
     rsquared_value = calculateRSq(y, features, all_adj, trained_model)
