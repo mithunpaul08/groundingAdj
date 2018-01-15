@@ -41,7 +41,7 @@ class AdjEmb(nn.Module):
         path = cwd+"/data/"
         self.vocab, self.vec = torchwordemb.load_glove_text(path+"glove_our_adj")
 
-        emb=self.vec[self.vocab["intense"]]
+        #emb=self.vec[self.vocab["intense"]]
         #print(emb)
 
 
@@ -377,11 +377,7 @@ def  train_dev_print_rsq(features, allY, list_Adj, all_adj):
             pred_y = model(each_adj, featureV)
 
 
-
-
-
             adj_10_emb[each_adj]=pred_y
-
 
             #the complete linear regression code- only thing is features here will include the squished_emb
             # Reset gradients
@@ -560,23 +556,14 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
                 # print("eachRow:")
                 # print(eachRow)
 
-
                 #using shuffling
                 feature=features[eachRow]
-
-
-
 
                 y = allY[eachRow]
                 each_adj = all_adj[eachRow]
 
                 featureV= convert_to_variable(feature)
                 pred_y = model(each_adj, featureV)
-
-
-
-
-
 
                 adj_10_emb[each_adj]=pred_y
                 batch_y = convert_scalar_to_variable(y)
