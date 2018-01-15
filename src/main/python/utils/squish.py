@@ -22,7 +22,7 @@ torch.manual_seed(1)
 dense1_size=20
 dense2_size=10
 dense3_size=1
-noOfEpochs=100
+noOfEpochs=300
 
 rsq_file="rsq_file.txt"
 class AdjEmb(nn.Module):
