@@ -39,7 +39,7 @@ class AdjEmb(nn.Module):
 
         cwd=os.getcwd()
         path = cwd+"/data/"
-        self.vocab, self.vec = torchwordemb.load_glove_text(path+"glove_our_adj")
+        self.vocab, self.vec = torchwordemb.load_glove_text(path+"glove_our_adj.csv")
 
         #emb=self.vec[self.vocab["intense"]]
         #print(emb)
@@ -321,9 +321,9 @@ def do_training(features, allY, list_Adj, all_adj):
 
     # print(fc.weight.data.view(-1))
 
-
-#the actual trainign code. Basically create an object of the class above
-def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj):
+'''train on training data, print its rsquared against the same training data, then test with dev, print its rsquared. Do this at each epoch.
+This is all done for tuning purposes'''
+def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
@@ -426,7 +426,11 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj):
         # print(loss)
 
 
-        #tuneOnDev(cwd, dev, False, uniq_turker)
+        #test on dev and print the rsquared value after each epoch
+        cwd = os.getcwd()
+        tuneOnDev(cwd, dev, False, uniq_turker)
+
+        sys.exit(1)
 
 
 
@@ -714,12 +718,12 @@ def cutGlove(adj_lexicon):
         return adj_glove_emb
 
 
-def tuneOnDev(trained_model,cwd, dev, uniq_turker):
+def tuneOnDev(trained_model,dev,cwd, uniq_turker):
     # test on dev data
     features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker)
     print("done reading dev data:")
 
     # calculate rsquared
     rsquared_value = calculateRSq(y, features, all_adj, trained_model)
-    print("rsquared_value:")
+    print("rsquared_value_dev:")
     print(str(rsquared_value))
