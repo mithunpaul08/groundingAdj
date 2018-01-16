@@ -22,7 +22,7 @@ torch.manual_seed(1)
 dense1_size=20
 dense2_size=10
 dense3_size=1
-noOfEpochs=300
+noOfEpochs=30
 
 rsq_file="rsq_file.txt"
 class AdjEmb(nn.Module):
@@ -67,7 +67,7 @@ class AdjEmb(nn.Module):
         self.embeddings.weight.data.copy_(self.vec)
 
         #dont update embeddings
-        self.embeddings.weight.requires_grad=True
+        self.embeddings.weight.requires_grad=False
 
         # the layer where you squish the 300 embeddings to a dense layer of 10
         # i.e it takes embeddings as input and returns a dense layer of size 10
@@ -185,7 +185,7 @@ def do_training(features, allY, list_Adj, all_adj):
     #things needed for the linear regression phase
     featureShape=features.shape
 
-    params_to_update = filter(lambda p: p.requires_grad==False, model.parameters())
+    params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
     rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
@@ -338,7 +338,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
     model=AdjEmb(193)
 
 
-    params_to_update = filter(lambda p: p.requires_grad==False, model.parameters())
+    params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
     rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
@@ -508,7 +508,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
     #things needed for the linear regression phase
     featureShape=features.shape
 
-    params_to_update = filter(lambda p: p.requires_grad==False, model.parameters())
+    params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
     rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
