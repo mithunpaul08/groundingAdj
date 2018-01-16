@@ -19,6 +19,8 @@ from tqdm import tqdm
 from utils.grounding import get_features_dev
 torch.manual_seed(1)
 
+hidden_layers=[20,10]
+no_of_hidden_layers=3
 dense1_size=20
 dense2_size=10
 dense3_size=1
@@ -73,9 +75,30 @@ class AdjEmb(nn.Module):
         # i.e it takes embeddings as input and returns a dense layer of size 10
         # note: this is also known as the weight vector to be used in an affine
         self.linear1 = nn.Linear(self.vec.size(1), dense1_size)
+
+
         #self.tanned=nn.Tanh(self.squish)
-        self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
-        self.linear3 = torch.nn.Linear(dense2_size, dense3_size)
+        # self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
+        # self.linear3 = torch.nn.Linear(dense2_size, dense3_size)
+
+
+        #dynamically add the hidden layers
+        for index,layer in enumerate(hidden_layers):
+            print("layer:")
+            print(layer)
+            if((index+1) < len(hidden_layers)):
+                self.linear2 = torch.nn.Linear(layer, hidden_layers[index+1])
+
+
+
+        #the size of the last layer will be the last entry in dense3_size
+        dense3_size=hidden_layers[len(hidden_layers)-1]
+
+        print("dense3_size:")
+        print(dense3_size)
+        sys.exit()
+
+        #whatever the output of previous layer was concatenate it with the mu and sigma and one-hot vector for turker
         self.fc = torch.nn.Linear(dense3_size+turkCount+2, 1)
 
 
