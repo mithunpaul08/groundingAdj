@@ -25,8 +25,8 @@ dense1_size=1
 # dense2_size=10
 # dense3_size=1
 
-noOfEpochs=1000
-lr=5e-5
+noOfEpochs=10000
+lr=1e-5
 
 rsq_file="rsq_file.txt"
 class AdjEmb(nn.Module):
@@ -71,7 +71,7 @@ class AdjEmb(nn.Module):
         self.embeddings.weight.data.copy_(self.vec)
 
         #dont update embeddings
-        self.embeddings.weight.requires_grad=False
+        self.embeddings.weight.requires_grad=True
 
 
         #the size of the last layer will be the last entry in dense3_size
