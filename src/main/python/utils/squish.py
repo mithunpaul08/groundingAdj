@@ -22,8 +22,8 @@ torch.manual_seed(1)
 #hidden_layers=[30,1]
 # no_of_hidden_layers=3
 dense1_size=20
-dense2_size=10
-dense3_size=1
+# dense2_size=10
+# dense3_size=1
 
 noOfEpochs=30
 
@@ -86,8 +86,8 @@ class AdjEmb(nn.Module):
         self.linear1 = nn.Linear(self.vec.size(1), dense1_size)
 
         # self.tanned=nn.Tanh(self.squish)
-        self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
-        self.linear3 = torch.nn.Linear(dense2_size, dense3_size)
+        # self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
+        # self.linear3 = torch.nn.Linear(dense2_size, dense3_size)
 
 
         #dynamically add the hidden layers
@@ -110,7 +110,7 @@ class AdjEmb(nn.Module):
         # print(dense3_size)
 
         #the last step: whatever the output of previous layer was concatenate it with the mu and sigma and one-hot vector for turker
-        self.fc = torch.nn.Linear(dense3_size+turkCount+2, 1)
+        self.fc = torch.nn.Linear(dense1_size+turkCount+2, 1)
 
 
 
@@ -138,8 +138,8 @@ class AdjEmb(nn.Module):
 
         #
         out=F.tanh(self.linear1(embV))
-        out=F.tanh(self.linear2(out))
-        out=F.tanh(self.linear3(out))
+        #out=F.tanh(self.linear2(out))
+        #out=F.tanh(self.linear3(out))
 
 
         # #dynamically add the hidden layers
@@ -388,7 +388,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
 
 
     params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
-    rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    rms = optim.RMSprop(params_to_update,lr=1e-3, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
     allIndex = np.arange(len(features))
