@@ -21,12 +21,12 @@ torch.manual_seed(1)
 
 #hidden_layers=[30,1]
 # no_of_hidden_layers=3
-dense1_size=20
+dense1_size=1
 # dense2_size=10
 # dense3_size=1
 
-noOfEpochs=30
-lr=1e-5
+noOfEpochs=1000
+lr=5e-5
 
 rsq_file="rsq_file.txt"
 class AdjEmb(nn.Module):
