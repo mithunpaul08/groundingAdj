@@ -21,8 +21,8 @@ torch.manual_seed(1)
 
 #hidden_layers=[30,1]
 # no_of_hidden_layers=3
-dense1_size=20
-dense2_size=10
+dense1_size=30
+dense2_size=1
 # dense3_size=1
 
 noOfEpochs=30
