@@ -26,6 +26,7 @@ dense1_size=20
 # dense3_size=1
 
 noOfEpochs=30
+lr=1e-5
 
 rsq_file="rsq_file.txt"
 class AdjEmb(nn.Module):
@@ -388,7 +389,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
 
 
     params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
-    rms = optim.RMSprop(params_to_update,lr=1e-3, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    rms = optim.RMSprop(params_to_update,lr, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
     allIndex = np.arange(len(features))
@@ -444,13 +445,14 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
 
 
 
-                loss = loss_fn(pred_y, true_variable_y)
+                loss_training = loss_fn(pred_y, true_variable_y)
+
 
 
 
 
                 # Backward pass
-                loss.backward()
+                loss_training.backward()
 
 
 
@@ -464,19 +466,22 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
             # # print(y_total)
             # # print("pred_y_total:")
             # # print(pred_y_total)
-            rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
-            # print("rsquared_value_training")
-            # print(rsquared_value)
-            rsq_values.write(str(epoch)+"\t"+str(rsquared_value)+"\t")
-            # print("loss:")
-            # print(loss)
+
+
+
+
+            rsquared_value_training=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+            # print("rsquared_value_training: "+str(rsquared_value_training))
+            rsq_values.write(str(epoch)+"\t"+str(rsquared_value_training)+"\t")
+            # print("loss_training:")
+            # print(loss_training)
 
 
 
 
 
 
-            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values)
+            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training)
 
 
 
@@ -505,26 +510,26 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
 
 
 
-    # print("loss")
+    # print("loss_training")
     #
-    # #print(loss)
+    # #print(loss_training)
     # #
     # #
     # # #todo: return the entire new 98x10 hashtable to regression code
     # # print(adj_10_emb)
     # # sys.exit(1)
     # #
-    # # print('Loss: after all epochs'+str((loss.data)))
+    # # print('Loss: after all epochs'+str((loss_training.data)))
     # #
     # #print("allY value:")
     # #print(len(y_total))
     # #print("predicted allY value")
     # #print(len(pred_y_total))
-    # rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+    # rsquared_value_training=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
     #
     #
-    # print("rsquared_value:")
-    # print(str(rsquared_value))
+    # print("rsquared_value_training:")
+    # print(str(rsquared_value_training))
     #learned_weights = model.affine.weight.data
     #return(learned_weights.cpu().numpy())
 
@@ -724,6 +729,8 @@ def calculateRSq(allY, features,all_adj,trained_model):
     # print((features.shape))
 
 
+    loss_fn = nn.MSELoss(size_average=True)
+
 
     for index,feature in tqdm(enumerate(features), total=len(features), desc="predict:"):
 
@@ -733,6 +740,8 @@ def calculateRSq(allY, features,all_adj,trained_model):
             pred_y = trained_model(each_adj, featureV)
             y_total.append(y)
             pred_y_total.append(pred_y.data.cpu().numpy()[0])
+
+        #loss_dev = loss_fn(pred_y, true_variable_y)
 
 
     # print("allY value length (must be 331):")
@@ -766,13 +775,16 @@ def cutGlove(adj_lexicon):
         return adj_glove_emb
 
 
-def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values):
+def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training):
     # test on dev data
     features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker)
     #print("done reading dev data:")
 
     # calculate rsquared
     rsquared_value = calculateRSq(y, features, all_adj, trained_model)
-    # print("rsquared_value_dev:")
-    # print(str(rsquared_value))
+
+    #print(str(loss_training)+"\t"+ str(rsquared_value))
+
+
+    print(str(rsquared_value_training)+"\t"+ str(rsquared_value))
     rsq_values.write(str(rsquared_value)+"\n")
