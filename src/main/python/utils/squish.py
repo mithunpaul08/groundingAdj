@@ -785,4 +785,6 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_train
 
 
     print(str(rsquared_value_training)+"\t"+ str(rsquared_value))
+    print("training value:")
+    print(rsquared_value_training)
     rsq_values.write(str(rsquared_value)+"\n")
