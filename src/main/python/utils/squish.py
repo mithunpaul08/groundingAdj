@@ -109,7 +109,7 @@ class AdjEmb(nn.Module):
         # print(dense3_size)
 
         #the last step: whatever the output of previous layer was concatenate it with the mu and sigma and one-hot vector for turker
-        self.fc = torch.nn.Linear(dense1_size+turkCount+2, 1)
+        self.fc = torch.nn.Linear(dense2_size+turkCount+2, 1)
 
 
 
