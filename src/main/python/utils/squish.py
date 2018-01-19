@@ -21,8 +21,8 @@ torch.manual_seed(1)
 
 #hidden_layers=[30,1]
 # no_of_hidden_layers=3
-dense1_size=1
-# dense2_size=10
+dense1_size=100
+dense2_size=1
 # dense3_size=1
 
 noOfEpochs=10000
@@ -85,9 +85,7 @@ class AdjEmb(nn.Module):
         # note: this is also known as the weight vector to be used in an affine
 
         self.linear1 = nn.Linear(self.vec.size(1), dense1_size)
-
-        # self.tanned=nn.Tanh(self.squish)
-        # self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
+        self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
         # self.linear3 = torch.nn.Linear(dense2_size, dense3_size)
 
 
@@ -139,7 +137,7 @@ class AdjEmb(nn.Module):
 
         #
         out=F.tanh(self.linear1(embV))
-        #out=F.tanh(self.linear2(out))
+        out=F.tanh(self.linear2(out))
         #out=F.tanh(self.linear3(out))
 
 
