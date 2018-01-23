@@ -245,7 +245,7 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker):
             ##print(" localFeatures shape:"+str(len(localFeatures)))
             ##print(" stddev :"+str((stddev)))
             localFeatures.append(stddev)
-            localFeatures.extend(one_hotT)
+            #localFeatures.extend(one_hotT)
             ##print(" localFeatures shape:"+str(len(localFeatures)))
 
 
