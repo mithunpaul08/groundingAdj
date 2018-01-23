@@ -515,7 +515,8 @@ def split_training_based_on_adj(cwd, turkFile, useOneHot, uniq_turker):
     sorted_df_raw_turk_data=df_raw_turk_data.sort_values("adjective")
 
     print(sorted_df_raw_turk_data)
-    split_data_write_to_file(sorted_df_raw_turk_data)
+    split_data_write_to_file(sorted_df_raw_turk_data, cwd)
+
     sys.exit(1)
 
     # create a hash table to store unique adj
@@ -956,10 +957,10 @@ def get_features_old(cwd, turkFile, useOneHot):
         return npfeatures,y, uniq_adj, all_adj,uniq_turker
 
 
-def split_data_write_to_file(cwd, turkFile, useOneHot):
-    df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
+def split_data_write_to_file(df_raw_turk_data, cwd):
+    #df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
 
-    # create a hash table to store unique adj
+    # # create a hash table to store unique adj
     uniq_adj = {}
     counter = 0
 
@@ -970,26 +971,16 @@ def split_data_write_to_file(cwd, turkFile, useOneHot):
             uniq_adj[a] = counter
             counter = counter + 1
 
-    uniq_turker = {}
-    turk_counter = 0
-    # create a total list of unique turkers in this collection
-    for b in df_raw_turk_data["turker"]:
-        if (b) not in uniq_turker:
-            # if its not there already add it as the latest element
-            uniq_turker[b] = turk_counter
-            turk_counter = turk_counter + 1
-
-    uniq_adj_count = len(uniq_adj)
-    uniq_turker_count = len(uniq_turker)
-
-    ##print("total number of unique adjectives is "+str(len(uniq_adj)))
-    ##print("total number of unique turkers is "+str(len(uniq_turker)))
+    print("total number of unique adjectives is "+str(len(uniq_adj)))
 
 
 
 
-    # Split data in to train-dev-test
-    noOfRows = df_raw_turk_data.shape[0]
+    # Split data in to train-dev_adj-test_adj
+    noOfRows = len(uniq_adj.items())
+
+    # noOfRows_data = len(df_raw_turk_data.items())
+
     # print("noOfRows")
     # print(noOfRows)
 
@@ -999,61 +990,65 @@ def split_data_write_to_file(cwd, turkFile, useOneHot):
 
     # now shuffle it and split
     # np.random.seed(1)
-    np.random.shuffle(allIndex)
+    #np.random.shuffle(allIndex)
 
     # take 80% of the total data as training data- rest as testing
     eighty = math.ceil(noOfRows * 80 / 100)
+    ten= math.ceil(noOfRows * 10 / 100)
+
     # twenty_index=math.ceil(noOfRows*80/100)
     # print("eighty")
     # print(eighty)
 
+
+    uniq_adj_list=[]
+    for k,v in uniq_adj.items():
+        uniq_adj_list.append(k)
+
+
     # eighty= number of rows
-    trainingData_indices = allIndex[:eighty]
-    rest = allIndex[eighty:]
+    trainingData_adj = uniq_adj_list[:eighty]
+    dev_adj = uniq_adj_list[eighty:(eighty+ten)]
+    test_adj = uniq_adj_list[(eighty+ten):(eighty+ten+ten)]
+
+    #
+    # print("trainingData_adj")
+    # print(len(trainingData_adj))
+    # print("dev_adj")
+    # print((dev_adj))
+    # print("test_adj")
+    # print((test_adj))
+
+
+    #go through each of the index in training data.
 
     trainingData = []
-    # write training data to a separate file. This should happen only once.
-    for eachline in trainingData_indices:
-        results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
-                   df_raw_turk_data["onestdev"][eachline],
-                   df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
+    devData=[]
+    testData=[]
 
-        trainingData.append(results )
+    # write training data to a separate file. This should happen only once.
+    for index, eachline in df_raw_turk_data.iterrows():
+        thisadj=eachline['adjective']
+
+        results = [eachline["turker"],eachline["adjective"],eachline["mean"],
+                   eachline["onestdev"],
+                   eachline["had_negative"],eachline["logrespdev"]]
+
+        if(thisadj in trainingData_adj):
+            trainingData.append(results)
+        else:
+            if(thisadj in dev_adj):
+                devData.append(results)
+            else:
+                if(thisadj in test_adj):
+                    testData.append(results)
+
 
     writeToFileWithHeader(trainingData,cwd, "trainingData_adj.csv")
+    writeToFileWithHeader(devData,cwd, "dev_adj.csv")
+    writeToFileWithHeader(testData,cwd, "test_adj.csv")
 
 
-
-
-    #split the rest into half as dev and test
-    dev_test_indices=np.array_split(rest,2)
-    #print(len(rest))
-
-
-    dev_indices=dev_test_indices[0]
-    test_indices=dev_test_indices[1]
-
-
-    # write dev data to a separate file. This should happen only once.
-    dev_list=[]
-    for eachline in dev_indices:
-        results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
-                   df_raw_turk_data["onestdev"][eachline],
-                   df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
-
-        dev_list.append(results)
-    writeToFileWithHeader(dev_list,cwd, "dev_adj.csv")
-
-    # write test data to a separate file. This should happen only once.
-    test_list=[]
-    for eachline in test_indices:
-        results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
-                   df_raw_turk_data["onestdev"][eachline],
-                   df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
-
-        test_list.append(results )
-
-    writeToFileWithHeader(test_list,cwd, "test_adj.csv")
     sys.exit(1)
 
 
