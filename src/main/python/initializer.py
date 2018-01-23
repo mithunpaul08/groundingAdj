@@ -13,7 +13,7 @@ import time
 from utils.grounding import predict_grounding
 from utils.grounding import get_features_dev
 from utils.grounding import get_features_training_data
-from utils.grounding import split_training_based_on_adj
+from utils.grounding import split_data_based_on_adj
 
 
 from utils.squish import do_training
@@ -39,6 +39,10 @@ entire_turk_data="all_turk_data.csv"
 dev="dev.csv"
 training_data="trainingData.csv"
 turkInterceptFile="turk_with_intercept.txt"
+
+dev_adj="dev_adj.csv"
+training_adj="trainingData_adj.csv"
+test_adj="test_adj.csv"
 
 if __name__ == "__main__":
     try:
@@ -92,13 +96,13 @@ if __name__ == "__main__":
                     uniq_turker = {}
 
 
+                    #code that splits the data based on adjectives and not the entire data- should be used only once ideally
+                    # features, y, adj_lexicon, all_adj, uniq_turker = split_data_based_on_adj(cwd, entire_turk_data,
+                    #                                                                          False, uniq_turker)
 
-                    features, y, adj_lexicon, all_adj, uniq_turker = split_training_based_on_adj(cwd, entire_turk_data,
-                                                                                                False, uniq_turker)
-
-                    features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_data,
+                    features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_adj,
                                                                                                False, uniq_turker)
-                    trained_model = train_dev_print_rsq(dev,features, y, adj_lexicon, all_adj,uniq_turker)
+                    trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker)
                     print("done training . Going to  read dev data")
 
 

@@ -508,7 +508,7 @@ def get_features_training_data(cwd, turkFile, useOneHot,uniq_turker):
 '''this is created on jan 22nd 2018. By now we have the grounding working for squished to 1 architecture.
 Turker is removed. Next aim is to sort the entire data based on 98 adjectives, split it into 80-10-10 based on
 adjectives. So that 10 data points in TEST partiition will be unseen by the code '''
-def split_training_based_on_adj(cwd, turkFile, useOneHot, uniq_turker):
+def split_data_based_on_adj(cwd, turkFile, useOneHot, uniq_turker):
     df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
 
     #sort the entire data based on adjectives.
