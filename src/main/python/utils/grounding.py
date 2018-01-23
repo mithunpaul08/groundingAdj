@@ -2,6 +2,7 @@ from utils.read_write_data import readRawTurkDataFile
 from utils.read_write_data import loadEmbeddings
 from utils.read_write_data import writeCsvToFile
 from utils.read_write_data import writeToFileWithPd
+from utils.read_write_data import writeToFileWithHeader
 from utils.linearReg import runLR
 from tqdm import tqdm
 import numpy as np
@@ -514,6 +515,7 @@ def split_training_based_on_adj(cwd, turkFile, useOneHot, uniq_turker):
     sorted_df_raw_turk_data=df_raw_turk_data.sort_values("adjective")
 
     print(sorted_df_raw_turk_data)
+    split_data_write_to_file(sorted_df_raw_turk_data)
     sys.exit(1)
 
     # create a hash table to store unique adj
@@ -953,5 +955,105 @@ def get_features_old(cwd, turkFile, useOneHot):
 
         return npfeatures,y, uniq_adj, all_adj,uniq_turker
 
+
+def split_data_write_to_file(cwd, turkFile, useOneHot):
+    df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
+
+    # create a hash table to store unique adj
+    uniq_adj = {}
+    counter = 0
+
+    # create a total list of unique adj in this collection
+    for a in df_raw_turk_data["adjective"]:
+        if (a) not in uniq_adj:
+            # if its not there already add it as the latest element
+            uniq_adj[a] = counter
+            counter = counter + 1
+
+    uniq_turker = {}
+    turk_counter = 0
+    # create a total list of unique turkers in this collection
+    for b in df_raw_turk_data["turker"]:
+        if (b) not in uniq_turker:
+            # if its not there already add it as the latest element
+            uniq_turker[b] = turk_counter
+            turk_counter = turk_counter + 1
+
+    uniq_adj_count = len(uniq_adj)
+    uniq_turker_count = len(uniq_turker)
+
+    ##print("total number of unique adjectives is "+str(len(uniq_adj)))
+    ##print("total number of unique turkers is "+str(len(uniq_turker)))
+
+
+
+
+    # Split data in to train-dev-test
+    noOfRows = df_raw_turk_data.shape[0]
+    # print("noOfRows")
+    # print(noOfRows)
+
+
+    # create an numpy array of that range
+    allIndex = np.arange(noOfRows)
+
+    # now shuffle it and split
+    # np.random.seed(1)
+    np.random.shuffle(allIndex)
+
+    # take 80% of the total data as training data- rest as testing
+    eighty = math.ceil(noOfRows * 80 / 100)
+    # twenty_index=math.ceil(noOfRows*80/100)
+    # print("eighty")
+    # print(eighty)
+
+    # eighty= number of rows
+    trainingData_indices = allIndex[:eighty]
+    rest = allIndex[eighty:]
+
+    trainingData = []
+    # write training data to a separate file. This should happen only once.
+    for eachline in trainingData_indices:
+        results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+                   df_raw_turk_data["onestdev"][eachline],
+                   df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
+
+        trainingData.append(results )
+
+    writeToFileWithHeader(trainingData,cwd, "trainingData_adj.csv")
+
+
+
+
+    #split the rest into half as dev and test
+    dev_test_indices=np.array_split(rest,2)
+    #print(len(rest))
+
+
+    dev_indices=dev_test_indices[0]
+    test_indices=dev_test_indices[1]
+
+
+    # write dev data to a separate file. This should happen only once.
+    dev_list=[]
+    for eachline in dev_indices:
+        results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+                   df_raw_turk_data["onestdev"][eachline],
+                   df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
+
+        dev_list.append(results)
+    writeToFileWithHeader(dev_list,cwd, "dev_adj.csv")
+
+    # write test data to a separate file. This should happen only once.
+    test_list=[]
+    for eachline in test_indices:
+        results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+                   df_raw_turk_data["onestdev"][eachline],
+                   df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
+
+        test_list.append(results )
+
+    writeToFileWithHeader(test_list,cwd, "test_adj.csv")
+    sys.exit(1)
 
 
