@@ -13,6 +13,9 @@ import time
 from utils.grounding import predict_grounding
 from utils.grounding import get_features_dev
 from utils.grounding import get_features_training_data
+from utils.grounding import split_training_based_on_adj
+
+
 from utils.squish import do_training
 from utils.squish import run_adj_emb_loocv
 from utils.squish import tuneOnDev
@@ -86,6 +89,12 @@ if __name__ == "__main__":
                     # run 3: run both dev and training together and print rsq after each epoch
                     # mutual exclusive with run 2 above
                     uniq_turker = {}
+
+
+
+                    features, y, adj_lexicon, all_adj, uniq_turker = split_training_based_on_adj(cwd, training_data,
+                                                                                                False, uniq_turker)
+
                     features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_data,
                                                                                                False, uniq_turker)
                     trained_model = train_dev_print_rsq(dev,features, y, adj_lexicon, all_adj,uniq_turker)
