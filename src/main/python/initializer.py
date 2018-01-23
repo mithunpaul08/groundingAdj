@@ -35,6 +35,7 @@ from utils.linearReg import runLR
 start_time = time.time()
 
 cwd=os.getcwd()
+entire_turk_data="all_turk_data.csv"
 dev="dev.csv"
 training_data="trainingData.csv"
 turkInterceptFile="turk_with_intercept.txt"
@@ -92,7 +93,7 @@ if __name__ == "__main__":
 
 
 
-                    features, y, adj_lexicon, all_adj, uniq_turker = split_training_based_on_adj(cwd, training_data,
+                    features, y, adj_lexicon, all_adj, uniq_turker = split_training_based_on_adj(cwd, entire_turk_data,
                                                                                                 False, uniq_turker)
 
                     features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_data,
