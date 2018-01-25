@@ -150,10 +150,10 @@ def runLR(features, y):
 
     print('Loss: after all epochs'+str((loss.data)))
 
-    print("y value:")
-    print(y)
-    print("predicted y value")
-    print(pred_y)
+    #print("y value:")
+    #print(y)
+    #print("predicted y value")
+    #print(pred_y)
     rsquared_value=r2_score(y, pred_y, sample_weight=None, multioutput='uniform_average')
 
 
@@ -164,7 +164,7 @@ def runLR(features, y):
     # print("rsquared_value2:")
     # print(str(rsquared_value2))
 
-    print(fc.weight.data.view(-1))
+    #print(fc.weight.data.view(-1))
     learned_weights = fc.weight.data
     return(learned_weights.cpu().numpy())
    # print('==> Learned function:\t' + poly_desc(fc.weight.data.view(-1), fc.bias.data))

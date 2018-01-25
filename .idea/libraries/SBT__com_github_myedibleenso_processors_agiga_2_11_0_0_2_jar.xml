@@ -3,9 +3,6 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.ivy2/cache/com.github.myedibleenso/processors-agiga_2.11/jars/processors-agiga_2.11-0.0.2.jar!/" />
     </CLASSES>
-    <JAVADOC>
-      <root url="jar://$USER_HOME$/.ivy2/cache/com.github.myedibleenso/processors-agiga_2.11/docs/processors-agiga_2.11-0.0.2-javadoc.jar!/" />
-    </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.ivy2/cache/com.github.myedibleenso/processors-agiga_2.11/srcs/processors-agiga_2.11-0.0.2-sources.jar!/" />
     </SOURCES>
