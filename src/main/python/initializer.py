@@ -44,7 +44,7 @@ dev_adj="dev_adj.csv"
 training_adj="trainingData_adj.csv"
 test_adj="test_adj.csv"
 
-addTurkerOneHot=True
+addTurkerOneHot=False
 addAdjOneHot=False
 
 if __name__ == "__main__":
@@ -131,7 +131,7 @@ if __name__ == "__main__":
                     # adj_intercepts_learned = learned_weights[:num_adj]
                     # #pairing weights with adjectives.
                     # adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
-                    #
+
                     # sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
                     #
                     # #print highest 20 intercepts and lowest 20 intercepts

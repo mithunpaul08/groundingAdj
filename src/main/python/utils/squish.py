@@ -25,7 +25,7 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfEpochs=10000
+noOfEpochs=136
 lr=5e-5
 #lr=1e-5
 
@@ -485,7 +485,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
 
-            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot)
+            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch)
 
 
 
@@ -720,23 +720,33 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
 
-def predictAndCalculateRSq(allY, features, all_adj, trained_model):
+def predictAndCalculateRSq(allY, features, all_adj, trained_model,epoch):
     pred_y_total = []
     y_total = []
 
     # #a bunch of debug statements
     # print("allY value length (must be 331):")
     # print((allY.shape))
+
+    # print("all_adj:")
+    # print(all_adj)
     # print("each_adj value length (must be 331):")
     # print(len(all_adj))
+
     # print("features length (must be 331):")
     # print((features.shape))
 
 
     loss_fn = nn.MSELoss(size_average=True)
 
+    adj_gold_pred={}
+    previous_adj=""
+    current_adj=""
+    this_adj_gold_y=[]
+    this_adj_pred_y=[]
 
     for index,feature in tqdm(enumerate(features), total=len(features), desc="predict:"):
+
 
             featureV= convert_to_variable(feature)
             y = allY[index]
@@ -744,6 +754,31 @@ def predictAndCalculateRSq(allY, features, all_adj, trained_model):
             pred_y = trained_model(each_adj, featureV)
             y_total.append(y)
             pred_y_total.append(pred_y.data.cpu().numpy()[0])
+
+            #for each data point which has the same adjective, store its goldY and predY values
+            current_adj=each_adj
+
+            #very first time initialize the previous_adj=current_adj
+            if(index==0):
+                previous_adj=current_adj
+                # print("foujnd that index==0")
+
+            if(current_adj==previous_adj):
+                this_adj_gold_y.append(y)
+                this_adj_pred_y.append(pred_y.data.cpu().numpy()[0])
+                # print("foujnd that this adj and previous adj are same.")
+
+
+            #if the adjectives are different, it means that we are switching to a new one. calculate rsquared. update previous_adj
+            else:
+                # print("foujnd that this adj and previous adj are NOT same.")
+                # print(str(len(this_adj_gold_y)))
+                # print(str(len(this_adj_pred_y)))
+                previous_adj=current_adj
+                rsquared_value_per_adj=r2_score(this_adj_gold_y, this_adj_pred_y, sample_weight=None, multioutput='uniform_average')
+
+                if(epoch==135):
+                    print("adj:"+current_adj+" rsq value:"+str(rsquared_value_per_adj))
 
         #loss_dev = loss_fn(pred_y, true_variable_y)
 
@@ -779,13 +814,13 @@ def cutGlove(adj_lexicon):
         return adj_glove_emb
 
 
-def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot):
+def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch):
     # test on dev data
     features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker,addTurkerOneHot)
     #print("done reading dev data:")
 
     # calculate rsquared
-    rsquared_value = predictAndCalculateRSq(y, features, all_adj, trained_model)
+    rsquared_value = predictAndCalculateRSq(y, features, all_adj, trained_model,epoch)
 
     #print(str(loss_training)+"\t"+ str(rsquared_value))
 
@@ -793,3 +828,6 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_train
     print(str(rsquared_value_training)+"\t"+ str(rsquared_value))
     print("")
     rsq_values.write(str(rsquared_value)+"\n")
+
+    if(epoch==135):
+        sys.exit(1)
