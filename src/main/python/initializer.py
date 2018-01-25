@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
 
 
-                    #run1: run with leave one out cross validation
+                    # run1: run with leave one out cross validation
                     #run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
 
                     #run 2 : do training and dev tuning separately.

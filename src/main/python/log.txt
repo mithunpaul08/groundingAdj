@@ -5,4 +5,241 @@ To run the model with just linear regression Press:1
 To run the model with a dense NN, embeddings through linear regression Press:2
 To run the model with a dense NN, with LOOCV Press:3
 To exit Press:0
-what is your choice:
+what is your choice:got inside do_training. going to Load embeddings:
+going to load glove for per adj.
+just loaded glove for per adj. going to load glove for entire embeddings.
+.self.vec.shape[0]
+98
+.self.vec.shape[1]
+300
+done loading all gloves
+adj:stable rsq value:-3.5317465808925244
+adj:steep rsq value:-2.5911953082685155
+adj:striking rsq value:-1.491649749948683
+adj:strong rsq value:-1.1838411708032996
+adj:substantial rsq value:-1.1973273683780135
+adj:surprising rsq value:-1.2163702640714331
+adj:thin rsq value:-1.204446412501901
+adj:tight rsq value:-1.1674675490414121
+adj:tiny rsq value:-1.3312349530959775
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079894	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+adj:stable rsq value:-3.5317465808925244
+adj:steep rsq value:-2.5911953082685155
+adj:striking rsq value:-1.491649749948683
+adj:strong rsq value:-1.1838411708032996
+adj:substantial rsq value:-1.1973273683780135
+adj:surprising rsq value:-1.2163702640714331
+adj:thin rsq value:-1.204446412501901
+adj:tight rsq value:-1.1674675490414121
+adj:tiny rsq value:-1.3312349530959775
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+adj:stable rsq value:-3.5317465808925244
+adj:steep rsq value:-2.5911953082685155
+adj:striking rsq value:-1.491649749948683
+adj:strong rsq value:-1.1838411708032996
+adj:substantial rsq value:-1.1973273683780135
+adj:surprising rsq value:-1.2163702640714331
+adj:thin rsq value:-1.204446412501901
+adj:tight rsq value:-1.1674675490414121
+adj:tiny rsq value:-1.3312349530959775
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+adj:stable rsq value:-3.5317465808925244
+adj:steep rsq value:-2.5911953082685155
+adj:striking rsq value:-1.491649749948683
+adj:strong rsq value:-1.1838411708032996
+adj:substantial rsq value:-1.1973273683780135
+adj:surprising rsq value:-1.2163702640714331
+adj:thin rsq value:-1.204446412501901
+adj:tight rsq value:-1.1674675490414121
+adj:tiny rsq value:-1.3312349530959775
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079894	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+adj:stable rsq value:-3.5317465808925244
+adj:steep rsq value:-2.5911953082685155
+adj:striking rsq value:-1.491649749948683
+adj:strong rsq value:-1.1838411708032996
+adj:substantial rsq value:-1.1973273683780135
+adj:surprising rsq value:-1.2163702640714331
+adj:thin rsq value:-1.204446412501901
+adj:tight rsq value:-1.1674675490414121
+adj:tiny rsq value:-1.3312349530959775
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+adj:stable rsq value:-3.5317465808925244
+adj:steep rsq value:-2.5911953082685155
+adj:striking rsq value:-1.491649749948683
+adj:strong rsq value:-1.1838411708032996
+adj:substantial rsq value:-1.1973273683780135
+adj:surprising rsq value:-1.2163702640714331
+adj:thin rsq value:-1.204446412501901
+adj:tight rsq value:-1.1674675490414121
+adj:tiny rsq value:-1.3312349530959775
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+adj:stable rsq value:-3.5317465808925244
+adj:steep rsq value:-2.5911953082685155
+adj:striking rsq value:-1.491649749948683
+adj:strong rsq value:-1.1838411708032996
+adj:substantial rsq value:-1.1973273683780135
+adj:surprising rsq value:-1.2163702640714331
+adj:thin rsq value:-1.204446412501901
+adj:tight rsq value:-1.1674675490414121
+adj:tiny rsq value:-1.3312349530959775
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.3380883416079898	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+adj:stable rsq value:-3.5317465808925244
+adj:steep rsq value:-2.5911953082685155
+adj:striking rsq value:-1.491649749948683
+adj:strong rsq value:-1.1838411708032996
+adj:substantial rsq value:-1.1973273683780135
+adj:surprising rsq value:-1.2163702640714331
+adj:thin rsq value:-1.204446412501901
+adj:tight rsq value:-1.1674675490414121
+adj:tiny rsq value:-1.3312349530959775
+
+-1.338088329988869	-1.3051402103083807
+
+	learned weights:[[ 0.38194174 -0.5178611  -0.3801013 ]]
+generic exception: Traceback (most recent call last):
+  File "initializer.py", line 108, in <module>
+    trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
+  File "/lhome/mithunpaul/spring2018/research/groundingAdj/src/main/python/utils/squish.py", line 459, in train_dev_print_rsq
+    loss_training.backward()
+  File "/lhome/mithunpaul/miniconda3/envs/turkCompare/lib/python3.6/site-packages/torch/autograd/variable.py", line 167, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, retain_variables)
+  File "/lhome/mithunpaul/miniconda3/envs/turkCompare/lib/python3.6/site-packages/torch/autograd/__init__.py", line 87, in backward
+    grad_variables, create_graph = _make_grads(variables, grad_variables, create_graph)
+  File "/lhome/mithunpaul/miniconda3/envs/turkCompare/lib/python3.6/site-packages/torch/autograd/__init__.py", line 38, in _make_grads
+    Variable(data.new().resize_as_(data).fill_(1), volatile=not create_graph))
+KeyboardInterrupt
+
+time taken:72.3619031906128

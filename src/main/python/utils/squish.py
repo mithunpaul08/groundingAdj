@@ -25,9 +25,9 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfEpochs=136
-lr=5e-5
-#lr=1e-5
+noOfEpochs=200
+lr=1e-5
+#lr=1e-2
 
 rsq_file="rsq_file.txt"
 class AdjEmb(nn.Module):
@@ -164,9 +164,10 @@ class AdjEmb(nn.Module):
 
 
 
+        feature_squished = (torch.cat((feats, out)))
 
-        feature_squished = torch.cat((feats, out))
-        return self.fc(feature_squished)
+        retValue=(self.fc(feature_squished))
+        return retValue
 
 
 
