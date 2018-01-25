@@ -486,6 +486,8 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
             tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch)
+            # Print weights
+            print("\tlearned weights:" + str(model.fc.learned_weights.cpu().numpy()))
 
 
 
