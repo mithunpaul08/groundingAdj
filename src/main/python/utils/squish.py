@@ -777,7 +777,7 @@ def predictAndCalculateRSq(allY, features, all_adj, trained_model,epoch):
                 previous_adj=current_adj
                 rsquared_value_per_adj=r2_score(this_adj_gold_y, this_adj_pred_y, sample_weight=None, multioutput='uniform_average')
 
-                if(epoch==135):
+                if((epoch%5)==0):
                     print("adj:"+current_adj+" rsq value:"+str(rsquared_value_per_adj))
 
         #loss_dev = loss_fn(pred_y, true_variable_y)
@@ -829,5 +829,3 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_train
     print("")
     rsq_values.write(str(rsquared_value)+"\n")
 
-    if(epoch==135):
-        sys.exit(1)
