@@ -104,7 +104,7 @@ def predict_grounding(cwd,turkFile):
 
 
 #take all the data in the given file.
-def get_features_dev(cwd, turkFile, useOneHot,uniq_turker):
+def get_features_dev(cwd, turkFile, useOneHot,uniq_turker,addTurkerOneHot):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
 
         #create a hash table to store unique adj
@@ -246,7 +246,8 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker):
             ##print(" localFeatures shape:"+str(len(localFeatures)))
             ##print(" stddev :"+str((stddev)))
             localFeatures.append(stddev)
-            #localFeatures.extend(one_hotT)
+            if(addTurkerOneHot):
+                localFeatures.extend(one_hotT)
             ##print(" localFeatures shape:"+str(len(localFeatures)))
 
 
@@ -304,7 +305,7 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker):
 
         return npfeatures,y, uniq_adj, all_adj
 
-def get_features_training_data(cwd, turkFile, useOneHot,uniq_turker):
+def get_features_training_data(cwd, turkFile, useAdjOneHot, uniq_turker, addTurkerOneHot):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
 
         #create a hash table to store unique adj
@@ -392,7 +393,7 @@ def get_features_training_data(cwd, turkFile, useOneHot,uniq_turker):
             ##print("uniq_adj_count:"+str(uniq_adj_count))
 
             embV=[]
-            if(useOneHot):
+            if(useAdjOneHot):
                 #####create a one hot vector for all adjectives
                 # one_hot_adj=np.zeros(uniq_adj_count)
                 one_hot_adj = [0] * uniq_adj_count
@@ -447,7 +448,8 @@ def get_features_training_data(cwd, turkFile, useOneHot,uniq_turker):
             ##print(" localFeatures shape:"+str(len(localFeatures)))
             ##print(" stddev :"+str((stddev)))
             localFeatures.append(stddev)
-            #localFeatures.extend(one_hotT)
+            if(addTurkerOneHot):
+                localFeatures.extend(one_hotT)
             ##print(" localFeatures shape:"+str(len(localFeatures)))
 
 

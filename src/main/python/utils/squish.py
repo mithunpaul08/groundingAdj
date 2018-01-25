@@ -26,12 +26,13 @@ dense1_size=1
 # dense3_size=1
 
 noOfEpochs=10000
-lr=1e-5
+lr=5e-5
+#lr=1e-5
 
 rsq_file="rsq_file.txt"
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
-    def __init__(self,turkCount):
+    def __init__(self,turkCount,addTurkerOneHot):
         super(AdjEmb,self).__init__()
 
 
@@ -109,10 +110,12 @@ class AdjEmb(nn.Module):
         # print(dense3_size)
 
         #the last step: whatever the output of previous layer was concatenate it with the mu and sigma and one-hot vector for turker
-        #self.fc = torch.nn.Linear(dense2_size+turkCount+2, 1)
-
-        #use this when you dont have one hot for turkers
-        self.fc = torch.nn.Linear(dense1_size+2, 1)
+        if(addTurkerOneHot):
+            self.fc = torch.nn.Linear(dense1_size+turkCount+2, 1)
+            print("found addTurkerOneHot=true")
+        else:
+            #use this when you dont have one hot for turkers
+            self.fc = torch.nn.Linear(dense1_size+2, 1)
 
 
 
@@ -379,14 +382,14 @@ def do_training(features, allY, list_Adj, all_adj):
 
 '''train on training data, print its rsquared against the same training data, then test with dev, print its rsquared. Do this at each epoch.
 This is all done for tuning purposes'''
-def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
+def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTurkerOneHot):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
 
     print("got inside do_training. going to Load embeddings:")
 
     #there are 193 unique turkers
-    model=AdjEmb(193)
+    model=AdjEmb(193,addTurkerOneHot)
 
 
     params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
@@ -482,7 +485,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker):
 
 
 
-            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training)
+            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot)
 
 
 
@@ -717,7 +720,7 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
 
-def calculateRSq(allY, features,all_adj,trained_model):
+def predictAndCalculateRSq(allY, features, all_adj, trained_model):
     pred_y_total = []
     y_total = []
 
@@ -776,13 +779,13 @@ def cutGlove(adj_lexicon):
         return adj_glove_emb
 
 
-def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training):
+def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot):
     # test on dev data
-    features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker)
+    features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker,addTurkerOneHot)
     #print("done reading dev data:")
 
     # calculate rsquared
-    rsquared_value = calculateRSq(y, features, all_adj, trained_model)
+    rsquared_value = predictAndCalculateRSq(y, features, all_adj, trained_model)
 
     #print(str(loss_training)+"\t"+ str(rsquared_value))
 

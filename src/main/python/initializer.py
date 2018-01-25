@@ -27,7 +27,7 @@ from sklearn.metrics import r2_score
 from utils.read_write_data import readAdjInterceptFile
 from utils.read_write_data import readRawTurkDataFile
 from utils.read_write_data import readWithSpace
-from utils.squish import calculateRSq
+from utils.squish import predictAndCalculateRSq
 from scipy.stats import kendalltau, spearmanr
 from utils.linearReg import runLR
 
@@ -43,6 +43,9 @@ turkInterceptFile="turk_with_intercept.txt"
 dev_adj="dev_adj.csv"
 training_adj="trainingData_adj.csv"
 test_adj="test_adj.csv"
+
+addTurkerOneHot=True
+addAdjOneHot=False
 
 if __name__ == "__main__":
     try:
@@ -101,8 +104,8 @@ if __name__ == "__main__":
                     #                                                                          False, uniq_turker)
 
                     features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_adj,
-                                                                                               False, uniq_turker)
-                    trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker)
+                                                                                               addAdjOneHot, uniq_turker,addTurkerOneHot)
+                    trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
                     print("done training . Going to  read dev data")
 
 
