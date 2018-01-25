@@ -25,7 +25,7 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfEpochs=200
+noOfEpochs=10000
 lr=1e-5
 #lr=1e-2
 
