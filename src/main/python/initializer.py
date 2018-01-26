@@ -17,7 +17,7 @@ from utils.grounding import split_data_based_on_adj
 
 
 from utils.squish import do_training
-from utils.squish import run_adj_emb_loocv
+from utils.squish import run_loocv_on_turk_data
 from utils.squish import tuneOnDev
 from utils.squish import train_dev_print_rsq
 from utils.squish import cutGlove
@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
 
                     # run1: run with leave one out cross validation
-                    #run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
+                    run_loocv_on_turk_data(features, y, adj_lexicon, all_adj)
 
                     #run 2 : do training and dev tuning separately.
                     # readtraining data
@@ -156,7 +156,7 @@ if __name__ == "__main__":
 
 
                         #run with leae one out cross validation
-                        run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
+                        run_loocv_on_turk_data(features, y, adj_lexicon, all_adj)
 
                         #run just with a classic train-dev-test partition
                         elapsed_time = time.time() - start_time
