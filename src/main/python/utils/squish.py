@@ -25,7 +25,7 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfEpochs=10000
+noOfEpochs=200
 lr=1e-5
 #lr=1e-2
 
@@ -550,7 +550,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
 '''  create feed forward NN model, but using loocv for cross validation'''
-def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj):
+def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
 
     #take the list of adjectives and give it all an index
@@ -558,7 +558,7 @@ def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj):
 
     print("got inside do_training. going to call model:")
 
-    model=AdjEmb(193)
+    model=AdjEmb(193,addTurkerOneHot)
 
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 

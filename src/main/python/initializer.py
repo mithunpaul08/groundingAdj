@@ -79,10 +79,17 @@ if __name__ == "__main__":
                     # sys.exit(1)
 
 
+                    uniq_turker = {}
 
+                    # run1: run with leave one out cross validation on all the turk experiment data points
+                    features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, entire_turk_data,
+                                                                                               addAdjOneHot, uniq_turker,addTurkerOneHot)
 
-                    # run1: run with leave one out cross validation
-                    #run_loocv_on_turk_data(features, y, adj_lexicon, all_adj)
+                    #read all the data. i.e without training-dev-split. This is for LOOCV
+                    run_loocv_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot)
+
+                    print("done loocv for all turk data, going to exit")
+                    sys.exit(1)
 
                     #run 2 : do training and dev tuning separately.
                     # readtraining data
@@ -97,7 +104,7 @@ if __name__ == "__main__":
 
                     # run 3: run both dev and training together and print rsq after each epoch
                     # mutual exclusive with run 2 above
-                    uniq_turker = {}
+
 
 
                     #code that splits the data based on adjectives and not the entire data- should be used only once ideally
@@ -114,7 +121,7 @@ if __name__ == "__main__":
                     #instead of splitting data into 80-10-10, do LOOCV based on adjectives
                     run_loocv_per_adj(features, y, adj_lexicon, all_adj,addTurkerOneHot,uniq_adj_list)
 
-                    print("done loocv, going to exit")
+                    print("done loocv for adj based turk data, going to exit")
                     sys.exit(1)
 
                     adj_lexicon_flipped = dict()
