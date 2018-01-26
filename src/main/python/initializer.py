@@ -18,6 +18,7 @@ from utils.grounding import split_data_based_on_adj
 
 from utils.squish import do_training
 from utils.squish import run_loocv_on_turk_data
+from utils.squish import run_nfoldCV_on_turk_data
 from utils.squish import run_loocv_per_adj
 from utils.squish import tuneOnDev
 from utils.squish import train_dev_print_rsq
@@ -86,7 +87,7 @@ if __name__ == "__main__":
                                                                                                addAdjOneHot, uniq_turker,addTurkerOneHot)
 
                     #read all the data. i.e without training-dev-split. This is for LOOCV
-                    run_loocv_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot)
+                    run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot)
 
                     print("done loocv for all turk data, going to exit")
                     sys.exit(1)
@@ -115,7 +116,7 @@ if __name__ == "__main__":
                                                                                                addAdjOneHot, uniq_turker,addTurkerOneHot)
 
                     #train on the adj based training split and tune on dev. All is done inside train_dev_print_rsq
-                    #trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
+                    trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
                     print("done training . Going to  read dev data")
 
                     #instead of splitting data into 80-10-10, do LOOCV based on adjectives

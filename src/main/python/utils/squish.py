@@ -717,6 +717,175 @@ def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     # print(fc.weight.data.view(-1))
 
 
+
+'''  create feed forward NN model, but using 100 data points (around 33 folds) for cross validation'''
+def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
+
+
+    #take the list of adjectives and give it all an index
+    adj_index=convert_adj_index(uniq_adj)
+
+    print("got inside do_training. going to call model:")
+
+    model=AdjEmb(193,addTurkerOneHot)
+
+    #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+
+    #run through each epoch, feed forward, calculate loss, back propagate
+
+
+    params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
+    rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    loss_fn = nn.MSELoss(size_average=True)
+
+    allIndex = np.arange(len(features))
+
+
+
+
+    pred_y_total = []
+    y_total = []
+    adj_10_emb = {}
+
+
+    # for each element in the training data, keep that one out, and train on the rest
+    for eachElement in tqdm(allIndex,total=len(allIndex), desc="eachTrngData:"):
+
+        # create a list of all the indices except the one you are keeping out
+        allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
+
+
+        # print("eachElement:")
+        # print(eachElement)
+
+        feature = features[eachElement]
+        # print("feature of held out one:")
+        # print(feature)
+
+        # print("len(trainingData):")
+        # print(len(allIndex_loocv))
+        # print("the value that was left out was")
+        # print(allIndex[eachElement])
+
+        #train on the rest, test on this one left out, add it to the
+
+        for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
+            #for each word in the list of adjectives
+            model.zero_grad()
+
+
+
+            #shuffle for each epoch
+            np.random.shuffle(allIndex_loocv)
+
+            '''for each row in the training data, predict y value for itself, and then back
+            propagate the loss'''
+            for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
+                # print("eachRow:")
+                # print(eachRow)
+
+                #using shuffling
+                feature=features[eachRow]
+
+                y = allY[eachRow]
+                each_adj = all_adj[eachRow]
+
+                featureV= convert_to_variable(feature)
+                pred_y = model(each_adj, featureV)
+
+                adj_10_emb[each_adj]=pred_y
+                batch_y = convert_scalar_to_variable(y)
+
+                loss = loss_fn(pred_y, batch_y)
+
+                # Backward pass
+                loss.backward()
+
+                rms.step()
+
+
+
+
+
+        #for loocv use the trained model to predict on the left over value
+        feature_loo = features[eachElement]
+        featureV_loo= convert_to_variable(feature_loo)
+        #print(feature)
+        y = allY[eachElement]
+        each_adj = all_adj[eachElement]
+        pred_y = model(each_adj, featureV_loo)
+        #adj_10_emb[each_adj] = pred_y
+        batch_y = convert_scalar_to_variable(y)
+        y_total.append(y)
+        #for each of the entry in training data, predict and store it in a bigger table
+        pred_y_total.append(pred_y.data.cpu().numpy())
+
+        # print(y)
+        # print(each_adj)
+        # print("pred_Y;")
+        # print(pred_y)
+
+        # the LOOCV ends here do this for each element as "THE LEAVE ONE OUT" the training data
+
+
+        #print loss at the end of every element left out
+
+        #print(adj_10_emb)
+        # print('Loss: after all epochs'+str((loss.data)))
+        print("allY value length (must be 2648):")
+        print(len(y_total))
+        print("predicted allY value length (must be 2648):")
+        print(len(pred_y_total))
+        print("loss")
+        print(loss)
+
+    print("done with all training data")
+   #  #the model is trained by now-store it to disk
+   #  file_Name5 = "squish.pkl"
+   #  # open the file for writing
+   #  fileObject5 = open(file_Name5,'wb')
+   #  pk.dump(model, fileObject5)
+   #
+   #  learned_weights = fc.weight.data
+   #  #return(learned_weights.cpu().numpy())
+   #
+   #
+   # #save the weights to disk
+   #  file_Name1 = "learned_weights.pkl"
+   #  # open the file for writing
+   #  fileObject1 = open(file_Name1,'wb')
+   #  pk.dump(learned_weights.cpu().numpy(), fileObject1)
+
+
+
+    #print("loss")
+    #print(loss)
+    # print(adj_10_emb)
+    # print('Loss: after all epochs'+str((loss.data)))
+    print("allY value length (must be 2648):")
+    print(len(y_total))
+    print("predicted allY value length (must be 2648):")
+    print(len(pred_y_total))
+
+
+    rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+
+
+    print("rsquared_value:")
+    print(str(rsquared_value))
+
+    sys.exit(1)
+    #learned_weights = model.affine.weight.data
+    #return(learned_weights.cpu().numpy())
+
+    # #rsquared_value2= rsquared(allY, pred_y)
+    # print("rsquared_value2:")
+    # print(str(rsquared_value2))
+
+    # print(fc.weight.data.view(-1))
+
+
 '''  create feed forward NN model, but using loocv for cross validation'''
 def run_loocv_per_adj(features, allY, uniq_adj, all_adj,addTurkerOneHot,uniq_adj_list):
 
