@@ -18,6 +18,7 @@ from utils.grounding import split_data_based_on_adj
 
 from utils.squish import do_training
 from utils.squish import run_loocv_on_turk_data
+from utils.squish import run_loocv_per_adj
 from utils.squish import tuneOnDev
 from utils.squish import train_dev_print_rsq
 from utils.squish import cutGlove
@@ -81,7 +82,7 @@ if __name__ == "__main__":
 
 
                     # run1: run with leave one out cross validation
-                    run_loocv_on_turk_data(features, y, adj_lexicon, all_adj)
+                    #run_loocv_on_turk_data(features, y, adj_lexicon, all_adj)
 
                     #run 2 : do training and dev tuning separately.
                     # readtraining data
@@ -103,13 +104,18 @@ if __name__ == "__main__":
                     # features, y, adj_lexicon, all_adj, uniq_turker = split_data_based_on_adj(cwd, entire_turk_data,
                     #                                                                          False, uniq_turker)
 
-                    features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_adj,
+                    features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, training_adj,
                                                                                                addAdjOneHot, uniq_turker,addTurkerOneHot)
-                    trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
+
+                    #train on the adj based training split and tune on dev. All is done inside train_dev_print_rsq
+                    #trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
                     print("done training . Going to  read dev data")
 
+                    #instead of splitting data into 80-10-10, do LOOCV based on adjectives
+                    run_loocv_per_adj(features, y, adj_lexicon, all_adj,addTurkerOneHot,uniq_adj_list)
 
-
+                    print("done loocv, going to exit")
+                    sys.exit(1)
 
                     adj_lexicon_flipped = dict()
                     #total number of unique adjectives

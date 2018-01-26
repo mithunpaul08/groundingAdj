@@ -718,14 +718,14 @@ def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj):
 
 
 '''  create feed forward NN model, but using loocv for cross validation'''
-def run_loocv_per_adj_(features, allY, uniq_adj, all_adj):
+def run_loocv_per_adj(features, allY, uniq_adj, all_adj,addTurkerOneHot,uniq_adj_list):
 
 
 
 
     print("got inside run_loocv_per_adj_. going to call model:")
 
-    model=AdjEmb(193)
+    model=AdjEmb(193,addTurkerOneHot)
 
     params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
     rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
@@ -742,37 +742,49 @@ def run_loocv_per_adj_(features, allY, uniq_adj, all_adj):
 
 
     # for each element in the list of adjectives keep that one out, and train on the rest
-    for eachElement in tqdm(allIndex,total=len(allIndex), desc="eachTrngData:"):
+    # instead of shuffling a list of adjectives, just create an index of all adjectives and shuffle that. easier to do
+    for index,eachElement in tqdm(enumerate(allIndex),total=len(allIndex), desc="eachTrngData:"):
 
         # create a list of all the indices except the one you are keeping out
         allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
 
 
-        # print("eachElement:")
-        # print(eachElement)
+        print("eachElement:")
+        print(eachElement)
 
         feature = features[eachElement]
-        # print("feature of held out one:")
-        # print(feature)
+        print("feature of held out one:")
+        print(feature)
 
-        # print("len(trainingData):")
-        # print(len(allIndex_loocv))
-        # print("the value that was left out was")
-        # print(allIndex[eachElement])
+        print("len(trainingData):")
+        print(len(allIndex_loocv))
+        print("the value that was left out was")
+        print(allIndex[eachElement])
+        leftOutIndex=allIndex[eachElement]
 
-        #train on the rest, test on this one left out, add it to the
+        print(("the adjective that was left out was"))
+        leftOutAdj=uniq_adj_list[leftOutIndex]
+        print(leftOutAdj)
 
+        if (index == 5):
+            sys.exit(1)
+
+        continue
+
+
+
+        #train on the rest
         for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
             #for each word in the list of adjectives
             model.zero_grad()
 
 
-
-            #shuffle for each epoch
+            #shuffle before each epoch
             np.random.shuffle(allIndex_loocv)
 
-            '''for each row in the training data, predict y value for itself, and then back
+            '''for each row in the training data, check if its adjective is part of the held out one. If yes, add to test set.
+             Else predict y value for itself, and then back
             propagate the loss'''
             for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
                 # print("eachRow:")
