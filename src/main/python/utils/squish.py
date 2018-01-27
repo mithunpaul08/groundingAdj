@@ -25,7 +25,7 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfEpochs=200
+noOfEpochs=135
 lr=1e-5
 #lr=1e-2
 
@@ -716,7 +716,10 @@ def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
     # print(fc.weight.data.view(-1))
 
-
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
 
 '''  create feed forward NN model, but using 100 data points (around 33 folds) for cross validation'''
 def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
@@ -742,30 +745,67 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
 
 
+    #split it into folds. with each fold having 100 data points each
+    n=100
+    split_data=[allIndex[i:i + n] for i in range(0, len(allIndex), n)]
+
+    #
+    # counter=0
+    # for eachchunk in split_data:
+    #     if(len(eachchunk)>20):
+    #         counter=counter+1
+    #         print(eachchunk)
+    #
+    # print("counter:"+str(counter))
+    # sys.exit(1)
+
+
+    chunkIndices = np.arange(len(split_data))
+
+    print("length of chunkIndices:"+str(len(chunkIndices)))
 
     pred_y_total = []
     y_total = []
     adj_10_emb = {}
 
 
-    # for each element in the training data, keep that one out, and train on the rest
-    for eachElement in tqdm(allIndex,total=len(allIndex), desc="eachTrngData:"):
-
-        # create a list of all the indices except the one you are keeping out
-        allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
+    # for each chunk in the training data, keep that one out, and train on the rest
+    for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="eachTrngData:"):
 
 
-        # print("eachElement:")
-        # print(eachElement)
+        print(eachChunkIndex)
 
-        feature = features[eachElement]
+        # create a  list of all the indices of chunks except the chunk you are keeping out
+        allIndices_chunks=[]
+        for i in chunkIndices:
+            if i!=eachChunkIndex:
+                allIndices_chunks.append(i)
+
+        #print("allIndices_chunks:"+str((allIndices_chunks)))
+
+
+        #print("length of allIndices_chunks:"+str(len(allIndices_chunks)))
+        allIndex_loocv=[]
+
+        #for each of these chunks, pull out its data points, and concatenate all into one single huge list of data points
+        for eachChunk in allIndices_chunks:
+            for eachElement in split_data[eachChunk]:
+                allIndex_loocv.append(eachElement)
+            #print("length:"+str(len(allIndex_loocv)))
+
+
+
+        # print("eachChunkIndex:")
+        # print(eachChunkIndex)
+
+        feature = features[eachChunkIndex]
         # print("feature of held out one:")
         # print(feature)
 
         # print("len(trainingData):")
         # print(len(allIndex_loocv))
         # print("the value that was left out was")
-        # print(allIndex[eachElement])
+        # print(allIndex[eachChunkIndex])
 
         #train on the rest, test on this one left out, add it to the
 
@@ -809,11 +849,11 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
 
         #for loocv use the trained model to predict on the left over value
-        feature_loo = features[eachElement]
+        feature_loo = features[eachChunkIndex]
         featureV_loo= convert_to_variable(feature_loo)
         #print(feature)
-        y = allY[eachElement]
-        each_adj = all_adj[eachElement]
+        y = allY[eachChunkIndex]
+        each_adj = all_adj[eachChunkIndex]
         pred_y = model(each_adj, featureV_loo)
         #adj_10_emb[each_adj] = pred_y
         batch_y = convert_scalar_to_variable(y)
