@@ -766,7 +766,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
     pred_y_total = []
     y_total = []
-    adj_10_emb = {}
+
 
 
     # for each chunk in the training data, keep that one out, and train on the rest
@@ -787,11 +787,20 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
         #print("length of allIndices_chunks:"+str(len(allIndices_chunks)))
         allIndex_loocv=[]
 
-        #for each of these chunks, pull out its data points, and concatenate all into one single huge list of data points
+        #for each of these chunks, pull out its data points, and concatenate all into one single huge list of
+        # data points-this is the training data
         for eachChunk in allIndices_chunks:
             for eachElement in split_data[eachChunk]:
                 allIndex_loocv.append(eachElement)
             #print("length:"+str(len(allIndex_loocv)))
+
+        test_data=[]
+        #for the left out chunk, pull out its data points, and concatenate all into one single huge list of
+        # data points-this is the training data
+        for eachElement in split_data[eachChunkIndex]:
+                test_data.append(eachElement)
+
+        print("length:"+str(len(test_data)))
 
 
 
@@ -848,18 +857,22 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
 
 
-        #for loocv use the trained model to predict on the left over value
+        #at the end of all epochs, use the trained model to predict on the left over value
         feature_loo = features[eachChunkIndex]
-        featureV_loo= convert_to_variable(feature_loo)
-        #print(feature)
-        y = allY[eachChunkIndex]
-        each_adj = all_adj[eachChunkIndex]
-        pred_y = model(each_adj, featureV_loo)
-        #adj_10_emb[each_adj] = pred_y
-        batch_y = convert_scalar_to_variable(y)
-        y_total.append(y)
-        #for each of the entry in training data, predict and store it in a bigger table
-        pred_y_total.append(pred_y.data.cpu().numpy())
+
+        #for each element in the test data, calculate its predicted value, and append it to predy_total
+        for feature_loo in test_data:
+
+            featureV_loo= convert_to_variable(feature_loo)
+            #print(feature)
+            y = allY[eachChunkIndex]
+            each_adj = all_adj[eachChunkIndex]
+            pred_y = model(each_adj, featureV_loo)
+            #adj_10_emb[each_adj] = pred_y
+            batch_y = convert_scalar_to_variable(y)
+            y_total.append(y)
+            #for each of the entry in training data, predict and store it in a bigger table
+            pred_y_total.append(pred_y.data.cpu().numpy())
 
         # print(y)
         # print(each_adj)
@@ -873,12 +886,18 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
         #print(adj_10_emb)
         # print('Loss: after all epochs'+str((loss.data)))
-        print("allY value length (must be 2648):")
-        print(len(y_total))
+        print("test_data value length (must be 100):")
+        print(len(test_data))
         print("predicted allY value length (must be 2648):")
         print(len(pred_y_total))
         print("loss")
         print(loss)
+
+        #calculate the rsquared value for each chunk
+        rsquared_value=r2_score(test_data, pred_y_total, sample_weight=None, multioutput='uniform_average')
+        print("rsquared_value:")
+        print(str(rsquared_value))
+        sys.exit(1)
 
     print("done with all training data")
    #  #the model is trained by now-store it to disk
@@ -909,13 +928,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     print(len(pred_y_total))
 
 
-    rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
 
-
-    print("rsquared_value:")
-    print(str(rsquared_value))
-
-    sys.exit(1)
     #learned_weights = model.affine.weight.data
     #return(learned_weights.cpu().numpy())
 
