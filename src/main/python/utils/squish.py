@@ -25,8 +25,8 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfFoldsCV=1
-noOfEpochs=1
+noOfFoldsCV=10
+noOfEpochs=10
 lr=1e-5
 #lr=1e-2
 
