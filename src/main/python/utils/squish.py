@@ -25,11 +25,16 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
+noOfFoldsCV=3
 noOfEpochs=1
 lr=1e-5
 #lr=1e-2
 
 rsq_file="rsq_file.txt"
+rsq_file_nfcv="rsq_file_nfcv.txt"
+rsq_file_nfcv_avrg="rsq_file_nfcv_avrg.txt"
+
+
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount,addTurkerOneHot):
@@ -738,7 +743,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
 
     #split it into folds. n=number of folds. almost even sized.
-    n=30
+    n=noOfFoldsCV
     split_data=chunk(allIndex,n)
 
         #[allIndex[i:i + n] for i in range(0, len(allIndex), n)]
@@ -763,155 +768,160 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
     rsq_total=[]
 
-
-
-
+    cwd=os.getcwd()
+    # empty out the existing file
+    with open(cwd + "/outputs/" + rsq_file_nfcv, "w+")as rsq_values_avg:
+        rsq_values_avg.write("Epoch \t Train \t\t Dev \n")
+    rsq_values_avg.close()
 
     # for each chunk in the training data, keep that one out, and train on the rest
-    for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
+    # append the rest of the values
+    with open(cwd + "/outputs/" + rsq_file, "a")as rsq_values_avg:
+        for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
 
-        #print(eachChunkIndex)
+            #print(eachChunkIndex)
 
-        # create a  list of all the indices of chunks except the chunk you are keeping out
-        allIndices_chunks=[]
-        for i in chunkIndices:
-            if i!=eachChunkIndex:
-                allIndices_chunks.append(i)
+            # create a  list of all the indices of chunks except the chunk you are keeping out
+            allIndices_chunks=[]
+            for i in chunkIndices:
+                if i!=eachChunkIndex:
+                    allIndices_chunks.append(i)
 
-        #print("allIndices_chunks:"+str((allIndices_chunks)))
-
-
-        #print("length of allIndices_chunks:"+str(len(allIndices_chunks)))
-        training_data=[]
-
-        #for each of these chunks, pull out its data points, and concatenate all into one single huge list of
-        # data points-this is the training data
-        for eachChunk in allIndices_chunks:
-            for eachElement in split_data[eachChunk]:
-                training_data.append(eachElement)
-            #print("length:"+str(len(training_data)))
-
-        test_data=[]
-        #for the left out chunk, pull out its data points, and concatenate all into one single huge list of
-        # data points-this is the training data
-        for eachElement in split_data[eachChunkIndex]:
-                test_data.append(eachElement)
-
-        #print("length:"+str(len(test_data)))
+            #print("allIndices_chunks:"+str((allIndices_chunks)))
 
 
+            #print("length of allIndices_chunks:"+str(len(allIndices_chunks)))
+            training_data=[]
 
-        # print("eachChunkIndex:")
-        # print(eachChunkIndex)
+            #for each of these chunks, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the training data
+            for eachChunk in allIndices_chunks:
+                for eachElement in split_data[eachChunk]:
+                    training_data.append(eachElement)
+                #print("length:"+str(len(training_data)))
 
-        feature = features[eachChunkIndex]
-        # print("feature of held out one:")
-        # print(feature)
+            test_data=[]
+            #for the left out chunk, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the training data
+            for eachElement in split_data[eachChunkIndex]:
+                    test_data.append(eachElement)
 
-        # print("len(trainingData):")
-        # print(len(training_data))
-        # print("the value that was left out was")
-        # print(allIndex[eachChunkIndex])
+            #print("length:"+str(len(test_data)))
 
 
-        #run n epochs on the left over training data
-        for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
-            #for each word in the list of adjectives
-            model.zero_grad()
+            # print("eachChunkIndex:")
+            # print(eachChunkIndex)
 
-            # for eachfeature in features:
-            #     print(eachfeature)
+            feature = features[eachChunkIndex]
+            # print("feature of held out one:")
+            # print(feature)
+
+            # print("len(trainingData):")
+            # print(len(training_data))
+            # print("the value that was left out was")
+            # print(allIndex[eachChunkIndex])
+
+
+            #run n epochs on the left over training data
+            for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
+                #for each word in the list of adjectives
+                model.zero_grad()
+
+                # for eachfeature in features:
+                #     print(eachfeature)
+                #
+                # for eachY in allY:
+                #     print(eachY)
+
+                #shuffle for each epoch
+                np.random.shuffle(training_data)
+
+                '''for each row in the training data, predict y value for itself, and then back
+                propagate the loss'''
+                for eachRow in tqdm(training_data, total=len(features), desc="each_adj:"):
+                    # print("eachRow:")
+                    # print(eachRow)
+
+                    feature=features[eachRow]
+
+                    y = allY[eachRow]
+                    each_adj = all_adj[eachRow]
+
+
+                    featureV= convert_to_variable(feature)
+                    pred_y = model(each_adj, featureV)
+
+                    #adj_10_emb[each_adj]=pred_y
+                    batch_y = convert_scalar_to_variable(y)
+
+                    loss = loss_fn(pred_y, batch_y)
+
+                    # Backward pass
+                    loss.backward()
+
+                    rms.step()
+
+
+
+
+
+            #at the end of all epochs take the trained model that was trained on the 29 epochs
+            #and use the trained model to predict on the values in the left over chunk
+            test_data_index = features[eachChunkIndex]
+            # print("len(features):")
             #
-            # for eachY in allY:
-            #     print(eachY)
+            # print(len(features))
+            #
+            # print("test_data")
+            # print(test_data)
 
-            #shuffle for each epoch
-            np.random.shuffle(training_data)
-
-            '''for each row in the training data, predict y value for itself, and then back
-            propagate the loss'''
-            for eachRow in tqdm(training_data, total=len(features), desc="each_adj:"):
-                # print("eachRow:")
-                # print(eachRow)
-
-                feature=features[eachRow]
-
-                y = allY[eachRow]
-                each_adj = all_adj[eachRow]
+            pred_y_total_test_data = []
+            y_total_test_data = []
 
 
-                featureV= convert_to_variable(feature)
-                pred_y = model(each_adj, featureV)
+            #for each element in the test data, calculate its predicted value, and append it to predy_total
+            for test_data_index in test_data:
 
-                #adj_10_emb[each_adj]=pred_y
+                this_feature = features[test_data_index]
+
+                #print(this_feature)
+
+
+
+                featureV_loo= convert_to_variable(this_feature)
+
+                y = allY[test_data_index]
+                each_adj = all_adj[test_data_index]
+
+                # print(y)
+                # print(each_adj)
+
+                pred_y = model(each_adj, featureV_loo)
+                #adj_10_emb[each_adj] = pred_y
                 batch_y = convert_scalar_to_variable(y)
-
-                loss = loss_fn(pred_y, batch_y)
-
-                # Backward pass
-                loss.backward()
-
-                rms.step()
+                y_total_test_data.append(y)
+                #for each of the entry in training data, predict and store it in a bigger table
+                pred_y_total_test_data.append(pred_y.data.cpu().numpy())
 
 
 
+            # print("y_total_test_data value length (must be around 100):")
+            # print(len(y_total_test_data))
+            # print(" pred_y_total_test_data value length (must be 2648):")
+            # print(len(pred_y_total_test_data))
+            # print("loss")
+            # print(loss)
 
+            #calculate the rsquared value for each chunk
+            rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+            print("rsquared_value:")
+            print(str(rsquared_value))
+            rsq_values_avg.write(str(epoch) + "\t" + str(rsquared_value) + "\t")
 
-        #at the end of all epochs take the trained model that was trained on the 29 epochs
-        #and use the trained model to predict on the values in the left over chunk
-        test_data_index = features[eachChunkIndex]
-        # print("len(features):")
-        #
-        # print(len(features))
-        #
-        # print("test_data")
-        # print(test_data)
-
-        pred_y_total_test_data = []
-        y_total_test_data = []
-
-
-        #for each element in the test data, calculate its predicted value, and append it to predy_total
-        for test_data_index in test_data:
-
-            this_feature = features[test_data_index]
-
-            #print(this_feature)
-
-
-
-            featureV_loo= convert_to_variable(this_feature)
-
-            y = allY[test_data_index]
-            each_adj = all_adj[test_data_index]
-
-            # print(y)
-            # print(each_adj)
-
-            pred_y = model(each_adj, featureV_loo)
-            #adj_10_emb[each_adj] = pred_y
-            batch_y = convert_scalar_to_variable(y)
-            y_total_test_data.append(y)
-            #for each of the entry in training data, predict and store it in a bigger table
-            pred_y_total_test_data.append(pred_y.data.cpu().numpy())
-
-
-
-        # print("y_total_test_data value length (must be around 100):")
-        # print(len(y_total_test_data))
-        # print(" pred_y_total_test_data value length (must be 2648):")
-        # print(len(pred_y_total_test_data))
-        # print("loss")
-        # print(loss)
-
-        #calculate the rsquared value for each chunk
-        rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
-        print("rsquared_value:")
-        print(str(rsquared_value))
-
-        rsq_total.append(rsquared_value)
+            rsq_total.append(rsquared_value)
 
 
 
@@ -926,6 +936,10 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
     print(rsq_total)
 
+    print("len(rsq_total:")
+
+    print(len(rsq_total))
+
     rsq_cumulative=0;
 
     for eachRsq in rsq_total:
@@ -936,6 +950,11 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
     print("rsq_average:")
     print(str(rsq_average))
+
+    # empty out the existing file
+    with open(cwd + "/outputs/" + rsq_file_nfcv_avrg, "w+")as rsq_values_avg:
+        rsq_values_avg.write("rsq_average: \t "+str(rsq_average))
+    rsq_values_avg.close()
 
     # print(fc.weight.data.view(-1))
 
