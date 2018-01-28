@@ -917,6 +917,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
             #calculate the rsquared value for each chunk
             rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+            print("\n")
             print("rsquared_value:")
             print(str(rsquared_value))
             nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
