@@ -25,8 +25,8 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfFoldsCV=3
-noOfEpochs=1
+noOfFoldsCV=30
+noOfEpochs=135
 lr=1e-5
 #lr=1e-2
 
@@ -770,13 +770,13 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
     cwd=os.getcwd()
     # empty out the existing file
-    with open(cwd + "/outputs/" + rsq_file_nfcv, "w+")as rsq_values_avg:
-        rsq_values_avg.write("Epoch \t Train \t\t Dev \n")
-    rsq_values_avg.close()
+    with open(cwd + "/outputs/" + rsq_file_nfcv, "w+")as nfcv:
+        nfcv.write("Chunk \t RSQ\n")
+        nfcv.close()
 
     # for each chunk in the training data, keep that one out, and train on the rest
     # append the rest of the values
-    with open(cwd + "/outputs/" + rsq_file, "a")as rsq_values_avg:
+    with open(cwd + "/outputs/" + rsq_file_nfcv, "a")as nfcv:
         for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
 
@@ -919,7 +919,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
             print("rsquared_value:")
             print(str(rsquared_value))
-            rsq_values_avg.write(str(epoch) + "\t" + str(rsquared_value) + "\t")
+            nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
 
             rsq_total.append(rsquared_value)
 
