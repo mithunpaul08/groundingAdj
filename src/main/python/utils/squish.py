@@ -725,9 +725,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(uniq_adj)
 
-    print("got inside do_training. going to call model:")
 
-    model=AdjEmb(193,addTurkerOneHot)
 
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
@@ -779,6 +777,9 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     with open(cwd + "/outputs/" + rsq_file_nfcv, "a")as nfcv:
         for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
+            print("got inside do_training. going to call model:")
+
+            model = AdjEmb(193, addTurkerOneHot)
 
             #print(eachChunkIndex)
 
@@ -827,8 +828,6 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             #run n epochs on the left over training data
             for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
-                #for each word in the list of adjectives
-                model.zero_grad()
 
                 # for eachfeature in features:
                 #     print(eachfeature)
@@ -844,6 +843,9 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
                 for eachRow in tqdm(training_data, total=len(features), desc="each_adj:"):
                     # print("eachRow:")
                     # print(eachRow)
+
+                    #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
+                    model.zero_grad()
 
                     feature=features[eachRow]
 

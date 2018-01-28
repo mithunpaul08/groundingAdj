@@ -90,7 +90,7 @@ if __name__ == "__main__":
                     run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot)
 
                     print("done loocv for all turk data, going to exit")
-                    sys.exit(1)
+
 
                     #run 2 : do training and dev tuning separately.
                     # readtraining data
