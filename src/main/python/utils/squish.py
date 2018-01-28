@@ -25,8 +25,8 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfFoldsCV=30
-noOfEpochs=135
+noOfFoldsCV=1
+noOfEpochs=1
 lr=1e-5
 #lr=1e-2
 
@@ -918,8 +918,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             #calculate the rsquared value for each chunk
             rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
             print("\n")
-            print("rsquared_value:")
-            print(str(rsquared_value))
+            print("rsquared_value:"+str(rsquared_value))
+            print("\n")
             nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
 
             rsq_total.append(rsquared_value)
