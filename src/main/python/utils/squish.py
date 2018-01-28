@@ -9,7 +9,7 @@ import torchtext.vocab as vocab
 import torchwordemb
 import numpy as np
 import os
-
+from itertools import accumulate, chain, repeat, tee
 from utils.linearReg import convert_variable
 from utils.read_write_data import readRawTurkDataFile
 from sklearn.metrics import r2_score
@@ -578,9 +578,11 @@ def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     y_total = []
     adj_10_emb = {}
 
+    rsq_total=[]
+
 
     # for each element in the training data, keep that one out, and train on the rest
-    for eachElement in tqdm(allIndex,total=len(allIndex), desc="eachTrngData:"):
+    for eachElement in tqdm(allIndex,total=len(allIndex), desc="n-fold-CV:"):
 
         # create a list of all the indices except the one you are keeping out
         allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
@@ -672,28 +674,9 @@ def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
         print(loss)
 
     print("done with all training data")
-   #  #the model is trained by now-store it to disk
-   #  file_Name5 = "squish.pkl"
-   #  # open the file for writing
-   #  fileObject5 = open(file_Name5,'wb')
-   #  pk.dump(model, fileObject5)
-   #
-   #  learned_weights = fc.weight.data
-   #  #return(learned_weights.cpu().numpy())
-   #
-   #
-   # #save the weights to disk
-   #  file_Name1 = "learned_weights.pkl"
-   #  # open the file for writing
-   #  fileObject1 = open(file_Name1,'wb')
-   #  pk.dump(learned_weights.cpu().numpy(), fileObject1)
 
 
 
-    #print("loss")
-    #print(loss)
-    # print(adj_10_emb)
-    # print('Loss: after all epochs'+str((loss.data)))
     print("allY value length (must be 2648):")
     print(len(y_total))
     print("predicted allY value length (must be 2648):")
@@ -706,6 +689,8 @@ def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     print("rsquared_value:")
     print(str(rsquared_value))
 
+    rsq_total.append(rsquared_value)
+
     sys.exit(1)
     #learned_weights = model.affine.weight.data
     #return(learned_weights.cpu().numpy())
@@ -716,10 +701,17 @@ def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
     # print(fc.weight.data.view(-1))
 
-def chunks(l, n):
-    """Yield successive n-sized chunks from l."""
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
+'''from: http://wordaligned.org/articles/slicing-a-list-evenly-with-python'''
+def chunk(xs, n):
+    assert n > 0
+    L = len(xs)
+    s, r = divmod(L, n)
+    widths = chain(repeat(s+1, r), repeat(s, n-r))
+    offsets = accumulate(chain((0,), widths))
+    b, e = tee(offsets)
+    next(e)
+    return [xs[s] for s in map(slice, b, e)]
+
 
 '''  create feed forward NN model, but using 100 data points (around 33 folds) for cross validation'''
 def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
@@ -745,9 +737,11 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
 
 
-    #split it into folds. with each fold having 100 data points each
-    n=100
-    split_data=[allIndex[i:i + n] for i in range(0, len(allIndex), n)]
+    #split it into folds. n=number of folds. almost even sized.
+    n=30
+    split_data=chunk(allIndex,n)
+
+        #[allIndex[i:i + n] for i in range(0, len(allIndex), n)]
 
     #
     # counter=0
@@ -767,10 +761,14 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     pred_y_total = []
     y_total = []
 
+    rsq_total=[]
+
+
+
 
 
     # for each chunk in the training data, keep that one out, and train on the rest
-    for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="eachTrngData:"):
+    for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
 
         #print(eachChunkIndex)
@@ -864,22 +862,23 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
         #at the end of all epochs take the trained model that was trained on the 29 epochs
         #and use the trained model to predict on the values in the left over chunk
         test_data_index = features[eachChunkIndex]
-        print("len(features):")
+        # print("len(features):")
+        #
+        # print(len(features))
+        #
+        # print("test_data")
+        # print(test_data)
 
-        print(len(features))
+        pred_y_total_test_data = []
+        y_total_test_data = []
 
-        print("test_data")
-        print(test_data)
+
         #for each element in the test data, calculate its predicted value, and append it to predy_total
         for test_data_index in test_data:
 
-
-            print("feature_loo2:")
-            print(test_data_index)
-
             this_feature = features[test_data_index]
 
-            print(this_feature)
+            #print(this_feature)
 
 
 
@@ -894,67 +893,53 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             pred_y = model(each_adj, featureV_loo)
             #adj_10_emb[each_adj] = pred_y
             batch_y = convert_scalar_to_variable(y)
-            y_total.append(y)
+            y_total_test_data.append(y)
             #for each of the entry in training data, predict and store it in a bigger table
-            pred_y_total.append(pred_y.data.cpu().numpy())
-
-        # print(y)
-        # print(each_adj)
-        # print("pred_Y;")
-        # print(pred_y)
+            pred_y_total_test_data.append(pred_y.data.cpu().numpy())
 
 
-        print("y_total value length (must be around 100):")
-        print(len(y_total))
-        print("predicted allY value length (must be 2648):")
-        print(len(pred_y_total))
-        print("loss")
-        print(loss)
+
+        # print("y_total_test_data value length (must be around 100):")
+        # print(len(y_total_test_data))
+        # print(" pred_y_total_test_data value length (must be 2648):")
+        # print(len(pred_y_total_test_data))
+        # print("loss")
+        # print(loss)
 
         #calculate the rsquared value for each chunk
-        rsquared_value=r2_score(test_data, pred_y_total, sample_weight=None, multioutput='uniform_average')
+        rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
         print("rsquared_value:")
         print(str(rsquared_value))
-        sys.exit(1)
 
-    print("done with all training data")
-   #  #the model is trained by now-store it to disk
-   #  file_Name5 = "squish.pkl"
-   #  # open the file for writing
-   #  fileObject5 = open(file_Name5,'wb')
-   #  pk.dump(model, fileObject5)
-   #
-   #  learned_weights = fc.weight.data
-   #  #return(learned_weights.cpu().numpy())
-   #
-   #
-   # #save the weights to disk
-   #  file_Name1 = "learned_weights.pkl"
-   #  # open the file for writing
-   #  fileObject1 = open(file_Name1,'wb')
-   #  pk.dump(learned_weights.cpu().numpy(), fileObject1)
+        rsq_total.append(rsquared_value)
+
 
 
 
-    #print("loss")
-    #print(loss)
-    # print(adj_10_emb)
-    # print('Loss: after all epochs'+str((loss.data)))
-    print("allY value length (must be 2648):")
-    print(len(y_total))
-    print("predicted allY value length (must be 2648):")
-    print(len(pred_y_total))
+    print("done with all training data")
+
+    # calculate the average of each element in the list of predicted rsquared values. There should be 30 such values,
+    # each corresponding to one chunk being held out
 
 
+    print("rsq_total:")
 
-    #learned_weights = model.affine.weight.data
-    #return(learned_weights.cpu().numpy())
+    print(rsq_total)
 
-    # #rsquared_value2= rsquared(allY, pred_y)
-    # print("rsquared_value2:")
-    # print(str(rsquared_value2))
+    rsq_cumulative=0;
+
+    for eachRsq in rsq_total:
+        rsq_cumulative=rsq_cumulative+eachRsq
+
+
+    rsq_average=rsq_cumulative/(len(rsq_total))
+
+    print("rsq_average:")
+    print(str(rsq_average))
 
     # print(fc.weight.data.view(-1))
+
+    sys.exit(1)
 
 
 '''  create feed forward NN model, but using loocv for cross validation'''
