@@ -732,9 +732,6 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     #run through each epoch, feed forward, calculate loss, back propagate
 
 
-    params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
-    rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-    loss_fn = nn.MSELoss(size_average=True)
 
     allIndex = np.arange(len(features))
 
@@ -780,6 +777,10 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             print("got inside do_training. going to call model:")
 
             model = AdjEmb(193, addTurkerOneHot)
+
+            params_to_update = filter(lambda p: p.requires_grad == True, model.parameters())
+            rms = optim.RMSprop(params_to_update, lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            loss_fn = nn.MSELoss(size_average=True)
 
             #print(eachChunkIndex)
 
