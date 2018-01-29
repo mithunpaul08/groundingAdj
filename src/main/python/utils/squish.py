@@ -722,17 +722,6 @@ def chunk(xs, n):
 def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
 
-    #take the list of adjectives and give it all an index
-    adj_index=convert_adj_index(uniq_adj)
-
-
-
-    #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-
-    #run through each epoch, feed forward, calculate loss, back propagate
-
-
-
     allIndex = np.arange(len(features))
 
 
@@ -740,32 +729,15 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     #split it into folds. n=number of folds. almost even sized.
     n=noOfFoldsCV
     split_data=chunk(allIndex,n)
-
-        #[allIndex[i:i + n] for i in range(0, len(allIndex), n)]
-
-    #
-    # counter=0
-    # for eachchunk in split_data:
-    #     if(len(eachchunk)>20):
-    #         counter=counter+1
-    #         print(eachchunk)
-    #
-    # print("counter:"+str(counter))
-    # sys.exit(1)
-
-
     chunkIndices = np.arange(len(split_data))
 
-    #print("length of chunkIndices:"+str(len(chunkIndices)))
-
-    pred_y_total = []
-    y_total = []
 
     rsq_total=[]
-
     cwd=os.getcwd()
-    # empty out the existing file
+
+    # write rsq to disk
     with open(cwd + "/outputs/" + rsq_file_nfcv, "w+")as nfcv:
+        #empty out the existing file before loop does append
         nfcv.write("Chunk \t RSQ\n")
         nfcv.close()
 
@@ -774,15 +746,11 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
     with open(cwd + "/outputs/" + rsq_file_nfcv, "a")as nfcv:
         for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
-            print("got inside do_training. going to call model:")
-
             model = AdjEmb(193, addTurkerOneHot)
 
             params_to_update = filter(lambda p: p.requires_grad == True, model.parameters())
             rms = optim.RMSprop(params_to_update, lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
             loss_fn = nn.MSELoss(size_average=True)
-
-            #print(eachChunkIndex)
 
             # create a  list of all the indices of chunks except the chunk you are keeping out
             allIndices_chunks=[]
@@ -790,10 +758,6 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
                 if i!=eachChunkIndex:
                     allIndices_chunks.append(i)
 
-            #print("allIndices_chunks:"+str((allIndices_chunks)))
-
-
-            #print("length of allIndices_chunks:"+str(len(allIndices_chunks)))
             training_data=[]
 
             #for each of these chunks, pull out its data points, and concatenate all into one single huge list of
@@ -801,7 +765,6 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             for eachChunk in allIndices_chunks:
                 for eachElement in split_data[eachChunk]:
                     training_data.append(eachElement)
-                #print("length:"+str(len(training_data)))
 
             test_data=[]
             #for the left out chunk, pull out its data points, and concatenate all into one single huge list of
@@ -809,41 +772,18 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             for eachElement in split_data[eachChunkIndex]:
                     test_data.append(eachElement)
 
-            #print("length:"+str(len(test_data)))
-
-
-
-            # print("eachChunkIndex:")
-            # print(eachChunkIndex)
-
-            feature = features[eachChunkIndex]
-            # print("feature of held out one:")
-            # print(feature)
-
-            # print("len(trainingData):")
-            # print(len(training_data))
-            # print("the value that was left out was")
-            # print(allIndex[eachChunkIndex])
 
 
             #run n epochs on the left over training data
             for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
-
-                # for eachfeature in features:
-                #     print(eachfeature)
-                #
-                # for eachY in allY:
-                #     print(eachY)
-
-                #shuffle for each epoch
+                #shuffle before each epoch
                 np.random.shuffle(training_data)
 
                 '''for each row in the training data, predict y value for itself, and then back
                 propagate the loss'''
                 for eachRow in tqdm(training_data, total=len(features), desc="each_adj:"):
-                    # print("eachRow:")
-                    # print(eachRow)
+
 
                     #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
                     model.zero_grad()
@@ -857,7 +797,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
                     featureV= convert_to_variable(feature)
                     pred_y = model(each_adj, featureV)
 
-                    #adj_10_emb[each_adj]=pred_y
+
                     batch_y = convert_scalar_to_variable(y)
 
                     loss = loss_fn(pred_y, batch_y)
@@ -873,13 +813,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
             #at the end of all epochs take the trained model that was trained on the 29 epochs
             #and use the trained model to predict on the values in the left over chunk
-            test_data_index = features[eachChunkIndex]
-            # print("len(features):")
-            #
-            # print(len(features))
-            #
-            # print("test_data")
-            # print(test_data)
+
 
             pred_y_total_test_data = []
             y_total_test_data = []
@@ -889,34 +823,13 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             for test_data_index in test_data:
 
                 this_feature = features[test_data_index]
-
-                #print(this_feature)
-
-
-
                 featureV_loo= convert_to_variable(this_feature)
-
                 y = allY[test_data_index]
                 each_adj = all_adj[test_data_index]
-
-                # print(y)
-                # print(each_adj)
-
                 pred_y = model(each_adj, featureV_loo)
-                #adj_10_emb[each_adj] = pred_y
-                batch_y = convert_scalar_to_variable(y)
                 y_total_test_data.append(y)
-                #for each of the entry in training data, predict and store it in a bigger table
                 pred_y_total_test_data.append(pred_y.data.cpu().numpy())
 
-
-
-            # print("y_total_test_data value length (must be around 100):")
-            # print(len(y_total_test_data))
-            # print(" pred_y_total_test_data value length (must be 2648):")
-            # print(len(pred_y_total_test_data))
-            # print("loss")
-            # print(loss)
 
             #calculate the rsquared value for each chunk
             rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
@@ -924,25 +837,14 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             print("rsquared_value:"+str(rsquared_value))
             print("\n")
             nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
-
             rsq_total.append(rsquared_value)
 
 
-
-
-    print("done with all training data")
-
-    # calculate the average of each element in the list of predicted rsquared values. There should be 30 such values,
+    #  After all chunks are done, calculate the average of each element in the list of predicted rsquared values.
+    # There should be 30 such values,
     # each corresponding to one chunk being held out
 
 
-    print("rsq_total:")
-
-    print(rsq_total)
-
-    print("len(rsq_total:")
-
-    print(len(rsq_total))
 
     rsq_cumulative=0;
 
@@ -960,7 +862,6 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
         rsq_values_avg.write("rsq_average: \t "+str(rsq_average))
     rsq_values_avg.close()
 
-    # print(fc.weight.data.view(-1))
 
     sys.exit(1)
 
