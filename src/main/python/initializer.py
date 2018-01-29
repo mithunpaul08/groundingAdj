@@ -17,7 +17,9 @@ from utils.grounding import split_data_based_on_adj
 
 
 from utils.squish import do_training
-from utils.squish import run_adj_emb_loocv
+from utils.squish import run_loocv_on_turk_data
+from utils.squish import run_nfoldCV_on_turk_data
+from utils.squish import run_loocv_per_adj
 from utils.squish import tuneOnDev
 from utils.squish import train_dev_print_rsq
 from utils.squish import cutGlove
@@ -44,7 +46,7 @@ dev_adj="dev_adj.csv"
 training_adj="trainingData_adj.csv"
 test_adj="test_adj.csv"
 
-addTurkerOneHot=True
+addTurkerOneHot=False
 addAdjOneHot=False
 
 if __name__ == "__main__":
@@ -78,10 +80,17 @@ if __name__ == "__main__":
                     # sys.exit(1)
 
 
+                    uniq_turker = {}
 
+                    # run1: run with leave one out cross validation on all the turk experiment data points
+                    features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, entire_turk_data,
+                                                                                               addAdjOneHot, uniq_turker,addTurkerOneHot)
 
-                    #run1: run with leave one out cross validation
-                    #run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
+                    #read all the data. i.e without training-dev-split. This is for LOOCV
+                    run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot)
+
+                    print("done loocv for all turk data, going to exit")
+
 
                     #run 2 : do training and dev tuning separately.
                     # readtraining data
@@ -96,20 +105,25 @@ if __name__ == "__main__":
 
                     # run 3: run both dev and training together and print rsq after each epoch
                     # mutual exclusive with run 2 above
-                    uniq_turker = {}
+
 
 
                     #code that splits the data based on adjectives and not the entire data- should be used only once ideally
                     # features, y, adj_lexicon, all_adj, uniq_turker = split_data_based_on_adj(cwd, entire_turk_data,
                     #                                                                          False, uniq_turker)
 
-                    features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_adj,
+                    features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, training_adj,
                                                                                                addAdjOneHot, uniq_turker,addTurkerOneHot)
+
+                    #train on the adj based training split and tune on dev. All is done inside train_dev_print_rsq
                     trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
                     print("done training . Going to  read dev data")
 
+                    #instead of splitting data into 80-10-10, do LOOCV based on adjectives
+                    run_loocv_per_adj(features, y, adj_lexicon, all_adj,addTurkerOneHot,uniq_adj_list)
 
-
+                    print("done loocv for adj based turk data, going to exit")
+                    sys.exit(1)
 
                     adj_lexicon_flipped = dict()
                     #total number of unique adjectives
@@ -131,7 +145,7 @@ if __name__ == "__main__":
                     # adj_intercepts_learned = learned_weights[:num_adj]
                     # #pairing weights with adjectives.
                     # adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
-                    #
+
                     # sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
                     #
                     # #print highest 20 intercepts and lowest 20 intercepts
@@ -156,7 +170,7 @@ if __name__ == "__main__":
 
 
                         #run with leae one out cross validation
-                        run_adj_emb_loocv(features,y,adj_lexicon,all_adj)
+                        run_loocv_on_turk_data(features, y, adj_lexicon, all_adj)
 
                         #run just with a classic train-dev-test partition
                         elapsed_time = time.time() - start_time

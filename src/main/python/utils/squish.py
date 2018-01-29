@@ -9,7 +9,7 @@ import torchtext.vocab as vocab
 import torchwordemb
 import numpy as np
 import os
-
+from itertools import accumulate, chain, repeat, tee
 from utils.linearReg import convert_variable
 from utils.read_write_data import readRawTurkDataFile
 from sklearn.metrics import r2_score
@@ -25,11 +25,16 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfEpochs=10000
-lr=5e-5
-#lr=1e-5
+noOfFoldsCV=30
+noOfEpochs=135
+lr=1e-5
+#lr=1e-2
 
 rsq_file="rsq_file.txt"
+rsq_file_nfcv="rsq_file_nfcv.txt"
+rsq_file_nfcv_avrg="rsq_file_nfcv_avrg.txt"
+
+
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount,addTurkerOneHot):
@@ -164,9 +169,10 @@ class AdjEmb(nn.Module):
 
 
 
+        feature_squished = (torch.cat((feats, out)))
 
-        feature_squished = torch.cat((feats, out))
-        return self.fc(feature_squished)
+        retValue=(self.fc(feature_squished))
+        return retValue
 
 
 
@@ -485,7 +491,10 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
 
-            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot)
+            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch)
+            # Print weights
+            learned_weights = model.fc.weight.data
+            print("\tlearned weights:" + str(learned_weights.cpu().numpy()))
 
 
 
@@ -545,26 +554,21 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
 
+'''  create feed forward NN model, but using loocv for cross validation'''
+def run_loocv_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
-def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
-    ''' same create feed forward NN model, but using loocv for cross validation'''
 
     #take the list of adjectives and give it all an index
-    adj_index=convert_adj_index(list_Adj)
+    adj_index=convert_adj_index(uniq_adj)
 
     print("got inside do_training. going to call model:")
 
-    model=AdjEmb(193)
+    model=AdjEmb(193,addTurkerOneHot)
 
     #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
 
     #run through each epoch, feed forward, calculate loss, back propagate
 
-    #no point having epoch if you are not back propagating
-    #for epoch in tqdm(range(no_of_epochs),total=no_of_epochs,desc="squishing:"):
-
-    #things needed for the linear regression phase
-    featureShape=features.shape
 
     params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
     rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
@@ -579,11 +583,13 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
     y_total = []
     adj_10_emb = {}
 
-    # do loocv len(trainingData) times
-    for eachElement in tqdm(allIndex,total=len(allIndex), desc="eachTrngData:"):
+    rsq_total=[]
 
-        #for each element in the training data, keep that one out, and train on the rest
-        #i.e create a list of all the indices except the one you are keeping out
+
+    # for each element in the training data, keep that one out, and train on the rest
+    for eachElement in tqdm(allIndex,total=len(allIndex), desc="n-fold-CV:"):
+
+        # create a list of all the indices except the one you are keeping out
         allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
 
 
@@ -612,6 +618,421 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
             np.random.shuffle(allIndex_loocv)
 
             '''for each row in the training data, predict y value for itself, and then back
+            propagate the loss'''
+            for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
+                # print("eachRow:")
+                # print(eachRow)
+
+                #using shuffling
+                feature=features[eachRow]
+
+                y = allY[eachRow]
+                each_adj = all_adj[eachRow]
+
+                featureV= convert_to_variable(feature)
+                pred_y = model(each_adj, featureV)
+
+                adj_10_emb[each_adj]=pred_y
+                batch_y = convert_scalar_to_variable(y)
+
+                loss = loss_fn(pred_y, batch_y)
+
+                # Backward pass
+                loss.backward()
+
+                rms.step()
+
+
+
+
+
+        #for loocv use the trained model to predict on the left over value
+        feature_loo = features[eachElement]
+        featureV_loo= convert_to_variable(feature_loo)
+        #print(feature)
+        y = allY[eachElement]
+        each_adj = all_adj[eachElement]
+        pred_y = model(each_adj, featureV_loo)
+        #adj_10_emb[each_adj] = pred_y
+        batch_y = convert_scalar_to_variable(y)
+        y_total.append(y)
+        #for each of the entry in training data, predict and store it in a bigger table
+        pred_y_total.append(pred_y.data.cpu().numpy())
+
+        # print(y)
+        # print(each_adj)
+        # print("pred_Y;")
+        # print(pred_y)
+
+        # the LOOCV ends here do this for each element as "THE LEAVE ONE OUT" the training data
+
+
+        #print loss at the end of every element left out
+
+        #print(adj_10_emb)
+        # print('Loss: after all epochs'+str((loss.data)))
+        print("allY value length (must be 2648):")
+        print(len(y_total))
+        print("predicted allY value length (must be 2648):")
+        print(len(pred_y_total))
+        print("loss")
+        print(loss)
+
+    print("done with all training data")
+
+
+
+    print("allY value length (must be 2648):")
+    print(len(y_total))
+    print("predicted allY value length (must be 2648):")
+    print(len(pred_y_total))
+
+
+    rsquared_value=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
+
+
+    print("rsquared_value:")
+    print(str(rsquared_value))
+
+    rsq_total.append(rsquared_value)
+
+    sys.exit(1)
+    #learned_weights = model.affine.weight.data
+    #return(learned_weights.cpu().numpy())
+
+    # #rsquared_value2= rsquared(allY, pred_y)
+    # print("rsquared_value2:")
+    # print(str(rsquared_value2))
+
+    # print(fc.weight.data.view(-1))
+
+'''from: http://wordaligned.org/articles/slicing-a-list-evenly-with-python'''
+def chunk(xs, n):
+    assert n > 0
+    L = len(xs)
+    s, r = divmod(L, n)
+    widths = chain(repeat(s+1, r), repeat(s, n-r))
+    offsets = accumulate(chain((0,), widths))
+    b, e = tee(offsets)
+    next(e)
+    return [xs[s] for s in map(slice, b, e)]
+
+
+'''  create feed forward NN model, but using 100 data points (around 33 folds) for cross validation'''
+def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
+
+
+    #take the list of adjectives and give it all an index
+    adj_index=convert_adj_index(uniq_adj)
+
+
+
+    #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+
+    #run through each epoch, feed forward, calculate loss, back propagate
+
+
+
+    allIndex = np.arange(len(features))
+
+
+
+    #split it into folds. n=number of folds. almost even sized.
+    n=noOfFoldsCV
+    split_data=chunk(allIndex,n)
+
+        #[allIndex[i:i + n] for i in range(0, len(allIndex), n)]
+
+    #
+    # counter=0
+    # for eachchunk in split_data:
+    #     if(len(eachchunk)>20):
+    #         counter=counter+1
+    #         print(eachchunk)
+    #
+    # print("counter:"+str(counter))
+    # sys.exit(1)
+
+
+    chunkIndices = np.arange(len(split_data))
+
+    #print("length of chunkIndices:"+str(len(chunkIndices)))
+
+    pred_y_total = []
+    y_total = []
+
+    rsq_total=[]
+
+    cwd=os.getcwd()
+    # empty out the existing file
+    with open(cwd + "/outputs/" + rsq_file_nfcv, "w+")as nfcv:
+        nfcv.write("Chunk \t RSQ\n")
+        nfcv.close()
+
+    # for each chunk in the training data, keep that one out, and train on the rest
+    # append the rest of the values
+    with open(cwd + "/outputs/" + rsq_file_nfcv, "a")as nfcv:
+        for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
+
+            print("got inside do_training. going to call model:")
+
+            model = AdjEmb(193, addTurkerOneHot)
+
+            params_to_update = filter(lambda p: p.requires_grad == True, model.parameters())
+            rms = optim.RMSprop(params_to_update, lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            loss_fn = nn.MSELoss(size_average=True)
+
+            #print(eachChunkIndex)
+
+            # create a  list of all the indices of chunks except the chunk you are keeping out
+            allIndices_chunks=[]
+            for i in chunkIndices:
+                if i!=eachChunkIndex:
+                    allIndices_chunks.append(i)
+
+            #print("allIndices_chunks:"+str((allIndices_chunks)))
+
+
+            #print("length of allIndices_chunks:"+str(len(allIndices_chunks)))
+            training_data=[]
+
+            #for each of these chunks, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the training data
+            for eachChunk in allIndices_chunks:
+                for eachElement in split_data[eachChunk]:
+                    training_data.append(eachElement)
+                #print("length:"+str(len(training_data)))
+
+            test_data=[]
+            #for the left out chunk, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the training data
+            for eachElement in split_data[eachChunkIndex]:
+                    test_data.append(eachElement)
+
+            #print("length:"+str(len(test_data)))
+
+
+
+            # print("eachChunkIndex:")
+            # print(eachChunkIndex)
+
+            feature = features[eachChunkIndex]
+            # print("feature of held out one:")
+            # print(feature)
+
+            # print("len(trainingData):")
+            # print(len(training_data))
+            # print("the value that was left out was")
+            # print(allIndex[eachChunkIndex])
+
+
+            #run n epochs on the left over training data
+            for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
+
+                # for eachfeature in features:
+                #     print(eachfeature)
+                #
+                # for eachY in allY:
+                #     print(eachY)
+
+                #shuffle for each epoch
+                np.random.shuffle(training_data)
+
+                '''for each row in the training data, predict y value for itself, and then back
+                propagate the loss'''
+                for eachRow in tqdm(training_data, total=len(features), desc="each_adj:"):
+                    # print("eachRow:")
+                    # print(eachRow)
+
+                    #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
+                    model.zero_grad()
+
+                    feature=features[eachRow]
+
+                    y = allY[eachRow]
+                    each_adj = all_adj[eachRow]
+
+
+                    featureV= convert_to_variable(feature)
+                    pred_y = model(each_adj, featureV)
+
+                    #adj_10_emb[each_adj]=pred_y
+                    batch_y = convert_scalar_to_variable(y)
+
+                    loss = loss_fn(pred_y, batch_y)
+
+                    # Backward pass
+                    loss.backward()
+
+                    rms.step()
+
+
+
+
+
+            #at the end of all epochs take the trained model that was trained on the 29 epochs
+            #and use the trained model to predict on the values in the left over chunk
+            test_data_index = features[eachChunkIndex]
+            # print("len(features):")
+            #
+            # print(len(features))
+            #
+            # print("test_data")
+            # print(test_data)
+
+            pred_y_total_test_data = []
+            y_total_test_data = []
+
+
+            #for each element in the test data, calculate its predicted value, and append it to predy_total
+            for test_data_index in test_data:
+
+                this_feature = features[test_data_index]
+
+                #print(this_feature)
+
+
+
+                featureV_loo= convert_to_variable(this_feature)
+
+                y = allY[test_data_index]
+                each_adj = all_adj[test_data_index]
+
+                # print(y)
+                # print(each_adj)
+
+                pred_y = model(each_adj, featureV_loo)
+                #adj_10_emb[each_adj] = pred_y
+                batch_y = convert_scalar_to_variable(y)
+                y_total_test_data.append(y)
+                #for each of the entry in training data, predict and store it in a bigger table
+                pred_y_total_test_data.append(pred_y.data.cpu().numpy())
+
+
+
+            # print("y_total_test_data value length (must be around 100):")
+            # print(len(y_total_test_data))
+            # print(" pred_y_total_test_data value length (must be 2648):")
+            # print(len(pred_y_total_test_data))
+            # print("loss")
+            # print(loss)
+
+            #calculate the rsquared value for each chunk
+            rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+            print("\n")
+            print("rsquared_value:"+str(rsquared_value))
+            print("\n")
+            nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
+
+            rsq_total.append(rsquared_value)
+
+
+
+
+    print("done with all training data")
+
+    # calculate the average of each element in the list of predicted rsquared values. There should be 30 such values,
+    # each corresponding to one chunk being held out
+
+
+    print("rsq_total:")
+
+    print(rsq_total)
+
+    print("len(rsq_total:")
+
+    print(len(rsq_total))
+
+    rsq_cumulative=0;
+
+    for eachRsq in rsq_total:
+        rsq_cumulative=rsq_cumulative+eachRsq
+
+
+    rsq_average=rsq_cumulative/(len(rsq_total))
+
+    print("rsq_average:")
+    print(str(rsq_average))
+
+    # empty out the existing file
+    with open(cwd + "/outputs/" + rsq_file_nfcv_avrg, "w+")as rsq_values_avg:
+        rsq_values_avg.write("rsq_average: \t "+str(rsq_average))
+    rsq_values_avg.close()
+
+    # print(fc.weight.data.view(-1))
+
+    sys.exit(1)
+
+
+'''  create feed forward NN model, but using loocv for cross validation'''
+def run_loocv_per_adj(features, allY, uniq_adj, all_adj,addTurkerOneHot,uniq_adj_list):
+
+
+
+
+    print("got inside run_loocv_per_adj_. going to call model:")
+
+    model=AdjEmb(193,addTurkerOneHot)
+
+    params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
+    rms = optim.RMSprop(params_to_update,lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    loss_fn = nn.MSELoss(size_average=True)
+
+    allIndex = np.arange(len(uniq_adj))
+
+
+
+
+    pred_y_total = []
+    y_total = []
+    adj_10_emb = {}
+
+
+    # for each element in the list of adjectives keep that one out, and train on the rest
+    # instead of shuffling a list of adjectives, just create an index of all adjectives and shuffle that. easier to do
+    for index,eachElement in tqdm(enumerate(allIndex),total=len(allIndex), desc="eachTrngData:"):
+
+        # create a list of all the indices except the one you are keeping out
+        allIndex_loocv=[x for x,i in enumerate(allIndex) if i!=eachElement]
+
+
+        print("eachElement:")
+        print(eachElement)
+
+        feature = features[eachElement]
+        print("feature of held out one:")
+        print(feature)
+
+        print("len(trainingData):")
+        print(len(allIndex_loocv))
+        print("the value that was left out was")
+        print(allIndex[eachElement])
+        leftOutIndex=allIndex[eachElement]
+
+        print(("the adjective that was left out was"))
+        leftOutAdj=uniq_adj_list[leftOutIndex]
+        print(leftOutAdj)
+
+        if (index == 5):
+            sys.exit(1)
+
+        continue
+
+
+
+        #train on the rest
+        for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
+            #for each word in the list of adjectives
+            model.zero_grad()
+
+
+            #shuffle before each epoch
+            np.random.shuffle(allIndex_loocv)
+
+            '''for each row in the training data, check if its adjective is part of the held out one. If yes, add to test set.
+             Else predict y value for itself, and then back
             propagate the loss'''
             for eachRow in tqdm(allIndex_loocv, total=len(features), desc="each_adj:"):
                 # print("eachRow:")
@@ -719,24 +1140,33 @@ def run_adj_emb_loocv(features, allY, list_Adj, all_adj):
 
 
 
-
-def predictAndCalculateRSq(allY, features, all_adj, trained_model):
+def predictAndCalculateRSq(allY, features, all_adj, trained_model,epoch):
     pred_y_total = []
     y_total = []
 
     # #a bunch of debug statements
     # print("allY value length (must be 331):")
     # print((allY.shape))
+
+    # print("all_adj:")
+    # print(all_adj)
     # print("each_adj value length (must be 331):")
     # print(len(all_adj))
+
     # print("features length (must be 331):")
     # print((features.shape))
 
 
     loss_fn = nn.MSELoss(size_average=True)
 
+    adj_gold_pred={}
+    previous_adj=""
+    current_adj=""
+    this_adj_gold_y=[]
+    this_adj_pred_y=[]
 
     for index,feature in tqdm(enumerate(features), total=len(features), desc="predict:"):
+
 
             featureV= convert_to_variable(feature)
             y = allY[index]
@@ -744,6 +1174,31 @@ def predictAndCalculateRSq(allY, features, all_adj, trained_model):
             pred_y = trained_model(each_adj, featureV)
             y_total.append(y)
             pred_y_total.append(pred_y.data.cpu().numpy()[0])
+
+            #for each data point which has the same adjective, store its goldY and predY values
+            current_adj=each_adj
+
+            #very first time initialize the previous_adj=current_adj
+            if(index==0):
+                previous_adj=current_adj
+                # print("foujnd that index==0")
+
+            if(current_adj==previous_adj):
+                this_adj_gold_y.append(y)
+                this_adj_pred_y.append(pred_y.data.cpu().numpy()[0])
+                # print("foujnd that this adj and previous adj are same.")
+
+
+            #if the adjectives are different, it means that we are switching to a new one. calculate rsquared. update previous_adj
+            else:
+                # print("foujnd that this adj and previous adj are NOT same.")
+                # print(str(len(this_adj_gold_y)))
+                # print(str(len(this_adj_pred_y)))
+                previous_adj=current_adj
+                rsquared_value_per_adj=r2_score(this_adj_gold_y, this_adj_pred_y, sample_weight=None, multioutput='uniform_average')
+
+                if((epoch%5)==0):
+                    print("adj:"+current_adj+" rsq value:"+str(rsquared_value_per_adj))
 
         #loss_dev = loss_fn(pred_y, true_variable_y)
 
@@ -779,13 +1234,13 @@ def cutGlove(adj_lexicon):
         return adj_glove_emb
 
 
-def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot):
+def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch):
     # test on dev data
     features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker,addTurkerOneHot)
     #print("done reading dev data:")
 
     # calculate rsquared
-    rsquared_value = predictAndCalculateRSq(y, features, all_adj, trained_model)
+    rsquared_value = predictAndCalculateRSq(y, features, all_adj, trained_model,epoch)
 
     #print(str(loss_training)+"\t"+ str(rsquared_value))
 
@@ -793,3 +1248,4 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_train
     print(str(rsquared_value_training)+"\t"+ str(rsquared_value))
     print("")
     rsq_values.write(str(rsquared_value)+"\n")
+

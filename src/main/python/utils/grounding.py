@@ -312,13 +312,17 @@ def get_features_training_data(cwd, turkFile, useAdjOneHot, uniq_turker, addTurk
         uniq_adj={}
         counter=0
 
-        #create a total list of unique adj in this collection
+        #create a dictionary  of unique adj in this collection
         for a in df_raw_turk_data["adjective"]:
             if(a) not in uniq_adj:
                 #if its not there already add it as the latest element
                 uniq_adj[a]=counter
                 counter=counter+1
 
+        uniq_adj_list=[]
+        # create a list  of unique adj in this collection
+        for a in uniq_adj.keys():
+                uniq_adj_list.append(a)
 
 
 
@@ -504,7 +508,7 @@ def get_features_training_data(cwd, turkFile, useAdjOneHot, uniq_turker, addTurk
 
 
 
-        return npfeatures,y, uniq_adj, all_adj,uniq_turker
+        return npfeatures,y, uniq_adj, all_adj,uniq_turker,uniq_adj_list
 
 
 '''this is created on jan 22nd 2018. By now we have the grounding working for squished to 1 architecture.
