@@ -88,7 +88,7 @@ if __name__ == "__main__":
                                                                                                addAdjOneHot, uniq_turker,addTurkerOneHot)
 
                     #read all the data. i.e without training-dev-split. This is for LOOCV
-                    run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot)
+                    run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
 
                     print("done loocv for all turk data, going to exit")
 

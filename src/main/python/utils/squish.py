@@ -720,7 +720,7 @@ def chunk(xs, n):
 
 
 '''  create feed forward NN model, but using 100 data points (around 33 folds) for cross validation'''
-def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
+def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,useEarlyStopping):
 
 
     allIndex = np.arange(len(features))
@@ -775,36 +775,45 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
                     test_data.append(eachElement)
 
 
+            rsq_max_estop=0.000
+            rsq_previous_estop=0.000
+            patienceCounter=0;
+            patience_max=20;
+
 
             #run n epochs on the left over training data
             for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
                 '''adding early-stopping and patience'''
-                # split the training data further into training and dev
-                len_training_estop = len(training_data)
-                indices_tr_estop = np.arange(len_training_estop)
-                eighty_estop=math.ceil(len_training_estop*80/100)
-                trainingData_estop=indices_tr_estop[:eighty_estop]
-                dev_estop=indices_tr_estop[eighty_estop:]
+                if(useEarlyStopping):
 
-                print("len_training_estop:")
+                    # split the training data further into training and dev
+                    len_training_estop = len(training_data)
+                    indices_tr_estop = np.arange(len_training_estop)
+                    eighty_estop=math.ceil(len_training_estop*80/100)
+                    trainingData_estop=indices_tr_estop[:eighty_estop]
+                    dev_estop=indices_tr_estop[eighty_estop:]
+                    training_data = trainingData_estop
 
-                print(len_training_estop)
-                print("(trainingData_estop):")
-                print((trainingData_estop))
+                    #debug statements
+                    print("len_training_estop:")
+                    print(len_training_estop)
+                    print("(trainingData_estop):")
+                    print((trainingData_estop))
+
 
 
                 #shuffle before each epoch
-                np.random.shuffle(trainingData_estop)
+                np.random.shuffle(training_data)
 
-                print("(trainingData_estop):")
-                print((trainingData_estop))
+                print("(training_data):")
+                print((training_data))
 
-                sys.exit(1)
+
 
                 '''for each row in the training data, predict y value for itself, and then back
                 propagate the loss'''
-                for eachRow in tqdm(trainingData_estop, total=len(features), desc="each_adj:"):
+                for eachRow in tqdm(training_data, total=len(features), desc="each_adj:"):
 
 
                     #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
@@ -828,6 +837,59 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
                     loss.backward()
 
                     rms.step()
+
+
+                '''if using early stopping: For each epoch,
+                train on training_data and test on dev.
+                Calculate rsq and Store the rsq value if more than previous'''
+
+                if (useEarlyStopping):
+
+                    pred_y_total_dev_data = []
+                    y_total_dev_data = []
+
+                    # for each element in the dev data, calculate its predicted value, and append it to predy_total
+                    for test_data_index in dev_estop:
+                        this_feature = features[test_data_index]
+                        featureV_loo = convert_to_variable(this_feature)
+                        y = allY[test_data_index]
+                        each_adj = all_adj[test_data_index]
+                        pred_y = model(each_adj, featureV_loo)
+                        y_total_dev_data.append(y)
+                        pred_y_total_dev_data.append(pred_y.data.cpu().numpy())
+
+                    # calculate the rsquared value for entire dev_estop
+                    rsquared_value_estop = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
+                                              multioutput='uniform_average')
+                    print("\n")
+                    print("rsquared_value_estop:" + str(rsquared_value_estop))
+                    print("\n")
+
+                    #in the first epoch all the values are initialized to the current value
+                    if(epoch==1):
+                        rsq_max_estop = rsquared_value_estop
+                        rsq_previous_estop = rsquared_value_estop
+
+                    #2nd epoch onwards keep track of the maximum rsq value so far
+                    else:
+                        if(rsquared_value_estop>rsq_max_estop):
+                            rsq_max_estop = rsquared_value_estop
+
+                    #everytime the current rsquared value is less than the previous value, increase patience count
+                    if (rsquared_value_estop < rsq_previous_estop):
+                        patienceCounter=patienceCounter+1
+
+                    print("epoch:"+str(epoch)+"rsq_max_estop:"+str(rsq_max_estop))
+                    print("rsq_previous_estop"+str(rsq_previous_estop) +"rsquared_value_estop:"+rsquared_value_estop)
+
+                    rsq_previous_estop = rsquared_value_estop
+
+                    sys.exit(1)
+
+                    if(patienceCounter>patience_max):
+                        print("losing my patience. Crossed 20. Exiting")
+                        print("rsq_max_estop:"+str(rsq_max_estop))
+                        sys.exit(1)
 
 
 
