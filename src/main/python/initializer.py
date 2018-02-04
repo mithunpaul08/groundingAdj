@@ -48,6 +48,7 @@ test_adj="test_adj.csv"
 
 addTurkerOneHot=False
 addAdjOneHot=False
+useEarlyStopping=True
 
 if __name__ == "__main__":
     try:

@@ -1,6 +1,7 @@
 import pickle as pk
 import sys
 import torch
+import math
 import torch.nn as nn
 import torch.autograd as autograd
 import torch.nn.functional as F
@@ -741,9 +742,10 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
         nfcv.write("Chunk \t RSQ\n")
         nfcv.close()
 
-    # for each chunk in the training data, keep that one out, and train on the rest
-    # append the rest of the values
+
     with open(cwd + "/outputs/" + rsq_file_nfcv, "a")as nfcv:
+        # for each chunk in the training data, keep that one out, and train on the rest
+        # append the rest of the values
         for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
             model = AdjEmb(193, addTurkerOneHot)
@@ -768,7 +770,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
 
             test_data=[]
             #for the left out chunk, pull out its data points, and concatenate all into one single huge list of
-            # data points-this is the training data
+            # data points-this is the test data
             for eachElement in split_data[eachChunkIndex]:
                     test_data.append(eachElement)
 
@@ -777,12 +779,32 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot):
             #run n epochs on the left over training data
             for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
+                '''adding early-stopping and patience'''
+                # split the training data further into training and dev
+                len_training_estop = len(training_data)
+                indices_tr_estop = np.arange(len_training_estop)
+                eighty_estop=math.ceil(len_training_estop*80/100)
+                trainingData_estop=indices_tr_estop[:eighty_estop]
+                dev_estop=indices_tr_estop[eighty_estop:]
+
+                print("len_training_estop:")
+
+                print(len_training_estop)
+                print("(trainingData_estop):")
+                print((trainingData_estop))
+
+
                 #shuffle before each epoch
-                np.random.shuffle(training_data)
+                np.random.shuffle(trainingData_estop)
+
+                print("(trainingData_estop):")
+                print((trainingData_estop))
+
+                sys.exit(1)
 
                 '''for each row in the training data, predict y value for itself, and then back
                 propagate the loss'''
-                for eachRow in tqdm(training_data, total=len(features), desc="each_adj:"):
+                for eachRow in tqdm(trainingData_estop, total=len(features), desc="each_adj:"):
 
 
                     #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
