@@ -796,18 +796,18 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                     training_data = trainingData_estop
 
                     #debug statements
-                    print("len_training_estop:")
-                    print(len_training_estop)
-                    print("(trainingData_estop):")
-                    print((trainingData_estop))
+                    # print("len_training_estop:")
+                    # print(len_training_estop)
+                    # print("(trainingData_estop):")
+                    # print((trainingData_estop))
 
 
 
                 #shuffle before each epoch
                 np.random.shuffle(training_data)
 
-                print("(training_data):")
-                print((training_data))
+                # print("(training_data):")
+                # print((training_data))
 
 
 
@@ -862,7 +862,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                     rsquared_value_estop = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
                                               multioutput='uniform_average')
                     print("\n")
-                    print("rsquared_value_estop:" + str(rsquared_value_estop))
+                    #print("rsquared_value_estop:" + str(rsquared_value_estop))
                     print("\n")
 
                     #in the first epoch all the values are initialized to the current value
@@ -879,12 +879,12 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                     if (rsquared_value_estop < rsq_previous_estop):
                         patienceCounter=patienceCounter+1
 
-                    print("epoch:"+str(epoch)+"rsq_max_estop:"+str(rsq_max_estop))
-                    print("rsq_previous_estop"+str(rsq_previous_estop) +"rsquared_value_estop:"+rsquared_value_estop)
+                    print("epoch:"+str(epoch)+" rsq_max:"+str(rsq_max_estop)+" rsq_previous:"
+                          +str(rsq_previous_estop) +" rsq_current:"+str(rsquared_value_estop))
 
                     rsq_previous_estop = rsquared_value_estop
 
-                    sys.exit(1)
+
 
                     if(patienceCounter>patience_max):
                         print("losing my patience. Crossed 20. Exiting")
