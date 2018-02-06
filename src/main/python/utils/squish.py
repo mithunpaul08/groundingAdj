@@ -781,8 +781,12 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
             patience_max=20;
 
 
+
             #run n epochs on the left over training data
             for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
+                # shuffle before each epoch
+                np.random.shuffle(training_data)
 
                 '''adding early-stopping and patience'''
                 if(useEarlyStopping):
@@ -803,8 +807,6 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 
 
-                #shuffle before each epoch
-                np.random.shuffle(training_data)
 
                 # print("(training_data):")
                 # print((training_data))
@@ -872,6 +874,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
                     #2nd epoch onwards keep track of the maximum rsq value so far
                     else:
+
                         if(rsquared_value_estop>rsq_max_estop):
                             rsq_max_estop = rsquared_value_estop
 
@@ -880,7 +883,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                         patienceCounter=patienceCounter+1
 
                     print("epoch:"+str(epoch)+" rsq_max:"+str(rsq_max_estop)+" rsq_previous:"
-                          +str(rsq_previous_estop) +" rsq_current:"+str(rsquared_value_estop))
+                          +str(rsq_previous_estop) +" rsq_current:"+str(rsquared_value_estop)+
+                          " patience:"+str(patienceCounter)+" loss:"+str(loss))
 
                     rsq_previous_estop = rsquared_value_estop
 

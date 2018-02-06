@@ -14,207 +14,69 @@ just loaded glove for per adj. going to load glove for entire embeddings.
 done loading all gloves
 
 
-rsquared_value_estop:-207493.786164
 
 
-epoch:0 rsq_max:0.0 rsq_previous:0.0 rsq_current:-207493.786164
+epoch:0 rsq_max:0.0 rsq_previous:0.0 rsq_current:-207739.893526patience:1loss:Variable containing:
+ 52320.8789
+[torch.FloatTensor of size 1]
 
 
-rsquared_value_estop:-85525.9700025
 
 
-epoch:1 rsq_max:-85525.9700025 rsq_previous:-85525.9700025 rsq_current:-85525.9700025
 
+epoch:1 rsq_max:-85857.4500489 rsq_previous:-85857.4500489 rsq_current:-85857.4500489patience:1loss:Variable containing:
+ 26600.1191
+[torch.FloatTensor of size 1]
 
-rsquared_value_estop:-30900.4146672
 
 
-epoch:2 rsq_max:-30900.4146672 rsq_previous:-85525.9700025 rsq_current:-30900.4146672
 
 
-rsquared_value_estop:-22641.6441254
+epoch:2 rsq_max:-30870.2281315 rsq_previous:-85857.4500489 rsq_current:-30870.2281315patience:1loss:Variable containing:
+ 39778.3242
+[torch.FloatTensor of size 1]
 
 
-epoch:3 rsq_max:-22641.6441254 rsq_previous:-30900.4146672 rsq_current:-22641.6441254
 
 
-rsquared_value_estop:-9047.4258349
 
+epoch:3 rsq_max:-22799.1556498 rsq_previous:-30870.2281315 rsq_current:-22799.1556498patience:1loss:Variable containing:
+ 2266.5215
+[torch.FloatTensor of size 1]
 
-epoch:4 rsq_max:-9047.4258349 rsq_previous:-22641.6441254 rsq_current:-9047.4258349
 
 
-rsquared_value_estop:-14188.8235889
 
 
-epoch:5 rsq_max:-9047.4258349 rsq_previous:-9047.4258349 rsq_current:-14188.8235889
+epoch:4 rsq_max:-9099.02587142 rsq_previous:-22799.1556498 rsq_current:-9099.02587142patience:1loss:Variable containing:
+ 9391.1035
+[torch.FloatTensor of size 1]
 
 
-rsquared_value_estop:-4261.15005669
 
 
-epoch:6 rsq_max:-4261.15005669 rsq_previous:-14188.8235889 rsq_current:-4261.15005669
 
+epoch:5 rsq_max:-9099.02587142 rsq_previous:-9099.02587142 rsq_current:-14235.4883743patience:2loss:Variable containing:
+ 25525.5332
+[torch.FloatTensor of size 1]
 
-rsquared_value_estop:-5257.35803265
 
 
-epoch:7 rsq_max:-4261.15005669 rsq_previous:-4261.15005669 rsq_current:-5257.35803265
 
 
-rsquared_value_estop:-7976.63508588
+epoch:6 rsq_max:-4266.39981713 rsq_previous:-14235.4883743 rsq_current:-4266.39981713patience:2loss:Variable containing:
+ 9.1418
+[torch.FloatTensor of size 1]
 
-
-epoch:8 rsq_max:-4261.15005669 rsq_previous:-5257.35803265 rsq_current:-7976.63508588
-
-
-rsquared_value_estop:-13606.9311778
-
-
-epoch:9 rsq_max:-4261.15005669 rsq_previous:-7976.63508588 rsq_current:-13606.9311778
-
-
-rsquared_value_estop:-2425.47998296
-
-
-epoch:10 rsq_max:-2425.47998296 rsq_previous:-13606.9311778 rsq_current:-2425.47998296
-
-
-rsquared_value_estop:-2059.96418861
-
-
-epoch:11 rsq_max:-2059.96418861 rsq_previous:-2425.47998296 rsq_current:-2059.96418861
-
-
-rsquared_value_estop:-6979.97733833
-
-
-epoch:12 rsq_max:-2059.96418861 rsq_previous:-2059.96418861 rsq_current:-6979.97733833
-
-
-rsquared_value_estop:-22063.7501929
-
-
-epoch:13 rsq_max:-2059.96418861 rsq_previous:-6979.97733833 rsq_current:-22063.7501929
-
-
-rsquared_value_estop:-13703.5183611
-
-
-epoch:14 rsq_max:-2059.96418861 rsq_previous:-22063.7501929 rsq_current:-13703.5183611
-
-
-rsquared_value_estop:-52593.1785704
-
-
-epoch:15 rsq_max:-2059.96418861 rsq_previous:-13703.5183611 rsq_current:-52593.1785704
-
-
-rsquared_value_estop:-98213.5549001
-
-
-epoch:16 rsq_max:-2059.96418861 rsq_previous:-52593.1785704 rsq_current:-98213.5549001
-
-
-rsquared_value_estop:-10178.7955403
-
-
-epoch:17 rsq_max:-2059.96418861 rsq_previous:-98213.5549001 rsq_current:-10178.7955403
-
-
-rsquared_value_estop:-13763.8241892
-
-
-epoch:18 rsq_max:-2059.96418861 rsq_previous:-10178.7955403 rsq_current:-13763.8241892
-
-
-rsquared_value_estop:-8977.31119695
-
-
-epoch:19 rsq_max:-2059.96418861 rsq_previous:-13763.8241892 rsq_current:-8977.31119695
-
-
-rsquared_value_estop:-13488.3850138
-
-
-epoch:20 rsq_max:-2059.96418861 rsq_previous:-8977.31119695 rsq_current:-13488.3850138
-
-
-rsquared_value_estop:-232105.317654
-
-
-epoch:21 rsq_max:-2059.96418861 rsq_previous:-13488.3850138 rsq_current:-232105.317654
-
-
-rsquared_value_estop:-23220.1974946
-
-
-epoch:22 rsq_max:-2059.96418861 rsq_previous:-232105.317654 rsq_current:-23220.1974946
-
-
-rsquared_value_estop:-27191.3325105
-
-
-epoch:23 rsq_max:-2059.96418861 rsq_previous:-23220.1974946 rsq_current:-27191.3325105
-
-
-rsquared_value_estop:-7865.03615646
-
-
-epoch:24 rsq_max:-2059.96418861 rsq_previous:-27191.3325105 rsq_current:-7865.03615646
-
-
-rsquared_value_estop:-59066.8649594
-
-
-epoch:25 rsq_max:-2059.96418861 rsq_previous:-7865.03615646 rsq_current:-59066.8649594
-
-
-rsquared_value_estop:-12811.9677738
-
-
-epoch:26 rsq_max:-2059.96418861 rsq_previous:-59066.8649594 rsq_current:-12811.9677738
-
-
-rsquared_value_estop:-273849.12629
-
-
-epoch:27 rsq_max:-2059.96418861 rsq_previous:-12811.9677738 rsq_current:-273849.12629
-
-
-rsquared_value_estop:0.0
-
-
-epoch:28 rsq_max:0.0 rsq_previous:-273849.12629 rsq_current:0.0
-
-
-rsquared_value_estop:0.0
-
-
-epoch:29 rsq_max:0.0 rsq_previous:0.0 rsq_current:0.0
-
-
-rsquared_value_estop:0.0
-
-
-epoch:30 rsq_max:0.0 rsq_previous:0.0 rsq_current:0.0
-
-
-rsquared_value_estop:0.0
-
-
-epoch:31 rsq_max:0.0 rsq_previous:0.0 rsq_current:0.0
 generic exception: Traceback (most recent call last):
   File "initializer.py", line 91, in <module>
     run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
-  File "/Users/mithun/spring2018/research/v3_grounding/src/main/python/utils/squish.py", line 863, in run_nfoldCV_on_turk_data
-    multioutput='uniform_average')
-  File "/Users/mithun/miniconda3/envs/myPytorch/lib/python3.6/site-packages/sklearn/metrics/regression.py", line 530, in r2_score
-    y_true, y_pred, multioutput)
-  File "/Users/mithun/miniconda3/envs/myPytorch/lib/python3.6/site-packages/sklearn/metrics/regression.py", line 76, in _check_reg_targets
-    y_true = check_array(y_true, ensure_2d=False)
-  File "/Users/mithun/miniconda3/envs/myPytorch/lib/python3.6/site-packages/sklearn/utils/validation.py", line 462, in check_array
-    context))
-ValueError: Found array with 0 sample(s) (shape=(0,)) while a minimum of 1 is required.
+  File "/Users/mithun/spring2018/research/v3_grounding/src/main/python/utils/squish.py", line 839, in run_nfoldCV_on_turk_data
+    loss.backward()
+  File "/Users/mithun/miniconda3/envs/myPytorch/lib/python3.6/site-packages/torch/autograd/variable.py", line 156, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph, retain_variables)
+  File "/Users/mithun/miniconda3/envs/myPytorch/lib/python3.6/site-packages/torch/autograd/__init__.py", line 98, in backward
+    variables, grad_variables, retain_graph)
+KeyboardInterrupt
 
-time taken:14.311750173568726
+time taken:12.476001977920532
