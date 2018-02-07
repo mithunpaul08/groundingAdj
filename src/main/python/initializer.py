@@ -53,6 +53,8 @@ addTurkerOneHot=False
 addAdjOneHot=False
 useEarlyStopping=True
 
+rsq_on_test="rsq_on_test.txt"
+
 if __name__ == "__main__":
     try:
 
@@ -67,12 +69,14 @@ if __name__ == "__main__":
                 print("Welcome to Grounding For Adjectives. Please pick one of the following:")
 
                 print("To run the model with just linear regression Press:1")
-                print("To run the model with a dense NN, embeddings through linear regression Press:2")
-                print("To run the model with a dense NN, with LOOCV Press:3")
+                print("To train the model with a dense NN+embeddings and save the model 80-10-10:2")
+                print("To test the model with a dense NN saved best model 80-10-10:3")
                 print("To exit Press:0")
 
 
                 myInput=input("what is your choice:")
+
+                uniq_turker = {}
 
                 if(myInput=="2"):
 
@@ -84,7 +88,7 @@ if __name__ == "__main__":
                     # sys.exit(1)
 
 
-                    uniq_turker = {}
+
 
                     #run1: run with leave one out cross validationon all the turk experiment data points-i.e no adjective based split
                     # read all the data. i.e without training-dev-split. This is for LOOCV
@@ -127,7 +131,7 @@ if __name__ == "__main__":
                     #instead of splitting data into 80-10-10, do LOOCV based on adjectives
                     #run_loocv_per_adj(features, y, adj_lexicon, all_adj,addTurkerOneHot,uniq_adj_list)
 
-                    #runOnTestPartition(trained_model,test_data,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch)
+
 
                     print("done loocv for adj based turk data, going to exit")
 
@@ -168,24 +172,35 @@ if __name__ == "__main__":
                 else:
                     if(myInput=="3"):
 
+                        #empty out the existing file
+                        with open(cwd + "/outputs/" + rsq_on_test, "w+")as rsq_values:
+                            rsq_values.write("Epoch \t Train \t\t Dev \n")
+                            rsq_values.close()
+
+                        #append the rest of the values
+                        with open(cwd+"/outputs/" +rsq_on_test,"a")as rsq_values:
+
+                            trained_model = pk.load( open( "all_data_80-10-10.pkl", "rb" ))
+                            runOnTestPartition(trained_model,test_data,cwd, uniq_turker,rsq_values,addTurkerOneHot,1)
 
 
-                        features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
-                        adj_lexicon_flipped = dict()
-                        #total number of unique adjectives
-                        num_adj = len(adj_lexicon)
 
-                        #key=index value=adjective
-                        for a, idx in adj_lexicon.items():
-                            adj_lexicon_flipped[idx] = a
+                            # features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
+                            # adj_lexicon_flipped = dict()
+                            # #total number of unique adjectives
+                            # num_adj = len(adj_lexicon)
+                            #
+                            # #key=index value=adjective
+                            # for a, idx in adj_lexicon.items():
+                            #     adj_lexicon_flipped[idx] = a
+                            #
+                            #
+                            # #run with leae one out cross validation
+                            # run_loocv_on_turk_data(features, y, adj_lexicon, all_adj)
 
-
-                        #run with leae one out cross validation
-                        run_loocv_on_turk_data(features, y, adj_lexicon, all_adj)
-
-                        #run just with a classic train-dev-test partition
-                        elapsed_time = time.time() - start_time
-                        print("time taken:" + str(elapsed_time/60)+"minutes")
+                            #run just with a classic train-dev-test partition
+                            elapsed_time = time.time() - start_time
+                            print("time taken:" + str(elapsed_time/60)+"minutes")
                     else:
                         if(myInput=="0"):
                             print("******Good Bye")

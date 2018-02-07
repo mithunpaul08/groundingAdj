@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbc88f83-8607-4f52-b4c3-b86a46b449ce" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/initializer.py" afterPath="$PROJECT_DIR$/src/main/python/initializer.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/outputs/rsq_file.txt" afterPath="$PROJECT_DIR$/src/main/python/outputs/rsq_file.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/utils/squish.py" afterPath="$PROJECT_DIR$/src/main/python/utils/squish.py" />
@@ -28,11 +27,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="initializer.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="initializer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/python/initializer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="111">
-              <caret line="129" column="21" lean-forward="false" selection-start-line="129" selection-start-column="21" selection-end-line="129" selection-end-column="21" />
+            <state relative-caret-position="432">
+              <caret line="183" column="43" lean-forward="false" selection-start-line="183" selection-start-column="43" selection-end-line="183" selection-end-column="43" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -43,7 +42,7 @@
       <file leaf-file-name="grounding.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/python/utils/grounding.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
+            <state relative-caret-position="252">
               <caret line="106" column="4" lean-forward="false" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="4" />
               <folding>
                 <element signature="e#0#53#0" expanded="true" />
@@ -52,11 +51,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="squish.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="squish.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/python/utils/squish.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="37">
-              <caret line="1275" column="0" lean-forward="true" selection-start-line="1275" selection-start-column="0" selection-end-line="1275" selection-end-column="0" />
+            <state relative-caret-position="592">
+              <caret line="1287" column="33" lean-forward="false" selection-start-line="1287" selection-start-column="33" selection-end-line="1287" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -116,8 +115,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>seed</find>
-      <find>respdev</find>
       <find>done with</find>
       <find>done</find>
       <find>cutg</find>
@@ -130,22 +127,24 @@
       <find>requires_grad==False</find>
       <find>requires_grad</find>
       <find>filter</find>
-      <find>rsq_values</find>
       <find>one_hotT</find>
       <find>turkCount</find>
       <find>addTurkerOneHot</find>
       <find>df_raw_turk_data</find>
-      <find>epoch</find>
       <find>tanh</find>
       <find>eighty</find>
       <find>allIndex_loocv</find>
-      <find>pickle</find>
-      <find>pk.</find>
       <find>trained_model</find>
       <find>break</find>
       <find>rsquared_dev_value</find>
-      <find>test</find>
       <find>true</find>
+      <find>test</find>
+      <find>uniq_turker</find>
+      <find>pk.</find>
+      <find>pickle</find>
+      <find>rsq_values</find>
+      <find>epoch</find>
+      <find>rsq_file</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -165,16 +164,16 @@
         <option value="$PROJECT_DIR$/src/main/python/utils/read_write_data.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/main/python/utils/grounding.py" />
-        <option value="$PROJECT_DIR$/src/main/python/utils/squish.py" />
         <option value="$PROJECT_DIR$/src/main/python/initializer.py" />
+        <option value="$PROJECT_DIR$/src/main/python/utils/squish.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="16" />
+    <option name="x" value="-1" />
     <option name="y" value="24" />
-    <option name="width" value="1664" />
-    <option name="height" value="402" />
+    <option name="width" value="1682" />
+    <option name="height" value="1003" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -508,7 +507,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="16" y="24" width="1664" height="402" extended-state="0" />
+    <frame x="-1" y="24" width="1682" height="1003" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24864213" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -928,7 +927,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/python/utils/grounding.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
+        <state relative-caret-position="252">
           <caret line="106" column="4" lean-forward="false" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="4" />
           <folding>
             <element signature="e#0#53#0" expanded="true" />
@@ -936,21 +935,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/python/utils/squish.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="37">
-          <caret line="1275" column="0" lean-forward="true" selection-start-line="1275" selection-start-column="0" selection-end-line="1275" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/python/initializer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="111">
-          <caret line="129" column="21" lean-forward="false" selection-start-line="129" selection-start-column="21" selection-end-line="129" selection-end-column="21" />
+        <state relative-caret-position="432">
+          <caret line="183" column="43" lean-forward="false" selection-start-line="183" selection-start-column="43" selection-end-line="183" selection-end-column="43" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/python/utils/squish.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="592">
+          <caret line="1287" column="33" lean-forward="false" selection-start-line="1287" selection-start-column="33" selection-end-line="1287" selection-end-column="33" />
+          <folding />
         </state>
       </provider>
     </entry>

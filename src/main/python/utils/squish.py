@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=30
-noOfEpochs=150
+noOfEpochs=1
 lr=1e-5
 patience_max=50;
 #lr=1e-2
@@ -1270,11 +1270,11 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_train
 
     #this is a hack. we need to put early stopping or something here
     #once you hit a good rsq value, break and save the model and run on test partition
-    if(rsquared_dev_value>0.438):
+    if(rsquared_dev_value>0.43):
         return True;
 
 
-def runOnTestPartition(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch):
+def runOnTestPartition(trained_model,dev,cwd, uniq_turker,rsq_values,addTurkerOneHot,epoch):
     # read the test
     features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker,addTurkerOneHot)
     print("done reading test data:")
@@ -1285,7 +1285,7 @@ def runOnTestPartition(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_va
     #print(str(loss_training)+"\t"+ str(rsquared_value))
 
 
-    print("rsquared_value_dev:\n")
+    print("rsquared_value_on_test:\n")
     print(str(rsquared_test_value))
     print("")
     rsq_values.write(str(rsquared_test_value)+"\n")
