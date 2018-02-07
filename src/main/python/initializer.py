@@ -23,6 +23,8 @@ from utils.squish import run_loocv_per_adj
 from utils.squish import tuneOnDev
 from utils.squish import train_dev_print_rsq
 from utils.squish import cutGlove
+from utils.squish import runOnTestPartition
+
 from utils.read_write_data import writeCsvToFile
 from utils.read_write_data import writeDictToFile
 from sklearn.metrics import r2_score
@@ -41,6 +43,7 @@ entire_turk_data="all_turk_data.csv"
 dev="dev.csv"
 training_data="trainingData.csv"
 turkInterceptFile="turk_with_intercept.txt"
+test_data="test.csv"
 
 dev_adj="dev_adj.csv"
 training_adj="trainingData_adj.csv"
@@ -83,17 +86,18 @@ if __name__ == "__main__":
 
                     uniq_turker = {}
 
-                    # run1: run with leave one out cross validation on all the turk experiment data points
-                    features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, entire_turk_data,
-                                                                                               addAdjOneHot, uniq_turker,addTurkerOneHot)
+                    #run1: run with leave one out cross validationon all the turk experiment data points-i.e no adjective based split
+                    # read all the data. i.e without training-dev-split. This is for LOOCV
+                    #features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, entire_turk_data,
+                                                                                               #addAdjOneHot, uniq_turker,addTurkerOneHot)
 
-                    #read all the data. i.e without training-dev-split. This is for LOOCV
-                    run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
+                     # run1: run with leave one out cross validation
+                    #run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
 
                     print("done loocv for all turk data, going to exit")
 
 
-                    #run 2 : do training and dev tuning separately.
+                    #run 2 : do training and dev tuning separately--this is entire data, not based on adjectives.
                     # readtraining data
                     # uniq_turker = {}
                     # features, y, adj_lexicon, all_adj, uniq_turker = get_features_training_data(cwd, training_data,
@@ -118,13 +122,16 @@ if __name__ == "__main__":
 
                     #train on the adj based training split and tune on dev. All is done inside train_dev_print_rsq
                     trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
-                    print("done training . Going to  read dev data")
+                    print("done training and tuning on dev . Going to  test on test data")
 
                     #instead of splitting data into 80-10-10, do LOOCV based on adjectives
-                    run_loocv_per_adj(features, y, adj_lexicon, all_adj,addTurkerOneHot,uniq_adj_list)
+                    #run_loocv_per_adj(features, y, adj_lexicon, all_adj,addTurkerOneHot,uniq_adj_list)
+
+                    #runOnTestPartition(trained_model,test_data,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch)
 
                     print("done loocv for adj based turk data, going to exit")
-                    sys.exit(1)
+
+
 
                     adj_lexicon_flipped = dict()
                     #total number of unique adjectives
@@ -137,6 +144,9 @@ if __name__ == "__main__":
 
                     # features, y, adj_lexicon,all_adj=  get_features_dev(cwd, dev,False,uniq_turker)
                     # print("done reading dev data:")
+
+
+                    #############use the trained model to test on test split
 
 
 

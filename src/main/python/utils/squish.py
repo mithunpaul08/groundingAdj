@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=30
-noOfEpochs=10000
+noOfEpochs=150
 lr=1e-5
 patience_max=50;
 #lr=1e-2
@@ -492,21 +492,25 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
 
+            #this is a hack. we need to put early stopping or something here
+                #once you hit a good rsq value, break out of the epochs loop and save the model and run on test partition
+            foundGoodModel=tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch)
 
-            tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch)
+            if(foundGoodModel):
+                break
             # Print weights
             learned_weights = model.fc.weight.data
-            print("\tlearned weights:" + str(learned_weights.cpu().numpy()))
+            #print("\tlearned weights:" + str(learned_weights.cpu().numpy()))
 
 
 
 
 
-    print("done training the model. Going to  write it to disk")
+    print("found a good model after tuning the model on dev. Going to  write it to disk")
 
 
     #the model is trained by now-store it to disk
-    file_Name5 = "squish.pkl"
+    file_Name5 = "all_data_80-10-10.pkl"
     # open the file for writing
     fileObject5 = open(file_Name5,'wb')
     pk.dump(model, fileObject5)
@@ -1209,8 +1213,8 @@ def predictAndCalculateRSq(allY, features, all_adj, trained_model,epoch):
                 previous_adj=current_adj
                 rsquared_value_per_adj=r2_score(this_adj_gold_y, this_adj_pred_y, sample_weight=None, multioutput='uniform_average')
 
-                if((epoch%5)==0):
-                    print("adj:"+current_adj+" rsq value:"+str(rsquared_value_per_adj))
+                # if((epoch%5)==0):
+                #     print("adj:"+current_adj+" rsq value:"+str(rsquared_value_per_adj))
 
         #loss_dev = loss_fn(pred_y, true_variable_y)
 
@@ -1252,12 +1256,37 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_train
     #print("done reading dev data:")
 
     # calculate rsquared
-    rsquared_value = predictAndCalculateRSq(y, features, all_adj, trained_model,epoch)
+    rsquared_dev_value = predictAndCalculateRSq(y, features, all_adj, trained_model,epoch)
 
     #print(str(loss_training)+"\t"+ str(rsquared_value))
 
     print("")
-    print(str(rsquared_value_training)+"\t"+ str(rsquared_value))
+    print("rsquared_value_training:\n")
+    print(str(rsquared_value_training))
+    print("rsquared_value_dev:\n")
+    print(str(rsquared_dev_value))
     print("")
-    rsq_values.write(str(rsquared_value)+"\n")
+    rsq_values.write(str(rsquared_dev_value)+"\n")
+
+    #this is a hack. we need to put early stopping or something here
+    #once you hit a good rsq value, break and save the model and run on test partition
+    if(rsquared_dev_value>0.438):
+        return True;
+
+
+def runOnTestPartition(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch):
+    # read the test
+    features, y, adj_lexicon, all_adj = get_features_dev(cwd, dev, False, uniq_turker,addTurkerOneHot)
+    print("done reading test data:")
+
+    # calculate rsquared
+    rsquared_test_value = predictAndCalculateRSq(y, features, all_adj, trained_model,epoch)
+
+    #print(str(loss_training)+"\t"+ str(rsquared_value))
+
+
+    print("rsquared_value_dev:\n")
+    print(str(rsquared_test_value))
+    print("")
+    rsq_values.write(str(rsquared_test_value)+"\n")
 
