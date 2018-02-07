@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=30
-noOfEpochs=1
+noOfEpochs=150
 lr=1e-5
 patience_max=50;
 #lr=1e-2
@@ -510,7 +510,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
     #the model is trained by now-store it to disk
-    file_Name5 = "all_data_80-10-10.pkl"
+    file_Name5 = "adj_data_80-10-10.pkl"
     # open the file for writing
     fileObject5 = open(file_Name5,'wb')
     pk.dump(model, fileObject5)

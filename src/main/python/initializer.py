@@ -68,9 +68,11 @@ if __name__ == "__main__":
 
                 print("Welcome to Grounding For Adjectives. Please pick one of the following:")
 
-                print("To run the model with just linear regression Press:1")
-                print("To train the model with a dense NN+embeddings and save the model 80-10-10:2")
-                print("To test the model with a dense NN saved best model 80-10-10:3")
+                print("To train and save using adj based split press :1")
+
+                print("To train with nfoldCV_on_turk_data the model on entire data  press:2")
+                print("To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:3")
+                print("To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:3")
                 print("To exit Press:0")
 
 
@@ -92,11 +94,11 @@ if __name__ == "__main__":
 
                     #run1: run with leave one out cross validationon all the turk experiment data points-i.e no adjective based split
                     # read all the data. i.e without training-dev-split. This is for LOOCV
-                    #features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, entire_turk_data,
-                                                                                               #addAdjOneHot, uniq_turker,addTurkerOneHot)
+                    features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, entire_turk_data,
+                                                                                               addAdjOneHot, uniq_turker,addTurkerOneHot)
 
                      # run1: run with leave one out cross validation
-                    #run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
+                    run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
 
                     print("done loocv for all turk data, going to exit")
 
@@ -117,16 +119,7 @@ if __name__ == "__main__":
 
 
 
-                    #code that splits the data based on adjectives and not the entire data- should be used only once ideally
-                    # features, y, adj_lexicon, all_adj, uniq_turker = split_data_based_on_adj(cwd, entire_turk_data,
-                    #                                                                          False, uniq_turker)
 
-                    features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, training_adj,
-                                                                                               addAdjOneHot, uniq_turker,addTurkerOneHot)
-
-                    #train on the adj based training split and tune on dev. All is done inside train_dev_print_rsq
-                    trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
-                    print("done training and tuning on dev . Going to  test on test data")
 
                     #instead of splitting data into 80-10-10, do LOOCV based on adjectives
                     #run_loocv_per_adj(features, y, adj_lexicon, all_adj,addTurkerOneHot,uniq_adj_list)
@@ -201,6 +194,7 @@ if __name__ == "__main__":
                             #run just with a classic train-dev-test partition
                             elapsed_time = time.time() - start_time
                             print("time taken:" + str(elapsed_time/60)+"minutes")
+
                     else:
                         if(myInput=="0"):
                             print("******Good Bye")
@@ -208,38 +202,61 @@ if __name__ == "__main__":
                         else:
                             if(myInput=="1"):
 
-                                features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
-                                print(features.shape)
 
-                                adj_lexicon_flipped = dict()
-                                #total number of unique adjectives
-                                num_adj = len(adj_lexicon)
+                                #code that splits the data based on adjectives and not the entire data- should be used only once ideally
+                                # features, y, adj_lexicon, all_adj, uniq_turker = split_data_based_on_adj(cwd, entire_turk_data,
+                                #                                                                          False, uniq_turker)
 
-                                #key=index value=adjective
-                                for a, idx in adj_lexicon.items():
-                                    adj_lexicon_flipped[idx] = a
+                                features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, training_adj,
+                                                                                                           addAdjOneHot, uniq_turker,addTurkerOneHot)
 
-                                #actual linear regression part- how much weight should it assigne to each of 1-hot-adj-vector, mean and variance
+                                #train on the adj based training split and tune on dev. All is done inside train_dev_print_rsq
+                                trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
+                                print("done training and tuning on dev . Going to  test on test data")
 
-                                #will be of size 1x100=98 adj, one mean and variance
-                                learned_weights = runLR(features, y)
+                                #instead of splitting data into 80-10-10, do LOOCV based on adjectives
+                                #run_loocv_per_adj(features, y, adj_lexicon, all_adj,addTurkerOneHot,uniq_adj_list)
 
-                                #print(str(learned_weights.shape))
-                                #sys.exit(1)
-                                #print("NumUniqueAdj: ", num_adj)
-                                # Get the weights that correspond to the individual adjs
-                                adj_intercepts_learned = learned_weights[:num_adj]
-                                #pairing weights with adjectives.
-                                adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
 
-                                #print(adj_pairs[:2])
 
-                                #sorting them by their weight
-                                sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
+                                print("done loocv for adj based turk data, going to exit")
 
-                                #print highest 20 intercepts and lowest 20 intercepts
-                                print(sorted_adjs[:20])
-                                print(sorted_adjs[-20:])
+                                #
+                                #
+                                # features, y, adj_lexicon,all_adj= get_features_y(cwd, turkFile,False)
+                                # print(features.shape)
+                                #
+                                # adj_lexicon_flipped = dict()
+                                # #total number of unique adjectives
+                                # num_adj = len(adj_lexicon)
+                                #
+                                # #key=index value=adjective
+                                # for a, idx in adj_lexicon.items():
+                                #     adj_lexicon_flipped[idx] = a
+                                #
+                                # #actual linear regression part- how much weight should it assigne to each of 1-hot-adj-vector, mean and variance
+                                #
+                                # #will be of size 1x100=98 adj, one mean and variance
+                                # learned_weights = runLR(features, y)
+                                #
+                                # #print(str(learned_weights.shape))
+                                # #sys.exit(1)
+                                # #print("NumUniqueAdj: ", num_adj)
+                                # # Get the weights that correspond to the individual adjs
+                                # adj_intercepts_learned = learned_weights[:num_adj]
+                                # #pairing weights with adjectives.
+                                # adj_pairs = [(learned_weights[0][i], adj_lexicon_flipped[i]) for i in range(num_adj)]
+                                #
+                                # #print(adj_pairs[:2])
+                                #
+                                # #sorting them by their weight
+                                # sorted_adjs = sorted(adj_pairs, key=lambda x: x[0], reverse=True)
+                                #
+                                # #print highest 20 intercepts and lowest 20 intercepts
+                                # print(sorted_adjs[:20])
+                                # print(sorted_adjs[-20:])
+
+
 
     ##################################end of dev phase####################
     except:
