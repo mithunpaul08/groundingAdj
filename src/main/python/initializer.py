@@ -74,6 +74,7 @@ if __name__ == "__main__":
                 print("To train on all the data (not adj based split) press :5")
 
                 print("To train with nfoldCV on entire data (no adj based split)  press:2")
+                print("To train with nfoldCV on entire data (no adj based split)  press:6")
                 print("To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:3")
                 print("To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:4")
                 print("To exit Press:0")
@@ -302,7 +303,22 @@ if __name__ == "__main__":
                                                 #readtraining data
                                                 features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list= get_features_training_data(cwd, training_data,False, uniq_turker,addTurkerOneHot)
                                                  #train on whatever data split is given and tune on dev. All is done inside train_dev_print_rsq
+                                                #features here is the features you just read in the line above
                                                 trained_model = train_dev_print_rsq(dev_entire_data,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
+                                            else:
+                                                    if(myInput=="6"):
+                                                            #run1: run with leave one out cross validationon all the turk experiment data points-i.e no adjective based split
+                                                            # read all the data. i.e without training-dev-split. This is for LOOCV
+                                                            features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, training_adj,
+                                                                                                                                       addAdjOneHot, uniq_turker,addTurkerOneHot)
+
+                                                             # run1: run with leave one out cross validation
+                                                            run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
+
+                                                            print("done loocv for all turk data, going to exit")
+
+
+
 
 
 
