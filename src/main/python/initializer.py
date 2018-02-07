@@ -40,7 +40,7 @@ start_time = time.time()
 
 cwd=os.getcwd()
 entire_turk_data="all_turk_data.csv"
-dev="dev.csv"
+dev_entire_data= "dev.csv"
 training_data="trainingData.csv"
 turkInterceptFile="turk_with_intercept.txt"
 test_data="test.csv"
@@ -71,8 +71,9 @@ if __name__ == "__main__":
                 print("Welcome to Grounding For Adjectives. Please pick one of the following:")
 
                 print("To train and save using adj based split press :1")
+                print("To train on all the data (not adj based split) press :5")
 
-                print("To train with nfoldCV_on_turk_data the model on entire data  press:2")
+                print("To train with nfoldCV on entire data (no adj based split)  press:2")
                 print("To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:3")
                 print("To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:4")
                 print("To exit Press:0")
@@ -249,7 +250,7 @@ if __name__ == "__main__":
 
                                             #train on the adj based training split and tune on dev. All is done inside train_dev_print_rsq
                                             trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
-                                            print("done training and tuning on dev . Going to  test on test data")
+
 
                                             #instead of splitting data into 80-10-10, do LOOCV based on adjectives
                                             #run_loocv_per_adj(features, y, adj_lexicon, all_adj,addTurkerOneHot,uniq_adj_list)
@@ -292,6 +293,19 @@ if __name__ == "__main__":
                                             # #print highest 20 intercepts and lowest 20 intercepts
                                             # print(sorted_adjs[:20])
                                             # print(sorted_adjs[-20:])
+                                        else:
+
+                                            if(myInput=="5"):
+                                                #run 2 : do training and dev tuning separately--this is entire data, not based on adjectives.
+
+                                                uniq_turker = {}
+                                                #readtraining data
+                                                features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list= get_features_training_data(cwd, training_data,False, uniq_turker,addTurkerOneHot)
+                                                 #train on whatever data split is given and tune on dev. All is done inside train_dev_print_rsq
+                                                trained_model = train_dev_print_rsq(dev_entire_data,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
+
+
+
 
 
 

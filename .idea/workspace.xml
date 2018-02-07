@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="fbc88f83-8607-4f52-b4c3-b86a46b449ce" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/initializer.py" afterPath="$PROJECT_DIR$/src/main/python/initializer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/outputs/rsq_file.txt" afterPath="$PROJECT_DIR$/src/main/python/outputs/rsq_file.txt" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <ignored path="$PROJECT_DIR$/project/project/target/" />
@@ -29,8 +28,8 @@
       <file leaf-file-name="initializer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/python/initializer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="175" column="30" lean-forward="true" selection-start-line="175" selection-start-column="30" selection-end-line="175" selection-end-column="30" />
+            <state relative-caret-position="352">
+              <caret line="302" column="48" lean-forward="false" selection-start-line="302" selection-start-column="48" selection-end-line="302" selection-end-column="48" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -42,7 +41,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/python/utils/grounding.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="252">
-              <caret line="106" column="4" lean-forward="false" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="4" />
+              <caret line="307" column="0" lean-forward="false" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="90" />
               <folding>
                 <element signature="e#0#53#0" expanded="true" />
               </folding>
@@ -53,8 +52,8 @@
       <file leaf-file-name="squish.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/python/utils/squish.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="29" column="14" lean-forward="false" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
+            <state relative-caret-position="177">
+              <caret line="392" column="24" lean-forward="false" selection-start-line="392" selection-start-column="5" selection-end-line="392" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -114,8 +113,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>cutg</find>
-      <find>vocab</find>
       <find>shap</find>
       <find>torchwordemb</find>
       <find>trainingdata&quot;</find>
@@ -138,12 +135,14 @@
       <find>test</find>
       <find>uniq_turker</find>
       <find>pk.</find>
-      <find>pickle</find>
       <find>rsq_values</find>
       <find>epoch</find>
       <find>rsq_file</find>
       <find>run_nfoldCV_on_turk_data</find>
       <find>estop</find>
+      <find>train_dev_print_rsq</find>
+      <find>pickle</find>
+      <find>get_features_training_data</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -924,28 +923,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/python/utils/squish.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="392" column="24" lean-forward="false" selection-start-line="392" selection-start-column="5" selection-end-line="392" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/python/utils/grounding.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
-          <caret line="106" column="4" lean-forward="false" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="4" />
+          <caret line="307" column="0" lean-forward="false" selection-start-line="307" selection-start-column="0" selection-end-line="307" selection-end-column="90" />
           <folding>
             <element signature="e#0#53#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/python/utils/squish.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="29" column="14" lean-forward="false" selection-start-line="29" selection-start-column="14" selection-end-line="29" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/python/initializer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="175" column="30" lean-forward="true" selection-start-line="175" selection-start-column="30" selection-end-line="175" selection-end-column="30" />
+        <state relative-caret-position="352">
+          <caret line="302" column="48" lean-forward="false" selection-start-line="302" selection-start-column="48" selection-end-line="302" selection-end-column="48" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
