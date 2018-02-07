@@ -29,6 +29,7 @@ dense1_size=1
 noOfFoldsCV=30
 noOfEpochs=10000
 lr=1e-5
+patience_max=50;
 #lr=1e-2
 
 rsq_file="rsq_file.txt"
@@ -778,7 +779,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
             rsq_max_estop=0.000
             rsq_previous_estop=0.000
             patienceCounter=0;
-            patience_max=20;
+
 
             # print("size  of training_data1:" + str((len(training_data))))
             # print("size of  test_data:" + str((len(test_data))))
@@ -856,7 +857,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
                 if (useEarlyStopping):
 
-                    print("size of  dev_estop:" + str(len(dev_estop)))
+                    #print("size of  dev_estop:" + str(len(dev_estop)))
                     pred_y_total_dev_data = []
                     y_total_dev_data = []
 
@@ -892,7 +893,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                     else:
 
                         if(rsquared_value_estop>rsq_max_estop):
-                            print("found that we have a new max value:"+str(rsquared_value_estop))
+                            #print("found that we have a new max value:"+str(rsquared_value_estop))
                             rsq_max_estop = rsquared_value_estop
 
                     #everytime the current rsquared value is less than the previous value, increase patience count
