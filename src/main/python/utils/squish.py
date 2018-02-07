@@ -780,6 +780,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
             rsq_previous_estop=0.000
             patienceCounter=0;
 
+            # shuffle before splitting for early stopping
+            np.random.shuffle(training_data)
 
             # print("size  of training_data1:" + str((len(training_data))))
             # print("size of  test_data:" + str((len(test_data))))
