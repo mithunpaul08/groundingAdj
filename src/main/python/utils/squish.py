@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=30
-noOfEpochs=135
+noOfEpochs=10000
 lr=1e-5
 #lr=1e-2
 
@@ -780,6 +780,34 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
             patienceCounter=0;
             patience_max=20;
 
+            # print("size  of training_data1:" + str((len(training_data))))
+            # print("size of  test_data:" + str((len(test_data))))
+
+            '''adding early-stopping and patience'''
+            if (useEarlyStopping):
+                # split the training data further into training and dev
+                len_training_estop = len(training_data)
+                indices_tr_estop = np.arange(len_training_estop)
+                eighty_estop = math.ceil(len_training_estop * 80 / 100)
+                trainingData_estop = indices_tr_estop[:eighty_estop]
+                dev_estop = indices_tr_estop[eighty_estop:]
+                training_data = trainingData_estop
+
+
+
+                # debug statements
+                # print("len_training_estop:")
+                # print(len_training_estop)
+                # # print("(trainingData_estop):")
+                # # print((trainingData_estop))
+                # print("size of  len_training_estop:" + str((len_training_estop)))
+                # print("size of  dev_estop:" + str(len(dev_estop)))
+
+
+
+
+                # print("(training_data):")
+                # print((training_data))
 
 
             #run n epochs on the left over training data
@@ -788,32 +816,9 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                 # shuffle before each epoch
                 np.random.shuffle(training_data)
 
-                '''adding early-stopping and patience'''
-                if(useEarlyStopping):
+                #print("size of  length of training_data2:" + str((len(training_data))))
 
 
-                    # split the training data further into training and dev
-                    len_training_estop = len(training_data)
-                    indices_tr_estop = np.arange(len_training_estop)
-                    eighty_estop=math.ceil(len_training_estop*80/100)
-                    trainingData_estop=indices_tr_estop[:eighty_estop]
-                    dev_estop=indices_tr_estop[eighty_estop:]
-                    training_data = trainingData_estop
-
-                    print("size of  len_training_estop:" + str((len_training_estop)))
-                    print("size of  dev_estop:" + str(len(dev_estop)))
-
-                    #debug statements
-                    # print("len_training_estop:")
-                    # print(len_training_estop)
-                    # print("(trainingData_estop):")
-                    # print((trainingData_estop))
-
-
-
-
-                # print("(training_data):")
-                # print((training_data))
 
 
 
@@ -869,8 +874,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 
 
-                    print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
-                    print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
+                    #print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
+                    #print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
 
                     rsquared_value_estop = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
                                               multioutput='uniform_average')
@@ -892,8 +897,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
                     #everytime the current rsquared value is less than the previous value, increase patience count
                     if (rsquared_value_estop < rsq_previous_estop):
-                        print("found that rsquared_value_estop is less than"
-                              " rsq_previous_estop. going to increase patience:" )
+                        # print("found that rsquared_value_estop is less than"
+                        #       " rsq_previous_estop. going to increase patience:" )
                         patienceCounter=patienceCounter+1
 
                     print("epoch:"+str(epoch)+" rsq_max:"+str(rsq_max_estop)+" rsq_previous:"
