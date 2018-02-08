@@ -27,9 +27,9 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=30
-noOfEpochs=150
+noOfEpochs=10000
 lr=1e-5
-patience_max=50;
+patience_max=20;
 #lr=1e-2
 
 rsq_file="rsq_file.txt"
@@ -785,6 +785,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
             patienceCounter=0;
 
             # shuffle before splitting for early stopping
+            np.random.seed(1)
             np.random.shuffle(training_data)
 
             # print("size  of training_data1:" + str((len(training_data))))
@@ -816,11 +817,14 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                 # print("(training_data):")
                 # print((training_data))
 
+            #the patience counter starts from patience_max and decreases till it hits 0
+            patienceCounter = patience_max
 
             #run n epochs on the left over training data
             for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
                 # shuffle before each epoch
+                np.random.seed(1)
                 np.random.shuffle(training_data)
 
                 #print("size of  length of training_data2:" + str((len(training_data))))
@@ -861,6 +865,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                 train on training_data and test on dev.
                 Calculate rsq and Store the rsq value if more than previous'''
 
+
+
                 if (useEarlyStopping):
 
                     #print("size of  dev_estop:" + str(len(dev_estop)))
@@ -868,11 +874,11 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                     y_total_dev_data = []
 
                     # for each element in the dev data, calculate its predicted value, and append it to predy_total
-                    for test_data_index in dev_estop:
-                        this_feature = features[test_data_index]
+                    for dev_estop_index in dev_estop:
+                        this_feature = features[dev_estop_index]
                         featureV_loo = convert_to_variable(this_feature)
-                        y = allY[test_data_index]
-                        each_adj = all_adj[test_data_index]
+                        y = allY[dev_estop_index]
+                        each_adj = all_adj[dev_estop_index]
                         pred_y = model(each_adj, featureV_loo)
                         y_total_dev_data.append(y)
                         pred_y_total_dev_data.append(pred_y.data.cpu().numpy())
@@ -902,11 +908,14 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                             #print("found that we have a new max value:"+str(rsquared_value_estop))
                             rsq_max_estop = rsquared_value_estop
 
-                    #everytime the current rsquared value is less than the previous value, increase patience count
+                    #everytime the current rsquared value is less than the previous value, decrease patience count
                     if (rsquared_value_estop < rsq_previous_estop):
                         # print("found that rsquared_value_estop is less than"
                         #       " rsq_previous_estop. going to increase patience:" )
-                        patienceCounter=patienceCounter+1
+                        patienceCounter=patienceCounter-1
+                    else:
+                        #increase the patience every time it gets a good value
+                        patienceCounter = patienceCounter + 1
 
                     print("epoch:"+str(epoch)+" rsq_max:"+str(rsq_max_estop)+" rsq_previous:"
                           +str(rsq_previous_estop) +" rsq_current:"+str(rsquared_value_estop)+
@@ -916,8 +925,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 
 
-                    if(patienceCounter>patience_max):
-                        print("losing my patience. Crossed 20. Exiting")
+                    if(patienceCounter< 1 ):
+                        print("losing my patience. Have hit 0 . Exiting")
                         print("rsq_max_estop:"+str(rsq_max_estop))
                         sys.exit(1)
 
