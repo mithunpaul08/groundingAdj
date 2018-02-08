@@ -1,430 +1,74 @@
                       
           ******            
 Welcome to Grounding For Adjectives. Please pick one of the following:
-To run the model with just linear regression Press:1
-To run the model with a dense NN, embeddings through linear regression Press:2
-To run the model with a dense NN, with LOOCV Press:3
+To train and save using adj based split press :1
+To train on all the data (not adj based split) press :5
+To train with nfoldCV on entire data (no adj based split)  press:2
+To train with nfoldCV on  adj based split)  press:6
+To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:3
+To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:4
 To exit Press:0
-what is your choice:going to load glove for per adj.
+what is your choice:str(len(features)):
+3309
+doing chunk number:0 out of: 10
+going to load glove for per adj.
 just loaded glove for per adj. going to load glove for entire embeddings.
 .self.vec.shape[0]
 98
 .self.vec.shape[1]
 300
 done loading all gloves
-size  of training_data1:3198
-size of  test_data:111
-size of  len_training_estop:3198
-size of  dev_estop:639
-len_training_estop:
-3198
-(trainingData_estop):
-[   0    1    2 ..., 2556 2557 2558]
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
+length of training_data:2978
+length of test_data:331
+length of training estop:
+2383
+length of training estop:
+2383
+size of  dev_estop:595
+size of  dev_estop:595
+size of y_total_dev_data:595
+size of pred_y_total_dev_data:595
 
 
+rsquared_value_estop:-143836.970367
 
 
-found that rsquared_value_estop is less than rsq_previous_estop. going to increase patience:
-epoch:0 rsq_max:0.0 rsq_previous:0.0 rsq_current:-207433.832813 patience:1 loss:65740.921875
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
+epoch:0 rsq_max:-143836.970367 rsq_previous:-143836.970367 rsq_current:-143836.970367 patience:20 loss:275384.84375
+size of  dev_estop:595
+size of y_total_dev_data:595
+size of pred_y_total_dev_data:595
 
 
+rsquared_value_estop:-76253.6269345
 
 
-epoch:1 rsq_max:-102090.922872 rsq_previous:-102090.922872 rsq_current:-102090.922872 patience:1 loss:50869.70703125
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
+found that we have a new max value:-76253.6269345
+epoch:1 rsq_max:-76253.6269345 rsq_previous:-143836.970367 rsq_current:-76253.6269345 patience:20 loss:135461.625
+size of  dev_estop:595
+size of y_total_dev_data:595
+size of pred_y_total_dev_data:595
 
 
+rsquared_value_estop:-31352.5227711
 
 
-found that we have a new max value:-36341.5711132
-epoch:2 rsq_max:-36341.5711132 rsq_previous:-102090.922872 rsq_current:-36341.5711132 patience:1 loss:8547.154296875
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
+found that we have a new max value:-31352.5227711
+epoch:2 rsq_max:-31352.5227711 rsq_previous:-76253.6269345 rsq_current:-31352.5227711 patience:20 loss:44829.93359375
+size of  dev_estop:595
+size of y_total_dev_data:595
+size of pred_y_total_dev_data:595
 
 
+rsquared_value_estop:-9592.44892798
 
 
-found that we have a new max value:-11138.871222
-epoch:3 rsq_max:-11138.871222 rsq_previous:-36341.5711132 rsq_current:-11138.871222 patience:1 loss:22416.23828125
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-9216.47929108
-epoch:4 rsq_max:-9216.47929108 rsq_previous:-11138.871222 rsq_current:-9216.47929108 patience:1 loss:385.8404541015625
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-8762.94246283
-epoch:5 rsq_max:-8762.94246283 rsq_previous:-9216.47929108 rsq_current:-8762.94246283 patience:1 loss:2.1028597354888916
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-8295.81537477
-epoch:6 rsq_max:-8295.81537477 rsq_previous:-8762.94246283 rsq_current:-8295.81537477 patience:1 loss:27977.0234375
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-7837.89887478
-epoch:7 rsq_max:-7837.89887478 rsq_previous:-8295.81537477 rsq_current:-7837.89887478 patience:1 loss:667.8436889648438
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-7392.27312414
-epoch:8 rsq_max:-7392.27312414 rsq_previous:-7837.89887478 rsq_current:-7392.27312414 patience:1 loss:482.45343017578125
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-6988.58072302
-epoch:9 rsq_max:-6988.58072302 rsq_previous:-7392.27312414 rsq_current:-6988.58072302 patience:1 loss:10934.3359375
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-6552.33461307
-epoch:10 rsq_max:-6552.33461307 rsq_previous:-6988.58072302 rsq_current:-6552.33461307 patience:1 loss:1483.9014892578125
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-6170.28912416
-epoch:11 rsq_max:-6170.28912416 rsq_previous:-6552.33461307 rsq_current:-6170.28912416 patience:1 loss:841.215087890625
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-5765.73175411
-epoch:12 rsq_max:-5765.73175411 rsq_previous:-6170.28912416 rsq_current:-5765.73175411 patience:1 loss:6434.92919921875
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-5384.03864185
-epoch:13 rsq_max:-5384.03864185 rsq_previous:-5765.73175411 rsq_current:-5384.03864185 patience:1 loss:56.58571243286133
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-5024.64494137
-epoch:14 rsq_max:-5024.64494137 rsq_previous:-5384.03864185 rsq_current:-5024.64494137 patience:1 loss:5295.72119140625
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-4674.11094429
-epoch:15 rsq_max:-4674.11094429 rsq_previous:-5024.64494137 rsq_current:-4674.11094429 patience:1 loss:14497.5400390625
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-4340.55740549
-epoch:16 rsq_max:-4340.55740549 rsq_previous:-4674.11094429 rsq_current:-4340.55740549 patience:1 loss:2004.76318359375
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-3999.24925103
-epoch:17 rsq_max:-3999.24925103 rsq_previous:-4340.55740549 rsq_current:-3999.24925103 patience:1 loss:503.6069641113281
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-3695.36883838
-epoch:18 rsq_max:-3695.36883838 rsq_previous:-3999.24925103 rsq_current:-3695.36883838 patience:1 loss:736.1624755859375
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-3391.17997112
-epoch:19 rsq_max:-3391.17997112 rsq_previous:-3695.36883838 rsq_current:-3391.17997112 patience:1 loss:2585.096923828125
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-3101.96276508
-epoch:20 rsq_max:-3101.96276508 rsq_previous:-3391.17997112 rsq_current:-3101.96276508 patience:1 loss:1212.5054931640625
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-2822.52682555
-epoch:21 rsq_max:-2822.52682555 rsq_previous:-3101.96276508 rsq_current:-2822.52682555 patience:1 loss:6354.0
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-2569.54782283
-epoch:22 rsq_max:-2569.54782283 rsq_previous:-2822.52682555 rsq_current:-2569.54782283 patience:1 loss:593.4468994140625
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-2326.47641208
-epoch:23 rsq_max:-2326.47641208 rsq_previous:-2569.54782283 rsq_current:-2326.47641208 patience:1 loss:792.3961791992188
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-2077.86243346
-epoch:24 rsq_max:-2077.86243346 rsq_previous:-2326.47641208 rsq_current:-2077.86243346 patience:1 loss:0.36181584000587463
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-1853.10882436
-epoch:25 rsq_max:-1853.10882436 rsq_previous:-2077.86243346 rsq_current:-1853.10882436 patience:1 loss:261.8188781738281
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-1647.13214465
-epoch:26 rsq_max:-1647.13214465 rsq_previous:-1853.10882436 rsq_current:-1647.13214465 patience:1 loss:5611.0927734375
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-1445.17764091
-epoch:27 rsq_max:-1445.17764091 rsq_previous:-1647.13214465 rsq_current:-1445.17764091 patience:1 loss:1326.45849609375
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-1261.37200429
-epoch:28 rsq_max:-1261.37200429 rsq_previous:-1445.17764091 rsq_current:-1261.37200429 patience:1 loss:1071.616943359375
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-1088.33166261
-epoch:29 rsq_max:-1088.33166261 rsq_previous:-1261.37200429 rsq_current:-1088.33166261 patience:1 loss:1132.8988037109375
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-934.262907286
-epoch:30 rsq_max:-934.262907286 rsq_previous:-1088.33166261 rsq_current:-934.262907286 patience:1 loss:0.2836466133594513
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-781.573903867
-epoch:31 rsq_max:-781.573903867 rsq_previous:-934.262907286 rsq_current:-781.573903867 patience:1 loss:78.01702117919922
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-648.106473855
-epoch:32 rsq_max:-648.106473855 rsq_previous:-781.573903867 rsq_current:-648.106473855 patience:1 loss:45.09332275390625
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-524.8864285
-epoch:33 rsq_max:-524.8864285 rsq_previous:-648.106473855 rsq_current:-524.8864285 patience:1 loss:13.857839584350586
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-417.298771093
-epoch:34 rsq_max:-417.298771093 rsq_previous:-524.8864285 rsq_current:-417.298771093 patience:1 loss:49.743717193603516
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-320.306097615
-epoch:35 rsq_max:-320.306097615 rsq_previous:-417.298771093 rsq_current:-320.306097615 patience:1 loss:353.388916015625
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-238.162647363
-epoch:36 rsq_max:-238.162647363 rsq_previous:-320.306097615 rsq_current:-238.162647363 patience:1 loss:2.3224260807037354
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-165.996881376
-epoch:37 rsq_max:-165.996881376 rsq_previous:-238.162647363 rsq_current:-165.996881376 patience:1 loss:548.4581909179688
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-108.902183738
-epoch:38 rsq_max:-108.902183738 rsq_previous:-165.996881376 rsq_current:-108.902183738 patience:1 loss:96.0269546508789
-size of  length of training_data2:2559
-size of  dev_estop:639
-size of y_total_dev_data:639
-size of pred_y_total_dev_data:639
-
-
-
-
-found that we have a new max value:-63.1367697826
-epoch:39 rsq_max:-63.1367697826 rsq_previous:-108.902183738 rsq_current:-63.1367697826 patience:1 loss:2.086602210998535
-size of  length of training_data2:2559
+found that we have a new max value:-9592.44892798
+epoch:3 rsq_max:-9592.44892798 rsq_previous:-31352.5227711 rsq_current:-9592.44892798 patience:20 loss:4126.5107421875
 generic exception: Traceback (most recent call last):
-  File "initializer.py", line 91, in <module>
+  File "initializer.py", line 106, in <module>
     run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
-  File "/Users/mithun/spring2018/research/v3_grounding/src/main/python/utils/squish.py", line 847, in run_nfoldCV_on_turk_data
-    loss.backward()
-KeyboardInterrupt
+  File "/Users/mithun/spring2018/research/v3_grounding/src/main/python/utils/squish.py", line 955, in run_nfoldCV_on_turk_data
+    sys.exit(1)
+SystemExit: 1
 
-time taken:93.49582481384277
+time taken:13.623584032058716

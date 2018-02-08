@@ -26,10 +26,10 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfFoldsCV=30
-noOfEpochs=10000
+noOfFoldsCV=10
+noOfEpochs=2
 lr=1e-5
-patience_max=20;
+patience_max=5;
 #lr=1e-2
 
 rsq_file="rsq_file.txt"
@@ -726,15 +726,19 @@ def chunk(xs, n):
 
 '''  create feed forward NN model, but using 100 data points (around 33 folds) for cross validation'''
 def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,useEarlyStopping):
-
+    # shuffle before splitting for early stopping
+    np.random.seed(1)
 
     allIndex = np.arange(len(features))
+    print("str(len(features)):")
+    print(str(len(features)))
 
 
 
     #split it into folds. n=number of folds. almost even sized.
     n=noOfFoldsCV
     split_data=chunk(allIndex,n)
+    #print(str(split_data))
     chunkIndices = np.arange(len(split_data))
 
 
@@ -752,6 +756,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
         # for each chunk in the training data, keep that one out, and train on the rest
         # append the rest of the values
         for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
+
+            print("doing chunk number:"+str(eachChunkIndex)+" out of: "+str(len(chunkIndices)))
 
             model = AdjEmb(193, addTurkerOneHot)
 
@@ -773,19 +779,20 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                 for eachElement in split_data[eachChunk]:
                     training_data.append(eachElement)
 
+            print("length of training_data:"+str(len(training_data)))
             test_data=[]
             #for the left out chunk, pull out its data points, and concatenate all into one single huge list of
             # data points-this is the test data
             for eachElement in split_data[eachChunkIndex]:
                     test_data.append(eachElement)
 
+            print("length of test_data:" + str(len(test_data)))
 
             rsq_max_estop=0.000
             rsq_previous_estop=0.000
             patienceCounter=0;
 
-            # shuffle before splitting for early stopping
-            np.random.seed(1)
+
             np.random.shuffle(training_data)
 
             # print("size  of training_data1:" + str((len(training_data))))
@@ -796,7 +803,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                 # split the training data further into training and dev
                 len_training_estop = len(training_data)
                 indices_tr_estop = np.arange(len_training_estop)
-                eighty_estop = math.ceil(len_training_estop * 80 / 100)
+                eighty_estop = math.ceil(len_training_estop * (60 / 100))
                 trainingData_estop = indices_tr_estop[:eighty_estop]
                 dev_estop = indices_tr_estop[eighty_estop:]
                 training_data = trainingData_estop
@@ -804,11 +811,14 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 
                 # debug statements
-                # print("len_training_estop:")
-                # print(len_training_estop)
+                # print("length of training estop:")
+                # print(len(trainingData_estop))
+                #
+                # print("length of training estop:")
+                # print(len(training_data))
                 # # print("(trainingData_estop):")
                 # # print((trainingData_estop))
-                # print("size of  len_training_estop:" + str((len_training_estop)))
+                # # print("size of  len_training_estop:" + str((len_training_estop)))
                 # print("size of  dev_estop:" + str(len(dev_estop)))
 
 
@@ -823,8 +833,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
             #run n epochs on the left over training data
             for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
-                # shuffle before each epoch
-                np.random.seed(1)
+                # # shuffle before each epoch
                 np.random.shuffle(training_data)
 
                 #print("size of  length of training_data2:" + str((len(training_data))))
@@ -843,8 +852,14 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
                     feature=features[eachRow]
 
+                    #print("feature:"+str(feature))
+
                     y = allY[eachRow]
                     each_adj = all_adj[eachRow]
+
+                    #print("each_adj:"+str(each_adj))
+                    #print("y:"+str(y))
+
 
 
                     featureV= convert_to_variable(feature)
@@ -854,6 +869,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                     batch_y = convert_scalar_to_variable(y)
 
                     loss = loss_fn(pred_y, batch_y)
+
 
                     # Backward pass
                     loss.backward()
@@ -869,7 +885,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
                 if (useEarlyStopping):
 
-                    #print("size of  dev_estop:" + str(len(dev_estop)))
+                    print("size of  dev_estop:" + str(len(dev_estop)))
                     pred_y_total_dev_data = []
                     y_total_dev_data = []
 
@@ -887,17 +903,17 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 
 
-                    #print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
-                    #print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
+                    print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
+                    print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
 
                     rsquared_value_estop = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
                                               multioutput='uniform_average')
                     print("\n")
-                    #print("rsquared_value_estop:" + str(rsquared_value_estop))
+                    print("rsquared_value_estop:" + str(rsquared_value_estop))
                     print("\n")
 
                     #in the first epoch all the values are initialized to the current value
-                    if(epoch==1):
+                    if(epoch==0):
                         rsq_max_estop = rsquared_value_estop
                         rsq_previous_estop = rsquared_value_estop
 
@@ -905,17 +921,27 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                     else:
 
                         if(rsquared_value_estop>rsq_max_estop):
-                            #print("found that we have a new max value:"+str(rsquared_value_estop))
+                            print("found that we have a new max value:"+str(rsquared_value_estop))
                             rsq_max_estop = rsquared_value_estop
+
+                            # the model is trained by now-store it to disk
+                            file_Name5 = "rsq_best_model_chunk_"+str(eachChunkIndex)+".pkl"
+                            # open the file for writing
+                            fileObject5 = open(file_Name5,'wb')
+                            pk.dump(model, fileObject5)
+
+
 
                     #everytime the current rsquared value is less than the previous value, decrease patience count
                     if (rsquared_value_estop < rsq_previous_estop):
-                        # print("found that rsquared_value_estop is less than"
-                        #       " rsq_previous_estop. going to increase patience:" )
+                        print("found that rsquared_value_estop is less than"
+                              " rsq_previous_estop. going to increase patience:" )
                         patienceCounter=patienceCounter-1
                     else:
                         #increase the patience every time it gets a good value
                         patienceCounter = patienceCounter + 1
+                        if(patienceCounter>patience_max):
+                            patienceCounter=patience_max
 
                     print("epoch:"+str(epoch)+" rsq_max:"+str(rsq_max_estop)+" rsq_previous:"
                           +str(rsq_previous_estop) +" rsq_current:"+str(rsquared_value_estop)+
@@ -928,44 +954,42 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                     if(patienceCounter< 1 ):
                         print("losing my patience. Have hit 0 . Exiting")
                         print("rsq_max_estop:"+str(rsq_max_estop))
-                        sys.exit(1)
+
+                        trained_model_nfcv = pk.load(open("rsq_best_model_chunk_"+str(eachChunkIndex)+".pkl", "rb"))
+
+                        #at the end of all epochs take the trained model that was trained on the 29 epochs
+                        #and use the trained model to predict on the values in the left over chunk
+
+
+                        pred_y_total_test_data = []
+                        y_total_test_data = []
+
+
+                        #for each element in the test data, calculate its predicted value, and append it to predy_total
+                        for test_data_index in dev_estop:
+                            #for test_data_index in test_data:
+                            this_feature = features[test_data_index]
+                            featureV_loo= convert_to_variable(this_feature)
+                            y = allY[test_data_index]
+                            each_adj = all_adj[test_data_index]
+                            pred_y = trained_model_nfcv(each_adj, featureV_loo)
+                            y_total_test_data.append(y)
+                            pred_y_total_test_data.append(pred_y.data.cpu().numpy())
 
 
 
-
-
-            #at the end of all epochs take the trained model that was trained on the 29 epochs
-            #and use the trained model to predict on the values in the left over chunk
-
-
-            pred_y_total_test_data = []
-            y_total_test_data = []
-
-
-            #for each element in the test data, calculate its predicted value, and append it to predy_total
-            for test_data_index in test_data:
-
-                this_feature = features[test_data_index]
-                featureV_loo= convert_to_variable(this_feature)
-                y = allY[test_data_index]
-                each_adj = all_adj[test_data_index]
-                pred_y = model(each_adj, featureV_loo)
-                y_total_test_data.append(y)
-                pred_y_total_test_data.append(pred_y.data.cpu().numpy())
-
-
-
-            #calculate the rsquared value for each chunk
-            rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
-            print("\n")
-            print("rsquared_value:"+str(rsquared_value))
-            print("\n")
-            nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
-            rsq_total.append(rsquared_value)
+                        #calculate the rsquared value for this  held out
+                        rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+                        print("\n")
+                        print("rsquared_value_on_test_after_chunk_"+str(eachChunkIndex)+":"+str(rsquared_value))
+                        print("\n")
+                        nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
+                        rsq_total.append(rsquared_value)
+                        break;
 
 
     #  After all chunks are done, calculate the average of each element in the list of predicted rsquared values.
-    # There should be 30 such values,
+    # There should be 10 such values,
     # each corresponding to one chunk being held out
 
 
