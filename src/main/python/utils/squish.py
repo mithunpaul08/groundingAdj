@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=10
-noOfEpochs=2
+noOfEpochs=1000
 lr=1e-5
 patience_max=5;
 #lr=1e-2
@@ -44,7 +44,7 @@ class AdjEmb(nn.Module):
 
 
         # get teh glove vectors
-        print("going to load glove for per adj.")
+        #print("going to load glove for per adj.")
 
         # get the glove embeddings for this adjective
         #self.vocab, self.vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
@@ -69,12 +69,12 @@ class AdjEmb(nn.Module):
         #sys.exit(1)
 
         # get teh glove vectors
-        print("just loaded glove for per adj. going to load glove for entire embeddings.")
-
-        print(".self.vec.shape[0]")
-        print(self.vec.shape[0])
-        print(".self.vec.shape[1]")
-        print(self.vec.shape[1])
+        # print("just loaded glove for per adj. going to load glove for entire embeddings.")
+        #
+        # print(".self.vec.shape[0]")
+        # print(self.vec.shape[0])
+        # print(".self.vec.shape[1]")
+        # print(self.vec.shape[1])
         self.embeddings = nn.Embedding(self.vec.shape[0], self.vec.shape[1])
         self.embeddings.weight.data.copy_(self.vec)
 
@@ -119,14 +119,14 @@ class AdjEmb(nn.Module):
         #the last step: whatever the output of previous layer was concatenate it with the mu and sigma and one-hot vector for turker
         if(addTurkerOneHot):
             self.fc = torch.nn.Linear(dense1_size+turkCount+2, 1)
-            print("found addTurkerOneHot=true")
+            #print("found addTurkerOneHot=true")
         else:
             #use this when you dont have one hot for turkers
             self.fc = torch.nn.Linear(dense1_size+2, 1)
 
 
 
-        print("done loading all gloves")
+        #print("done loading all gloves")
 
         #glove = vocab.GloVe(name='6B', dim=300)
         #the linear regression code which maps hidden layer to intercept value must come here
@@ -757,7 +757,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
         # append the rest of the values
         for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
-            print("doing chunk number:"+str(eachChunkIndex)+" out of: "+str(len(chunkIndices)))
+            print("**************Starting next chunk, chunk number:"+str(eachChunkIndex)+" out of: "+str(len(chunkIndices)))
 
             model = AdjEmb(193, addTurkerOneHot)
 
@@ -779,14 +779,14 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                 for eachElement in split_data[eachChunk]:
                     training_data.append(eachElement)
 
-            print("length of training_data:"+str(len(training_data)))
+            #print("length of training_data:"+str(len(training_data)))
             test_data=[]
             #for the left out chunk, pull out its data points, and concatenate all into one single huge list of
             # data points-this is the test data
             for eachElement in split_data[eachChunkIndex]:
                     test_data.append(eachElement)
 
-            print("length of test_data:" + str(len(test_data)))
+            #print("length of test_data:" + str(len(test_data)))
 
             rsq_max_estop=0.000
             rsq_previous_estop=0.000
@@ -844,7 +844,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
                 '''for each row in the training data, predict y value for itself, and then back
                 propagate the loss'''
-                for eachRow in tqdm(training_data, total=len(features), desc="each_adj:"):
+                for eachRow in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
 
 
                     #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
@@ -885,7 +885,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
                 if (useEarlyStopping):
 
-                    print("size of  dev_estop:" + str(len(dev_estop)))
+                    #print("size of  dev_estop:" + str(len(dev_estop)))
                     pred_y_total_dev_data = []
                     y_total_dev_data = []
 
@@ -903,14 +903,14 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 
 
-                    print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
-                    print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
+                    # print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
+                    # print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
 
                     rsquared_value_estop = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
                                               multioutput='uniform_average')
-                    print("\n")
-                    print("rsquared_value_estop:" + str(rsquared_value_estop))
-                    print("\n")
+                    # print("\n")
+                    # print("rsquared_value_estop:" + str(rsquared_value_estop))
+                    # print("\n")
 
                     #in the first epoch all the values are initialized to the current value
                     if(epoch==0):
@@ -924,7 +924,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                             print("found that we have a new max value:"+str(rsquared_value_estop))
                             rsq_max_estop = rsquared_value_estop
 
-                            # the model is trained by now-store it to disk
+                            # store the model to disk every time we hit a max.
+                            # this is because at the end of hitting patience limit, we want the best model to test on the held out chunk
                             file_Name5 = "rsq_best_model_chunk_"+str(eachChunkIndex)+".pkl"
                             # open the file for writing
                             fileObject5 = open(file_Name5,'wb')
@@ -951,7 +952,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 
 
-                    if(patienceCounter< 1 ):
+                    if(patienceCounter < 1 ):
                         print("losing my patience. Have hit 0 . Exiting")
                         print("rsq_max_estop:"+str(rsq_max_estop))
 
