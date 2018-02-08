@@ -212,6 +212,7 @@ if __name__ == "__main__":
                             with open(cwd+"/outputs/" +rsq_on_test_all_data, "a")as rsq_values:
 
                                 trained_model = pk.load( open( "all_data_80-10-10.pkl", "rb" ))
+                                #trained_model = pk.load(open("all_data_80-10-10-122-epochs.pkl", "rb"))
                                 runOnTestPartition(trained_model,test_data,cwd, uniq_turker,rsq_values,addTurkerOneHot,1)
 
 
