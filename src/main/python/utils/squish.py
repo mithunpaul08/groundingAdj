@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=10
-noOfEpochs=1000
+noOfEpochs=200
 lr=1e-5
 patience_max=5;
 #lr=1e-2
@@ -79,7 +79,7 @@ class AdjEmb(nn.Module):
         self.embeddings.weight.data.copy_(self.vec)
 
         #dont update embeddings
-        self.embeddings.weight.requires_grad=True
+        self.embeddings.weight.requires_grad=False
 
 
         #the size of the last layer will be the last entry in dense3_size
@@ -496,11 +496,17 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
                 #once you hit a good rsq value, break out of the epochs loop and save the model and run on test partition
             foundGoodModel=tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch)
 
-            if(foundGoodModel):
-                break
+            # if(foundGoodModel):
+            #     break
             # Print weights
             learned_weights = model.fc.weight.data
             #print("\tlearned weights:" + str(learned_weights.cpu().numpy()))
+            if(epoch==122):
+                # the model is trained by now-store it to disk
+                file_Name122 = "all_data_80-10-10-122-epochs.pkl"
+                # open the file for writing
+                fileObject122 = open(file_Name122, 'wb')
+                pk.dump(model, fileObject122)
 
 
 
@@ -510,10 +516,10 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
     #the model is trained by now-store it to disk
-    file_Name5 = "adj_data_80-10-10.pkl"
+    file_Name_200 = "all_data_80-10-10.pkl"
     # open the file for writing
-    fileObject5 = open(file_Name5,'wb')
-    pk.dump(model, fileObject5)
+    fileObject_200 = open(file_Name_200,'wb')
+    pk.dump(model, fileObject_200)
 
    #  learned_weights = fc.weight.data
    #  #return(learned_weights.cpu().numpy())
@@ -803,7 +809,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                 # split the training data further into training and dev
                 len_training_estop = len(training_data)
                 indices_tr_estop = np.arange(len_training_estop)
-                eighty_estop = math.ceil(len_training_estop * (60 / 100))
+                eighty_estop = math.ceil(len_training_estop * (90 / 100))
                 trainingData_estop = indices_tr_estop[:eighty_estop]
                 dev_estop = indices_tr_estop[eighty_estop:]
                 training_data = trainingData_estop
@@ -920,7 +926,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                     #2nd epoch onwards keep track of the maximum rsq value so far
                     else:
 
-                        if(rsquared_value_estop>rsq_max_estop):
+                        if(rsquared_value_estop > rsq_max_estop):
                             print("found that we have a new max value:"+str(rsquared_value_estop))
                             rsq_max_estop = rsquared_value_estop
 
@@ -968,7 +974,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
                         #for each element in the test data, calculate its predicted value, and append it to predy_total
                         for test_data_index in dev_estop:
-                            #for test_data_index in test_data:
+                        #for test_data_index in test_data:
                             this_feature = features[test_data_index]
                             featureV_loo= convert_to_variable(this_feature)
                             y = allY[test_data_index]
@@ -1304,8 +1310,8 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_train
 
     #this is a hack. we need to put early stopping or something here
     #once you hit a good rsq value, break and save the model and run on test partition
-    if(rsquared_dev_value>0.43):
-        return True;
+    # if(rsquared_dev_value>0.43):
+    #     return True;
 
 
 def runOnTestPartition(trained_model,dev,cwd, uniq_turker,rsq_values,addTurkerOneHot,epoch):
