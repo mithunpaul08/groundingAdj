@@ -485,6 +485,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
             rsquared_value_training=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
             # print("rsquared_value_training: "+str(rsquared_value_training))
             rsq_values.write(str(epoch)+"\t"+str(rsquared_value_training)+"\t")
+            rsq_values.flush()
             # print("loss_training:")
             # print(loss_training)
 
@@ -992,6 +993,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                         print("rsquared_value_on_test_after_chunk_"+str(eachChunkIndex)+":"+str(rsquared_value))
                         print("\n")
                         nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
+                        nfcv.flush()
                         rsq_total.append(rsquared_value)
                         break;
 
@@ -1308,6 +1310,7 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_train
     print(str(rsquared_dev_value))
     print("")
     rsq_values.write(str(rsquared_dev_value)+"\n")
+    rsq_values.flush()
 
     #this is a hack. we need to put early stopping or something here
     #once you hit a good rsq value, break and save the model and run on test partition
@@ -1330,4 +1333,5 @@ def runOnTestPartition(trained_model,dev,cwd, uniq_turker,rsq_values,addTurkerOn
     print(str(rsquared_test_value))
     print("")
     rsq_values.write(str(rsquared_test_value)+"\n")
+    rsq_values.flush()
 
