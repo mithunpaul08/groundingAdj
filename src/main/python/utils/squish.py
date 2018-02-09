@@ -26,7 +26,7 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfFoldsCV=10
+noOfFoldsCV=3
 noOfEpochs=10000
 lr=1e-5
 patience_max=5;
@@ -809,9 +809,9 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                 # split the training data further into training and dev
                 len_training_estop = len(training_data)
                 indices_tr_estop = np.arange(len_training_estop)
-                eighty_estop = math.ceil(len_training_estop * (90 / 100))
-                trainingData_estop = indices_tr_estop[:eighty_estop]
-                dev_estop = indices_tr_estop[eighty_estop:]
+                limit_estop = math.ceil(len_training_estop * (50 / 100))
+                trainingData_estop = indices_tr_estop[:limit_estop]
+                dev_estop = indices_tr_estop[limit_estop:]
                 training_data = trainingData_estop
 
 
@@ -962,6 +962,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                         print("losing my patience. Have hit 0 . Exiting")
                         print("rsq_max_estop:"+str(rsq_max_estop))
 
+                        #once patience runs out, load the model that was saved at the best max rsq value-and use that to test the held out chunk
                         trained_model_nfcv = pk.load(open("rsq_best_model_chunk_"+str(eachChunkIndex)+".pkl", "rb"))
 
                         #at the end of all epochs take the trained model that was trained on the 29 epochs
