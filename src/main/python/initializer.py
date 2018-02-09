@@ -2,7 +2,6 @@ from __future__ import division
 import scipy
 import os
 import sys;
-import utils;
 import csv;
 import collections
 import numpy as np
@@ -10,9 +9,15 @@ import itertools
 import pickle as pk
 import time
 
+
+
+
 from utils.grounding import predict_grounding
+
+from utils.grounding import split_entire_data
 from utils.grounding import get_features_dev
-from utils.grounding import get_features_training_data
+from utils.grounding import get_features_labels_from_data
+from utils.grounding import split_data_based_on_adj
 from utils.grounding import split_data_based_on_adj
 
 
@@ -27,24 +32,31 @@ from utils.squish import runOnTestPartition
 
 from utils.read_write_data import writeCsvToFile
 from utils.read_write_data import writeDictToFile
-from sklearn.metrics import r2_score
+
 from utils.read_write_data import readAdjInterceptFile
 from utils.read_write_data import readRawTurkDataFile
 from utils.read_write_data import readWithSpace
 from utils.squish import predictAndCalculateRSq
 from scipy.stats import kendalltau, spearmanr
 from utils.linearReg import runLR
-
+from sklearn.metrics import r2_score
 
 start_time = time.time()
 
 cwd=os.getcwd()
+
+#files from turk experiment
+turkInterceptFile="turk_with_intercept.txt"
 entire_turk_data="all_turk_data.csv"
+
+#files after the data was split into training-dev-test
 dev_entire_data= "dev.csv"
 training_data="trainingData.csv"
-turkInterceptFile="turk_with_intercept.txt"
-test_data="test.csv"
+#test_data="test.csv"
+test_data="test_no_random_seed.csv"
+#test_data="test_rand_seed1.csv"
 
+#files after the data was sorted based on adjectives and was split into training-dev-test
 dev_adj="dev_adj.csv"
 training_adj="trainingData_adj.csv"
 test_adj="test_adj.csv"
@@ -53,8 +65,8 @@ addTurkerOneHot=False
 addAdjOneHot=False
 useEarlyStopping=True
 
-rsq_on_test_all_data= "rsq_on_test.txt"
 
+rsq_on_test_all_data= "rsq_on_test.txt"
 rsq_on_test_adj_based_data= "rsq_on_test_adj_based_data.txt"
 
 if __name__ == "__main__":
@@ -92,15 +104,15 @@ if __name__ == "__main__":
                     # cut_glove=cutGlove(adj_lexicon);
                     # writeDictToFile(cut_glove,cwd,"glove_our_adj")
                     # sys.exit(1)
-
-
+                    # split_entire_data(cwd, entire_turk_data, addTurkerOneHot)
+                    # sys.exit(1)
 
 
                     #run1: run with leave one out cross validationon all the turk experiment data points-i.e no adjective based split
 
                     # read all the data. i.e without training-dev-split. This is for LOOCV
-                    features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, entire_turk_data,
-                                                                                               addAdjOneHot, uniq_turker,addTurkerOneHot)
+                    features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, entire_turk_data,
+                                                                                                                 addAdjOneHot, uniq_turker, addTurkerOneHot)
 
                      # run1: run with leave one out cross validation
                     run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
@@ -248,8 +260,8 @@ if __name__ == "__main__":
                                             # features, y, adj_lexicon, all_adj, uniq_turker = split_data_based_on_adj(cwd, entire_turk_data,
                                             #                                                                          False, uniq_turker)
 
-                                            features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, training_adj,
-                                                                                                                       addAdjOneHot, uniq_turker,addTurkerOneHot)
+                                            features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, training_adj,
+                                                                                                                                         addAdjOneHot, uniq_turker, addTurkerOneHot)
 
                                             #train on the adj based training split and tune on dev. All is done inside train_dev_print_rsq
                                             trained_model = train_dev_print_rsq(dev_adj,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
@@ -303,7 +315,7 @@ if __name__ == "__main__":
 
                                                 uniq_turker = {}
                                                 #readtraining data
-                                                features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list= get_features_training_data(cwd, training_data,False, uniq_turker,addTurkerOneHot)
+                                                features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list= get_features_labels_from_data(cwd, training_data, False, uniq_turker, addTurkerOneHot)
                                                  #train on whatever data split is given and tune on dev. All is done inside train_dev_print_rsq
                                                 #features here is the features you just read in the line above
                                                 trained_model = train_dev_print_rsq(dev_entire_data,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
@@ -311,8 +323,8 @@ if __name__ == "__main__":
                                                     if(myInput=="6"):
                                                             #run1: run with leave one out cross validationon all the turk experiment data points-i.e no adjective based split
                                                             # read all the data. i.e without training-dev-split. This is for LOOCV
-                                                            features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_training_data(cwd, training_adj,
-                                                                                                                                       addAdjOneHot, uniq_turker,addTurkerOneHot)
+                                                            features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, training_adj,
+                                                                                                                                                         addAdjOneHot, uniq_turker, addTurkerOneHot)
 
                                                              # run1: run with leave one out cross validation
                                                             run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)

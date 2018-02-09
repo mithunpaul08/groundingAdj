@@ -1,17 +1,20 @@
-from utils.read_write_data import readRawTurkDataFile
-from utils.read_write_data import loadEmbeddings
-from utils.read_write_data import writeCsvToFile
-from utils.read_write_data import writeToFileWithPd
-from utils.read_write_data import writeToFileWithHeader
-from utils.linearReg import runLR
-from tqdm import tqdm
-import numpy as np
 import math
+import numpy as np
 import sys
 import torchtext.vocab as vocab
 import torchwordemb
+from tqdm import tqdm
+
+from utils.linearReg import runLR
+from utils.read_write_data import loadEmbeddings
+from utils.read_write_data import readRawTurkDataFile
+from utils.read_write_data import writeCsvToFile
+from utils.read_write_data import writeToFileWithHeader
+from utils.read_write_data import writeToFileWithPd
 
 cbow4 = "glove_vectors_syn_ant_sameord_difford.txt"
+random_seed=1
+useRandomSeed=False
 
 def predict_grounding(cwd,turkFile):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
@@ -305,7 +308,7 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker,addTurkerOneHot):
 
         return npfeatures,y, uniq_adj, all_adj
 
-def get_features_training_data(cwd, turkFile, useAdjOneHot, uniq_turker, addTurkerOneHot):
+def get_features_labels_from_data(cwd, turkFile, useAdjOneHot, uniq_turker, addTurkerOneHot):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
 
         #create a hash table to store unique adj
@@ -521,7 +524,7 @@ def split_data_based_on_adj(cwd, turkFile, useOneHot, uniq_turker):
     sorted_df_raw_turk_data=df_raw_turk_data.sort_values("adjective")
 
     print(sorted_df_raw_turk_data)
-    split_data_write_to_file(sorted_df_raw_turk_data, cwd)
+    split_adj_data_write_to_file(sorted_df_raw_turk_data, cwd)
 
     sys.exit(1)
 
@@ -712,8 +715,8 @@ def split_data_based_on_adj(cwd, turkFile, useOneHot, uniq_turker):
 
     return npfeatures, y, uniq_adj, all_adj, uniq_turker
 
-
-def get_features_old(cwd, turkFile, useOneHot):
+'''split the given data set into training, dev and test partitions'''
+def split_entire_data(cwd, turkFile, useOneHot):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
 
         #create a hash table to store unique adj
@@ -758,7 +761,9 @@ def get_features_old(cwd, turkFile, useOneHot):
         allIndex=np.arange(noOfRows)
 
         #now shuffle it and split
-        #np.random.seed(1)
+        if(useRandomSeed):
+            np.random.seed(random_seed)
+
         np.random.shuffle(allIndex)
 
         #take 80% of the total data as training data- rest as testing
@@ -774,7 +779,7 @@ def get_features_old(cwd, turkFile, useOneHot):
 
 
         trainingData=[]
-        # # write training data to a separate file. This should happen only once.
+        # write training data to a separate file. This should happen only once.
         # for eachline in trainingData_indices:
         #     results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
         #                df_raw_turk_data["onestdev"][eachline],
@@ -782,18 +787,20 @@ def get_features_old(cwd, turkFile, useOneHot):
         #
         #     trainingData.append(results )
         #
-        # writeToFile(trainingData,cwd, "trainingData.csv")
+        # writeToFileWithHeader(trainingData,cwd, "trainingData_with_random.csv")
+
+
         #
         #
         #
         #
-        # #split the rest into half as dev and test
-        # dev_test_indices=np.array_split(rest,2)
-        # #print(len(rest))
+        #split the rest into half as dev and test
+        dev_test_indices=np.array_split(rest,2)
+        #print(len(rest))
         #
         #
-        # dev_indices=dev_test_indices[0]
-        # test_indices=dev_test_indices[1]
+        dev_indices=dev_test_indices[0]
+        test_indices=dev_test_indices[1]
         #
         #
         # # write dev data to a separate file. This should happen only once.
@@ -806,19 +813,19 @@ def get_features_old(cwd, turkFile, useOneHot):
         #     dev_list.append(results)
         # writeToFile(dev_list,cwd, "dev.csv")
         #
-        # # write test data to a separate file. This should happen only once.
-        # test_list=[]
-        # for eachline in test_indices:
-        #     results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
-        #                df_raw_turk_data["onestdev"][eachline],
-        #                df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
-        #
-        #     test_list.append(results )
-        #
-        #
-        #
-        # writeToFile(test_list,cwd, "test.csv")
-        # sys.exit(1)
+        # write test data to a separate file. This should happen only once.
+        test_list=[]
+        for eachline in test_indices:
+            results = [df_raw_turk_data["turker"][eachline],df_raw_turk_data["adjective"][eachline],df_raw_turk_data["mean"][eachline],
+                       df_raw_turk_data["onestdev"][eachline],
+                       df_raw_turk_data["had_negative"][eachline],df_raw_turk_data["logrespdev"][eachline]]
+
+            test_list.append(results )
+
+
+
+        writeToFileWithHeader(test_list,cwd, "test_rand_seed1.csv")
+        sys.exit(1)
 
 
         y=np.array([],dtype="float32")
@@ -963,7 +970,7 @@ def get_features_old(cwd, turkFile, useOneHot):
         return npfeatures,y, uniq_adj, all_adj,uniq_turker
 
 
-def split_data_write_to_file(df_raw_turk_data, cwd):
+def split_adj_data_write_to_file(df_raw_turk_data, cwd):
     #df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
 
     # # create a hash table to store unique adj
@@ -982,7 +989,7 @@ def split_data_write_to_file(df_raw_turk_data, cwd):
 
 
 
-    # Split data in to train-dev_adj-test_adj
+    # get the total number of unique adjectives
     noOfRows = len(uniq_adj.items())
 
     # noOfRows_data = len(df_raw_turk_data.items())
