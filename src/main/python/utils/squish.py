@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=3
-noOfEpochs=10000
+noOfEpochs=145
 lr=1e-5
 patience_max=5;
 #lr=1e-2
@@ -501,9 +501,9 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
             # Print weights
             learned_weights = model.fc.weight.data
             #print("\tlearned weights:" + str(learned_weights.cpu().numpy()))
-            if(epoch==122):
+            if(epoch==120):
                 # the model is trained by now-store it to disk
-                file_Name122 = "all_data_80-10-10-122-epochs.pkl"
+                file_Name122 = "adj_data_80-10-10-120-epochs.pkl"
                 # open the file for writing
                 fileObject122 = open(file_Name122, 'wb')
                 pk.dump(model, fileObject122)
@@ -516,7 +516,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
     #the model is trained by now-store it to disk
-    file_Name_200 = "all_data_80-10-10.pkl"
+    file_Name_200 = "adj_data_80-10-10-145epochs.pkl"
     # open the file for writing
     fileObject_200 = open(file_Name_200,'wb')
     pk.dump(model, fileObject_200)
