@@ -16,7 +16,7 @@ from utils.read_write_data import readRawTurkDataFile
 from sklearn.metrics import r2_score
 from torch.autograd import Variable
 from tqdm import tqdm
-
+from utils.grounding import get_features_labels_from_data
 from utils.grounding import get_features_dev
 torch.manual_seed(1)
 
@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=3
-noOfEpochs=145
+noOfEpochs=10000
 lr=1e-5
 patience_max=5;
 #lr=1e-2
@@ -36,7 +36,11 @@ rsq_file="rsq_file.txt"
 rsq_file_nfcv="rsq_file_nfcv.txt"
 rsq_file_nfcv_avrg="rsq_file_nfcv_avrg.txt"
 
-
+training_data="trainingData.csv"
+#test_data="test.csv"
+#test_data="test_no_random_seed.csv"
+#test_data="test_rand_seed1.csv"
+test_data="test_no_random_seed2.csv"
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount,addTurkerOneHot):
@@ -800,6 +804,22 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
             patienceCounter=0;
 
 
+            '''feed the LOOCV with custom data, and not random chunks. this is a temporary hack for sanity check. '''
+
+            # # read the training data
+            # training_data, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, training_data,
+            #                                                                                                      addAdjOneHot, uniq_turker, addTurkerOneHot)
+            #
+            #
+            # # read the test data
+            # training_data, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, training_data,
+            #                                                                                                      addAdjOneHot, uniq_turker, addTurkerOneHot)
+            #
+            #
+            # print(training_data)
+            # sys.exit(1)
+            '''end of sanity check code'''
+
             np.random.shuffle(training_data)
 
             # print("size  of training_data1:" + str((len(training_data))))
@@ -975,8 +995,8 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 
                         #for each element in the test data, calculate its predicted value, and append it to predy_total
-                        for test_data_index in dev_estop:
-                        #for test_data_index in test_data:
+                        #for test_data_index in dev_estop:
+                        for test_data_index in test_data:
                             this_feature = features[test_data_index]
                             featureV_loo= convert_to_variable(this_feature)
                             y = allY[test_data_index]

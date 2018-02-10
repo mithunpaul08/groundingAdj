@@ -53,8 +53,10 @@ entire_turk_data="all_turk_data.csv"
 dev_entire_data= "dev.csv"
 training_data="trainingData.csv"
 #test_data="test.csv"
-test_data="test_no_random_seed.csv"
+#test_data="test_no_random_seed.csv"
 #test_data="test_rand_seed1.csv"
+test_data="test_no_random_seed2.csv"
+
 
 #files after the data was sorted based on adjectives and was split into training-dev-test
 dev_adj="dev_adj.csv"

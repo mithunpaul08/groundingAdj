@@ -14,7 +14,7 @@ from utils.read_write_data import writeToFileWithPd
 
 cbow4 = "glove_vectors_syn_ant_sameord_difford.txt"
 random_seed=1
-useRandomSeed=False
+useRandomSeed=True
 
 def predict_grounding(cwd,turkFile):
         df_raw_turk_data=readRawTurkDataFile(cwd, turkFile)
