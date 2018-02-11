@@ -28,7 +28,7 @@ dense1_size=1
 
 noOfFoldsCV=4
 noOfEpochs=2000
-lr=5e-5
+learning_rate=1e-6
 patience_max=5;
 #lr=1e-2
 
@@ -410,7 +410,7 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
     params_to_update = filter(lambda p: p.requires_grad==True, model.parameters())
-    rms = optim.RMSprop(params_to_update,lr, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+    rms = optim.RMSprop(params_to_update, learning_rate, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
     loss_fn = nn.MSELoss(size_average=True)
 
     allIndex = np.arange(len(features))
@@ -1466,7 +1466,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
             model_4chunk = AdjEmb(193, addTurkerOneHot)
 
             params_to_update = filter(lambda p: p.requires_grad == True, model_4chunk.parameters())
-            rms = optim.RMSprop(params_to_update, lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            rms = optim.RMSprop(params_to_update, lr=learning_rate, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
             loss_fn = nn.MSELoss(size_average=True)
 
             dev_fold_index = (test_fold_index + 1) % 4
