@@ -27,8 +27,8 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=4
-noOfEpochs=1000
-lr=1e-5
+noOfEpochs=5000
+lr=1e-6
 patience_max=5;
 #lr=1e-2
 
@@ -44,7 +44,7 @@ training_data="trainingData.csv"
 test_data="test_no_random_seed2.csv"
 
 random_seed=1
-useRandomSeed=False
+useRandomSeed=True
 
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
