@@ -28,7 +28,7 @@ dense1_size=1
 
 noOfFoldsCV=4
 noOfEpochs=2000
-learning_rate=5e-5
+learning_rate=1e-6
 patience_max=5;
 #lr=1e-2
 
