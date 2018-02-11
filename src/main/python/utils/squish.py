@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=4
-noOfEpochs=10000
+noOfEpochs=1000
 lr=1e-5
 patience_max=5;
 #lr=1e-2
@@ -42,6 +42,10 @@ training_data="trainingData.csv"
 #test_data="test_no_random_seed.csv"
 #test_data="test_rand_seed1.csv"
 test_data="test_no_random_seed2.csv"
+
+random_seed=1
+useRandomSeed=False
+
 class AdjEmb(nn.Module):
     #the constructor. Pass whatever you need to
     def __init__(self,turkCount,addTurkerOneHot):
@@ -1416,8 +1420,10 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 '''experiment: out of 4 chunks, keep one for testing, one for dev, and the rest two as training'''
 def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurkerOneHot,useEarlyStopping,use4Chunks):
-    # shuffle before splitting for early stopping
-    np.random.seed(1)
+    # shuffle before splitting
+    if (useRandomSeed):
+        np.random.seed(random_seed)
+
 
     allIndex = np.arange(len(features))
     print("str(len(features)):")
@@ -1444,7 +1450,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         # tp write rsq per epoch  to disk
         # first empty out the existing file before loop does append
     with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "w+")as nfcv_four:
-        nfcv_four.write("Epoch \t RSQ\n")
+        nfcv_four.write("")
         nfcv_four.close()
 
 
@@ -1452,30 +1458,30 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
         # for each chunk in the training data, keep that one out, and train on the rest
         # append the rest of the values
-        #note:eachChunkIndex starts at zero
-        for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
+        #note:test_fold_index starts at zero
+        for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
-            print("**************Starting next chunk, chunk number:"+str(eachChunkIndex)+" out of: "+str(len(chunkIndices)))
+            print("**************Starting next chunk, chunk number:"+str(test_fold_index)+" out of: "+str(len(chunkIndices))+"\n")
 
-            model = AdjEmb(193, addTurkerOneHot)
+            model_4chunk = AdjEmb(193, addTurkerOneHot)
 
-            params_to_update = filter(lambda p: p.requires_grad == True, model.parameters())
+            params_to_update = filter(lambda p: p.requires_grad == True, model_4chunk.parameters())
             rms = optim.RMSprop(params_to_update, lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
             loss_fn = nn.MSELoss(size_average=True)
 
-            dev_chunk_index = (eachChunkIndex + 1) % 4
+            dev_fold_index = (test_fold_index + 1) % 4
 
             # create a  list of all the indices of chunks except the test and dev chunk you are keeping out
-            tr_data_chunk_indices = []
+            tr_fold_indices = []
             for i in chunkIndices:
-                if (i != eachChunkIndex and i != dev_chunk_index):
-                    tr_data_chunk_indices.append(i)
+                if (i != test_fold_index and i != dev_fold_index):
+                    tr_fold_indices.append(i)
 
 
 
-            # print("tr_data_chunk_indices:" + str(tr_data_chunk_indices))
-            # print("eachChunkIndex:" + str(eachChunkIndex))
-            # print("dev_chunk_index:"+str(dev_chunk_index))
+            # print("tr_fold_indices:" + str(tr_fold_indices))
+            # print("test_fold_index:" + str(test_fold_index))
+            # print("dev_fold_index:"+str(dev_fold_index))
 
 
 
@@ -1483,7 +1489,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
             #for each of these left over chunks, pull out its data points, and concatenate all into one single huge list of
             # data points-this is the training data
-            for eachChunk in tr_data_chunk_indices:
+            for eachChunk in tr_fold_indices:
                 for eachElement in split_data[eachChunk]:
                     training_data.append(eachElement)
 
@@ -1492,7 +1498,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
             #for the left out test chunk, pull out its data points, and concatenate all into one single huge list of
             # data points-this is the test data
-            for eachElement in split_data[eachChunkIndex]:
+            for eachElement in split_data[test_fold_index]:
                     test_data.append(eachElement)
 
             #print("length of test_data:" + str(len(test_data)))
@@ -1500,7 +1506,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
             # for the left out dev chunk, pull out its data points, and concatenate all into one single huge list of
             # data points-this is the test data
             dev_data = []
-            for eachElement_dev in split_data[dev_chunk_index]:
+            for eachElement_dev in split_data[dev_fold_index]:
                 dev_data.append(eachElement_dev)
 
             #print("length of dev_data:" + str(len(dev_data)))
@@ -1509,25 +1515,11 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
-            np.random.shuffle(training_data)
+            #np.random.shuffle(training_data)
 
             # print("size  of training_data1:" + str((len(training_data))))
             # print("size of  test_data:" + str((len(test_data))))
 
-            '''adding early-stopping and patience'''
-
-
-
-                # debug statements
-                # print("length of training estop:")
-                # print(len(trainingData_estop))
-                #
-                # print("length of training estop:")
-                # print(len(training_data))
-                # # print("(trainingData_estop):")
-                # # print((trainingData_estop))
-                # # print("size of  len_training_estop:" + str((len_training_estop)))
-                # print("size of  dev_estop:" + str(len(dev_estop)))
 
 
 
@@ -1540,10 +1532,18 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
             #run n epochs on the left over training data
             with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "a")as nfcv_four:
+                nfcv_four.write("test_fold_index:" + str(test_fold_index)+"\n")
+                nfcv_four.write("dev_fold_index:"+str(dev_fold_index)+"\n")
+                nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
+                nfcv_four.write("Epoch \t RSQ\n")
+
                 for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
                     # # shuffle before each epoch
                     np.random.shuffle(training_data)
+
+                    #print(training_data)
+
 
                     #print("size of  length of training_data2:" + str((len(training_data))))
 
@@ -1553,26 +1553,26 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
                     '''for each row in the training data, predict y value for itself, and then back
                     propagate the loss'''
-                    for eachRow in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
+                    for each_data_item_index in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
 
 
                         #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
-                        model.zero_grad()
+                        model_4chunk.zero_grad()
 
-                        feature=features[eachRow]
+                        feature=features[each_data_item_index]
+                        y = allY[each_data_item_index]
+                        each_adj = all_adj[each_data_item_index]
 
-                        #print("feature:"+str(feature))
+                        # print("feature:"+str(feature))
+                        # print("each_adj:"+str(each_adj)+"\n")
+                        # print("y:"+str(y))
 
-                        y = allY[eachRow]
-                        each_adj = all_adj[eachRow]
 
-                        #print("each_adj:"+str(each_adj))
-                        #print("y:"+str(y))
 
 
 
                         featureV= convert_to_variable(feature)
-                        pred_y = model(each_adj, featureV)
+                        pred_y = model_4chunk(each_adj, featureV)
 
 
                         batch_y = convert_scalar_to_variable(y)
@@ -1588,10 +1588,14 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
-                    #after every epoch, run on dev data and calculate rsq
+                    #after every epoch, i.e after training on n data points,
+                    #  run on dev data and calculate rsq
                     # print("size of  dev_estop:" + str(len(dev_estop)))
                     pred_y_total_dev_data = []
                     y_total_dev_data = []
+
+                    # print(dev_data)
+                    # print(str(len(dev_data)))
 
                     # for each element in the dev data, calculate its predicted value, and append it to predy_total
                     for dev_index in dev_data:
@@ -1599,13 +1603,23 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                         featureV_loo = convert_to_variable(this_feature)
                         y = allY[dev_index]
                         each_adj = all_adj[dev_index]
-                        pred_y = model(each_adj, featureV_loo)
+
+
+
+                        pred_y = model_4chunk(each_adj, featureV_loo)
                         y_total_dev_data.append(y)
                         pred_y_total_dev_data.append(pred_y.data.cpu().numpy())
 
+                        # print("feature:" + str(feature))
+                        # print("each_adj:" + str(each_adj) + "\n")
+                        # print("y:" + str(y))
+                        # print(pred_y)
 
 
 
+
+                    # print(y_total_dev_data)
+                    # print(pred_y_total_dev_data)
                     # print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
                     # print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
 
@@ -1613,9 +1627,10 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                                               multioutput='uniform_average')
 
 
-                    #print("\n")
-                    #print("rsquared_value_Dev" + str(eachChunkIndex) + ":" + str(rsquared_value_dev))
-                    #print("\n")
+                    # print("\n")
+                    # print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
+                    # print("\n")
+
                     nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_dev) + "\n")
                     nfcv_four.flush()
 
@@ -1623,31 +1638,36 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
+
+
             print("done with all epochs")
-            sys.exit(1)
-            #after all epochs in the given chunk,
+
+
+
+            #Testing phase
+            # after all epochs in the given chunk,
             # for each element in the test data, calculate its predicted value, and append it to predy_total
             #for test_data_index in dev_estop:
-            for test_data_index in test_data:
-                this_feature = features[test_data_index]
-                featureV_loo= convert_to_variable(this_feature)
-                y = allY[test_data_index]
-                each_adj = all_adj[test_data_index]
-                pred_y = trained_model_nfcv(each_adj, featureV_loo)
-                y_total_test_data.append(y)
-                pred_y_total_test_data.append(pred_y.data.cpu().numpy())
+            # for test_data_index in test_data:
+            #     this_feature = features[test_data_index]
+            #     featureV_loo= convert_to_variable(this_feature)
+            #     y = allY[test_data_index]
+            #     each_adj = all_adj[test_data_index]
+            #     pred_y = trained_model_nfcv(each_adj, featureV_loo)
+            #     y_total_test_data.append(y)
+            #     pred_y_total_test_data.append(pred_y.data.cpu().numpy())
+            #
+            #
+            #
+            # #calculate the rsquared value for this  held out
+            # rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+            # print("\n")
+            # print("rsquared_value_on_test_after_chunk_"+str(test_fold_index)+":"+str(rsquared_value))
+            # print("\n")
+            # nfcv.write(str(test_fold_index) + "\t" + str(rsquared_value) + "\n")
+            # nfcv.flush()
+            # rsq_total.append(rsquared_value)
 
-
-
-            #calculate the rsquared value for this  held out
-            rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
-            print("\n")
-            print("rsquared_value_on_test_after_chunk_"+str(eachChunkIndex)+":"+str(rsquared_value))
-            print("\n")
-            nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
-            nfcv.flush()
-            rsq_total.append(rsquared_value)
-            break;
 
 
     #  After all chunks are done, calculate the average of each element in the list of predicted rsquared values.
@@ -1655,7 +1675,8 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
     # each corresponding to one chunk being held out
 
 
-
+    print("done with all chunks")
+    sys.exit(1)
     rsq_cumulative=0;
 
     for eachRsq in rsq_total:
