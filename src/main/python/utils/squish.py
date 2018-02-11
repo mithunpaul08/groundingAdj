@@ -27,8 +27,8 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=4
-noOfEpochs=5000
-lr=1e-6
+noOfEpochs=2000
+lr=5e-5
 patience_max=5;
 #lr=1e-2
 
