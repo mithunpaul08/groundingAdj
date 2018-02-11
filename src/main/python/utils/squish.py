@@ -26,7 +26,7 @@ dense1_size=1
 #dense2_size=1
 # dense3_size=1
 
-noOfFoldsCV=3
+noOfFoldsCV=4
 noOfEpochs=10000
 lr=1e-5
 patience_max=5;
@@ -736,7 +736,7 @@ def chunk(xs, n):
 
 
 '''  create feed forward NN model, but using 100 data points (around 33 folds) for cross validation'''
-def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,useEarlyStopping):
+def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,useEarlyStopping,use4Chunks):
     # shuffle before splitting for early stopping
     np.random.seed(1)
 
@@ -764,8 +764,10 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
 
     with open(cwd + "/outputs/" + rsq_file_nfcv, "a")as nfcv:
+
         # for each chunk in the training data, keep that one out, and train on the rest
         # append the rest of the values
+        #note:eachChunkIndex starts at zero
         for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
             print("**************Starting next chunk, chunk number:"+str(eachChunkIndex)+" out of: "+str(len(chunkIndices)))
@@ -776,28 +778,59 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
             rms = optim.RMSprop(params_to_update, lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
             loss_fn = nn.MSELoss(size_average=True)
 
-            # create a  list of all the indices of chunks except the chunk you are keeping out
-            allIndices_chunks=[]
-            for i in chunkIndices:
-                if i!=eachChunkIndex:
-                    allIndices_chunks.append(i)
+
+            '''experiment: out of 4 chunks, keep one for testing, one for dev, and the rest two as training'''
+
+            if(use4Chunks):
+                dev_chunk_index = (eachChunkIndex + 1) % 4
+
+                # create a  list of all the indices of chunks except the test and dev chunk you are keeping out
+                tr_data_chunk_indices = []
+                for i in chunkIndices:
+                    if (i != eachChunkIndex and i!=dev_chunk_index):
+                        tr_data_chunk_indices.append(i)
+
+
+            else:
+                # create a  list of all the indices of chunks except the chunk you are keeping out
+                tr_data_chunk_indices=[]
+                for i in chunkIndices:
+                    if i!=eachChunkIndex:
+                        tr_data_chunk_indices.append(i)
+
+            # print("tr_data_chunk_indices:" + str(tr_data_chunk_indices))
+            # print("eachChunkIndex:" + str(eachChunkIndex))
+            # print("dev_chunk_index:"+str(dev_chunk_index))
+
+
 
             training_data=[]
 
-            #for each of these chunks, pull out its data points, and concatenate all into one single huge list of
+            #for each of these left over chunks, pull out its data points, and concatenate all into one single huge list of
             # data points-this is the training data
-            for eachChunk in allIndices_chunks:
+            for eachChunk in tr_data_chunk_indices:
                 for eachElement in split_data[eachChunk]:
                     training_data.append(eachElement)
 
-            #print("length of training_data:"+str(len(training_data)))
+            print("length of training_data:"+str(len(training_data)))
             test_data=[]
-            #for the left out chunk, pull out its data points, and concatenate all into one single huge list of
+
+            #for the left out test chunk, pull out its data points, and concatenate all into one single huge list of
             # data points-this is the test data
             for eachElement in split_data[eachChunkIndex]:
                     test_data.append(eachElement)
 
-            #print("length of test_data:" + str(len(test_data)))
+            print("length of test_data:" + str(len(test_data)))
+
+            # for the left out dev chunk, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the test data
+            dev_data = []
+            for eachElement_dev in split_data[dev_chunk_index]:
+                dev_data.append(eachElement_dev)
+
+            print("length of dev_data:" + str(len(dev_data)))
+
+            sys.exit(1)
 
             rsq_max_estop=0.000
             rsq_previous_estop=0.000

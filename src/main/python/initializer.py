@@ -65,7 +65,8 @@ test_adj="test_adj.csv"
 
 addTurkerOneHot=False
 addAdjOneHot=False
-useEarlyStopping=True
+useEarlyStopping=False
+use4Chunks=True;
 
 
 rsq_on_test_all_data= "rsq_on_test.txt"
@@ -117,7 +118,7 @@ if __name__ == "__main__":
                                                                                                                  addAdjOneHot, uniq_turker, addTurkerOneHot)
 
                      # run1: run with leave one out cross validation
-                    run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
+                    run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping,use4Chunks)
 
                     print("done loocv for all turk data, going to exit")
 
