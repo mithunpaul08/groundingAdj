@@ -35,6 +35,7 @@ patience_max=5;
 rsq_file="rsq_file.txt"
 rsq_file_nfcv="rsq_file_nfcv.txt"
 rsq_file_nfcv_avrg="rsq_file_nfcv_avrg.txt"
+rsq_per_epoch_dev_four_chunks="rsq_per_epoch_dev_4_chunks.txt"
 
 training_data="trainingData.csv"
 #test_data="test.csv"
@@ -736,7 +737,7 @@ def chunk(xs, n):
 
 
 '''  create feed forward NN model, but using 100 data points (around 33 folds) for cross validation'''
-def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,useEarlyStopping,use4Chunks):
+def run_nfoldCV_on_turk_data_with_estopping(features, allY, uniq_adj, all_adj,addTurkerOneHot,useEarlyStopping,use4Chunks):
     # shuffle before splitting for early stopping
     np.random.seed(1)
 
@@ -830,7 +831,7 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
 
             print("length of dev_data:" + str(len(dev_data)))
 
-            sys.exit(1)
+
 
             rsq_max_estop=0.000
             rsq_previous_estop=0.000
@@ -1049,6 +1050,604 @@ def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,u
                         nfcv.flush()
                         rsq_total.append(rsquared_value)
                         break;
+
+
+    #  After all chunks are done, calculate the average of each element in the list of predicted rsquared values.
+    # There should be 10 such values,
+    # each corresponding to one chunk being held out
+
+
+
+    rsq_cumulative=0;
+
+    for eachRsq in rsq_total:
+        rsq_cumulative=rsq_cumulative+eachRsq
+
+
+    rsq_average=rsq_cumulative/(len(rsq_total))
+
+    print("rsq_average:")
+    print(str(rsq_average))
+
+    # empty out the existing file
+    with open(cwd + "/outputs/" + rsq_file_nfcv_avrg, "w+")as rsq_values_avg:
+        rsq_values_avg.write("rsq_average: \t "+str(rsq_average))
+    rsq_values_avg.close()
+
+
+    sys.exit(1)
+
+
+
+'''  create feed forward NN model, but using 100 data points (around 33 folds) for cross validation'''
+def run_nfoldCV_on_turk_data(features, allY, uniq_adj, all_adj,addTurkerOneHot,useEarlyStopping,use4Chunks):
+    # shuffle before splitting for early stopping
+    np.random.seed(1)
+
+    allIndex = np.arange(len(features))
+    print("str(len(features)):")
+    print(str(len(features)))
+
+
+
+    #split it into folds. n=number of folds. almost even sized.
+    n=noOfFoldsCV
+    split_data=chunk(allIndex,n)
+    #print(str(split_data))
+    chunkIndices = np.arange(len(split_data))
+
+
+    rsq_total=[]
+    cwd=os.getcwd()
+
+    # write rsq to disk
+    with open(cwd + "/outputs/" + rsq_file_nfcv, "w+")as nfcv:
+        #empty out the existing file before loop does append
+        nfcv.write("Chunk \t RSQ\n")
+        nfcv.close()
+
+
+    with open(cwd + "/outputs/" + rsq_file_nfcv, "a")as nfcv:
+
+        # for each chunk in the training data, keep that one out, and train on the rest
+        # append the rest of the values
+        #note:eachChunkIndex starts at zero
+        for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
+
+            print("**************Starting next chunk, chunk number:"+str(eachChunkIndex)+" out of: "+str(len(chunkIndices)))
+
+            model = AdjEmb(193, addTurkerOneHot)
+
+            params_to_update = filter(lambda p: p.requires_grad == True, model.parameters())
+            rms = optim.RMSprop(params_to_update, lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            loss_fn = nn.MSELoss(size_average=True)
+
+
+            '''experiment: out of 4 chunks, keep one for testing, one for dev, and the rest two as training'''
+
+            if(use4Chunks):
+                dev_chunk_index = (eachChunkIndex + 1) % 4
+
+                # create a  list of all the indices of chunks except the test and dev chunk you are keeping out
+                tr_data_chunk_indices = []
+                for i in chunkIndices:
+                    if (i != eachChunkIndex and i!=dev_chunk_index):
+                        tr_data_chunk_indices.append(i)
+
+
+            else:
+                # create a  list of all the indices of chunks except the chunk you are keeping out
+                tr_data_chunk_indices=[]
+                for i in chunkIndices:
+                    if i!=eachChunkIndex:
+                        tr_data_chunk_indices.append(i)
+
+            # print("tr_data_chunk_indices:" + str(tr_data_chunk_indices))
+            # print("eachChunkIndex:" + str(eachChunkIndex))
+            # print("dev_chunk_index:"+str(dev_chunk_index))
+
+
+
+            training_data=[]
+
+            #for each of these left over chunks, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the training data
+            for eachChunk in tr_data_chunk_indices:
+                for eachElement in split_data[eachChunk]:
+                    training_data.append(eachElement)
+
+            print("length of training_data:"+str(len(training_data)))
+            test_data=[]
+
+            #for the left out test chunk, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the test data
+            for eachElement in split_data[eachChunkIndex]:
+                    test_data.append(eachElement)
+
+            print("length of test_data:" + str(len(test_data)))
+
+            # for the left out dev chunk, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the test data
+            dev_data = []
+            for eachElement_dev in split_data[dev_chunk_index]:
+                dev_data.append(eachElement_dev)
+
+            print("length of dev_data:" + str(len(dev_data)))
+
+
+
+            rsq_max_estop=0.000
+            rsq_previous_estop=0.000
+            patienceCounter=0;
+
+
+            '''feed the LOOCV with custom data, and not random chunks. this is a temporary hack for sanity check. '''
+
+            # # read the training data
+            # training_data, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, training_data,
+            #                                                                                                      addAdjOneHot, uniq_turker, addTurkerOneHot)
+            #
+            #
+            # # read the test data
+            # training_data, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, training_data,
+            #                                                                                                      addAdjOneHot, uniq_turker, addTurkerOneHot)
+            #
+            #
+            # print(training_data)
+            # sys.exit(1)
+            '''end of sanity check code'''
+
+            np.random.shuffle(training_data)
+
+            # print("size  of training_data1:" + str((len(training_data))))
+            # print("size of  test_data:" + str((len(test_data))))
+
+            '''adding early-stopping and patience'''
+
+
+
+                # debug statements
+                # print("length of training estop:")
+                # print(len(trainingData_estop))
+                #
+                # print("length of training estop:")
+                # print(len(training_data))
+                # # print("(trainingData_estop):")
+                # # print((trainingData_estop))
+                # # print("size of  len_training_estop:" + str((len_training_estop)))
+                # print("size of  dev_estop:" + str(len(dev_estop)))
+
+
+
+
+                # print("(training_data):")
+                # print((training_data))
+
+            #the patience counter starts from patience_max and decreases till it hits 0
+            patienceCounter = patience_max
+
+            #run n epochs on the left over training data
+            for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
+                # # shuffle before each epoch
+                np.random.shuffle(training_data)
+
+                #print("size of  length of training_data2:" + str((len(training_data))))
+
+
+
+
+
+                '''for each row in the training data, predict y value for itself, and then back
+                propagate the loss'''
+                for eachRow in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
+
+
+                    #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
+                    model.zero_grad()
+
+                    feature=features[eachRow]
+
+                    #print("feature:"+str(feature))
+
+                    y = allY[eachRow]
+                    each_adj = all_adj[eachRow]
+
+                    #print("each_adj:"+str(each_adj))
+                    #print("y:"+str(y))
+
+
+
+                    featureV= convert_to_variable(feature)
+                    pred_y = model(each_adj, featureV)
+
+
+                    batch_y = convert_scalar_to_variable(y)
+
+                    loss = loss_fn(pred_y, batch_y)
+
+
+                    # Backward pass
+                    loss.backward()
+
+                    rms.step()
+
+
+                '''if using early stopping: For each epoch,
+                train on training_data and test on dev.
+                Calculate rsq and Store the rsq value if more than previous'''
+
+
+
+                if (useEarlyStopping):
+
+                    #print("size of  dev_estop:" + str(len(dev_estop)))
+                    pred_y_total_dev_data = []
+                    y_total_dev_data = []
+
+                    # for each element in the dev data, calculate its predicted value, and append it to predy_total
+                    for dev_estop_index in dev_estop:
+                        this_feature = features[dev_estop_index]
+                        featureV_loo = convert_to_variable(this_feature)
+                        y = allY[dev_estop_index]
+                        each_adj = all_adj[dev_estop_index]
+                        pred_y = model(each_adj, featureV_loo)
+                        y_total_dev_data.append(y)
+                        pred_y_total_dev_data.append(pred_y.data.cpu().numpy())
+
+                    # calculate the rsquared value for entire dev_estop
+
+
+
+                    # print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
+                    # print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
+
+                    rsquared_value_estop = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
+                                              multioutput='uniform_average')
+                    # print("\n")
+                    # print("rsquared_value_estop:" + str(rsquared_value_estop))
+                    # print("\n")
+
+                    #in the first epoch all the values are initialized to the current value
+                    if(epoch==0):
+                        rsq_max_estop = rsquared_value_estop
+                        rsq_previous_estop = rsquared_value_estop
+
+                    #2nd epoch onwards keep track of the maximum rsq value so far
+                    else:
+
+                        if(rsquared_value_estop > rsq_max_estop):
+                            print("found that we have a new max value:"+str(rsquared_value_estop))
+                            rsq_max_estop = rsquared_value_estop
+
+                            # store the model to disk every time we hit a max.
+                            # this is because at the end of hitting patience limit, we want the best model to test on the held out chunk
+                            file_Name5 = "rsq_best_model_chunk_"+str(eachChunkIndex)+".pkl"
+                            # open the file for writing
+                            fileObject5 = open(file_Name5,'wb')
+                            pk.dump(model, fileObject5)
+
+
+
+                    #everytime the current rsquared value is less than the previous value, decrease patience count
+                    if (rsquared_value_estop < rsq_previous_estop):
+                        print("found that rsquared_value_estop is less than"
+                              " rsq_previous_estop. going to increase patience:" )
+                        patienceCounter=patienceCounter-1
+                    else:
+                        #increase the patience every time it gets a good value
+                        patienceCounter = patienceCounter + 1
+                        if(patienceCounter>patience_max):
+                            patienceCounter=patience_max
+
+                    print("epoch:"+str(epoch)+" rsq_max:"+str(rsq_max_estop)+" rsq_previous:"
+                          +str(rsq_previous_estop) +" rsq_current:"+str(rsquared_value_estop)+
+                          " patience:"+str(patienceCounter)+" loss:"+str(loss.data[0]))
+
+                    rsq_previous_estop = rsquared_value_estop
+
+
+
+                    if(patienceCounter < 1 ):
+                        print("losing my patience. Have hit 0 . Exiting")
+                        print("rsq_max_estop:"+str(rsq_max_estop))
+
+                        #once patience runs out, load the model that was saved at the best max rsq value-and use that to test the held out chunk
+                        trained_model_nfcv = pk.load(open("rsq_best_model_chunk_"+str(eachChunkIndex)+".pkl", "rb"))
+
+                        #at the end of all epochs take the trained model that was trained on the 29 epochs
+                        #and use the trained model to predict on the values in the left over chunk
+
+
+                        pred_y_total_test_data = []
+                        y_total_test_data = []
+
+
+                        #for each element in the test data, calculate its predicted value, and append it to predy_total
+                        #for test_data_index in dev_estop:
+                        for test_data_index in test_data:
+                            this_feature = features[test_data_index]
+                            featureV_loo= convert_to_variable(this_feature)
+                            y = allY[test_data_index]
+                            each_adj = all_adj[test_data_index]
+                            pred_y = trained_model_nfcv(each_adj, featureV_loo)
+                            y_total_test_data.append(y)
+                            pred_y_total_test_data.append(pred_y.data.cpu().numpy())
+
+
+
+                        #calculate the rsquared value for this  held out
+                        rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+                        print("\n")
+                        print("rsquared_value_on_test_after_chunk_"+str(eachChunkIndex)+":"+str(rsquared_value))
+                        print("\n")
+                        nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
+                        nfcv.flush()
+                        rsq_total.append(rsquared_value)
+                        break;
+
+
+    #  After all chunks are done, calculate the average of each element in the list of predicted rsquared values.
+    # There should be 10 such values,
+    # each corresponding to one chunk being held out
+
+
+
+    rsq_cumulative=0;
+
+    for eachRsq in rsq_total:
+        rsq_cumulative=rsq_cumulative+eachRsq
+
+
+    rsq_average=rsq_cumulative/(len(rsq_total))
+
+    print("rsq_average:")
+    print(str(rsq_average))
+
+    # empty out the existing file
+    with open(cwd + "/outputs/" + rsq_file_nfcv_avrg, "w+")as rsq_values_avg:
+        rsq_values_avg.write("rsq_average: \t "+str(rsq_average))
+    rsq_values_avg.close()
+
+
+    sys.exit(1)
+
+
+
+'''experiment: out of 4 chunks, keep one for testing, one for dev, and the rest two as training'''
+def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurkerOneHot,useEarlyStopping,use4Chunks):
+    # shuffle before splitting for early stopping
+    np.random.seed(1)
+
+    allIndex = np.arange(len(features))
+    print("str(len(features)):")
+    print(str(len(features)))
+
+
+
+    #split it into folds. n=number of folds. almost even sized.
+    n=noOfFoldsCV
+    split_data=chunk(allIndex,n)
+    #print(str(split_data))
+    chunkIndices = np.arange(len(split_data))
+
+
+    rsq_total=[]
+    cwd=os.getcwd()
+
+    # write rsq per chunk to disk
+    with open(cwd + "/outputs/" + rsq_file_nfcv, "w+")as nfcv:
+        #empty out the existing file before loop does append
+        nfcv.write("Chunk \t RSQ\n")
+        nfcv.close()
+
+        # tp write rsq per epoch  to disk
+        # first empty out the existing file before loop does append
+    with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "w+")as nfcv_four:
+        nfcv_four.write("Epoch \t RSQ\n")
+        nfcv_four.close()
+
+
+    with open(cwd + "/outputs/" + rsq_file_nfcv, "a")as nfcv:
+
+        # for each chunk in the training data, keep that one out, and train on the rest
+        # append the rest of the values
+        #note:eachChunkIndex starts at zero
+        for eachChunkIndex in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
+
+            print("**************Starting next chunk, chunk number:"+str(eachChunkIndex)+" out of: "+str(len(chunkIndices)))
+
+            model = AdjEmb(193, addTurkerOneHot)
+
+            params_to_update = filter(lambda p: p.requires_grad == True, model.parameters())
+            rms = optim.RMSprop(params_to_update, lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            loss_fn = nn.MSELoss(size_average=True)
+
+            dev_chunk_index = (eachChunkIndex + 1) % 4
+
+            # create a  list of all the indices of chunks except the test and dev chunk you are keeping out
+            tr_data_chunk_indices = []
+            for i in chunkIndices:
+                if (i != eachChunkIndex and i != dev_chunk_index):
+                    tr_data_chunk_indices.append(i)
+
+
+
+            # print("tr_data_chunk_indices:" + str(tr_data_chunk_indices))
+            # print("eachChunkIndex:" + str(eachChunkIndex))
+            # print("dev_chunk_index:"+str(dev_chunk_index))
+
+
+
+            training_data=[]
+
+            #for each of these left over chunks, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the training data
+            for eachChunk in tr_data_chunk_indices:
+                for eachElement in split_data[eachChunk]:
+                    training_data.append(eachElement)
+
+            #print("length of training_data:"+str(len(training_data)))
+            test_data=[]
+
+            #for the left out test chunk, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the test data
+            for eachElement in split_data[eachChunkIndex]:
+                    test_data.append(eachElement)
+
+            #print("length of test_data:" + str(len(test_data)))
+
+            # for the left out dev chunk, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the test data
+            dev_data = []
+            for eachElement_dev in split_data[dev_chunk_index]:
+                dev_data.append(eachElement_dev)
+
+            #print("length of dev_data:" + str(len(dev_data)))
+
+
+
+
+
+            np.random.shuffle(training_data)
+
+            # print("size  of training_data1:" + str((len(training_data))))
+            # print("size of  test_data:" + str((len(test_data))))
+
+            '''adding early-stopping and patience'''
+
+
+
+                # debug statements
+                # print("length of training estop:")
+                # print(len(trainingData_estop))
+                #
+                # print("length of training estop:")
+                # print(len(training_data))
+                # # print("(trainingData_estop):")
+                # # print((trainingData_estop))
+                # # print("size of  len_training_estop:" + str((len_training_estop)))
+                # print("size of  dev_estop:" + str(len(dev_estop)))
+
+
+
+
+                # print("(training_data):")
+                # print((training_data))
+
+            #the patience counter starts from patience_max and decreases till it hits 0
+            patienceCounter = patience_max
+
+            #run n epochs on the left over training data
+            with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "a")as nfcv_four:
+                for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
+                    # # shuffle before each epoch
+                    np.random.shuffle(training_data)
+
+                    #print("size of  length of training_data2:" + str((len(training_data))))
+
+
+
+
+
+                    '''for each row in the training data, predict y value for itself, and then back
+                    propagate the loss'''
+                    for eachRow in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
+
+
+                        #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
+                        model.zero_grad()
+
+                        feature=features[eachRow]
+
+                        #print("feature:"+str(feature))
+
+                        y = allY[eachRow]
+                        each_adj = all_adj[eachRow]
+
+                        #print("each_adj:"+str(each_adj))
+                        #print("y:"+str(y))
+
+
+
+                        featureV= convert_to_variable(feature)
+                        pred_y = model(each_adj, featureV)
+
+
+                        batch_y = convert_scalar_to_variable(y)
+
+                        loss = loss_fn(pred_y, batch_y)
+
+
+                        # Backward pass
+                        loss.backward()
+
+                        rms.step()
+
+
+
+
+                    #after every epoch, run on dev data and calculate rsq
+                    # print("size of  dev_estop:" + str(len(dev_estop)))
+                    pred_y_total_dev_data = []
+                    y_total_dev_data = []
+
+                    # for each element in the dev data, calculate its predicted value, and append it to predy_total
+                    for dev_index in dev_data:
+                        this_feature = features[dev_index]
+                        featureV_loo = convert_to_variable(this_feature)
+                        y = allY[dev_index]
+                        each_adj = all_adj[dev_index]
+                        pred_y = model(each_adj, featureV_loo)
+                        y_total_dev_data.append(y)
+                        pred_y_total_dev_data.append(pred_y.data.cpu().numpy())
+
+
+
+
+                    # print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
+                    # print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
+
+                    rsquared_value_dev = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
+                                              multioutput='uniform_average')
+
+
+                    #print("\n")
+                    #print("rsquared_value_Dev" + str(eachChunkIndex) + ":" + str(rsquared_value_dev))
+                    #print("\n")
+                    nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_dev) + "\n")
+                    nfcv_four.flush()
+
+
+
+
+
+            print("done with all epochs")
+            sys.exit(1)
+            #after all epochs in the given chunk,
+            # for each element in the test data, calculate its predicted value, and append it to predy_total
+            #for test_data_index in dev_estop:
+            for test_data_index in test_data:
+                this_feature = features[test_data_index]
+                featureV_loo= convert_to_variable(this_feature)
+                y = allY[test_data_index]
+                each_adj = all_adj[test_data_index]
+                pred_y = trained_model_nfcv(each_adj, featureV_loo)
+                y_total_test_data.append(y)
+                pred_y_total_test_data.append(pred_y.data.cpu().numpy())
+
+
+
+            #calculate the rsquared value for this  held out
+            rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+            print("\n")
+            print("rsquared_value_on_test_after_chunk_"+str(eachChunkIndex)+":"+str(rsquared_value))
+            print("\n")
+            nfcv.write(str(eachChunkIndex) + "\t" + str(rsquared_value) + "\n")
+            nfcv.flush()
+            rsq_total.append(rsquared_value)
+            break;
 
 
     #  After all chunks are done, calculate the average of each element in the list of predicted rsquared values.

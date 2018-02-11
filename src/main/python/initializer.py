@@ -24,6 +24,7 @@ from utils.grounding import split_data_based_on_adj
 from utils.squish import do_training
 from utils.squish import run_loocv_on_turk_data
 from utils.squish import run_nfoldCV_on_turk_data
+from utils.squish import run_nfoldCV_on_turk_data_4chunks
 from utils.squish import run_loocv_per_adj
 from utils.squish import tuneOnDev
 from utils.squish import train_dev_print_rsq
@@ -118,7 +119,9 @@ if __name__ == "__main__":
                                                                                                                  addAdjOneHot, uniq_turker, addTurkerOneHot)
 
                      # run1: run with leave one out cross validation
-                    run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping,use4Chunks)
+                    #run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping,use4Chunks)
+                    run_nfoldCV_on_turk_data_4chunks(features, y, adj_lexicon, all_adj, addTurkerOneHot, useEarlyStopping,
+                                             use4Chunks)
 
                     print("done loocv for all turk data, going to exit")
 
