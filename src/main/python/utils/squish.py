@@ -1523,16 +1523,16 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                 uniqAdj_test={}
                 uniqAdj_training={}
                 for eachDev in dev_data:
-                    each_adj = all_adj[eachDev]
-                    uniqAdj_dev[each_adj] = uniqAdj_dev.get(each_adj, 0) + 1
+                    each_adj_tr = all_adj[eachDev]
+                    uniqAdj_dev[each_adj_tr] = uniqAdj_dev.get(each_adj_tr, 0) + 1
 
                 for eachDev in test_data:
-                    each_adj = all_adj[eachDev]
-                    uniqAdj_test[each_adj] = uniqAdj_test.get(each_adj, 0) + 1
+                    each_adj_tr = all_adj[eachDev]
+                    uniqAdj_test[each_adj_tr] = uniqAdj_test.get(each_adj_tr, 0) + 1
 
                 for eachDev in training_data:
-                    each_adj = all_adj[eachDev]
-                    uniqAdj_training[each_adj] = uniqAdj_training.get(each_adj, 0) + 1
+                    each_adj_tr = all_adj[eachDev]
+                    uniqAdj_training[each_adj_tr] = uniqAdj_training.get(each_adj_tr, 0) + 1
 
 
                 for (k,v) in uniqAdj_dev.items():
@@ -1589,7 +1589,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                     nfcv_four.write("test_fold_index:" + str(test_fold_index)+"\n")
                     nfcv_four.write("dev_fold_index:"+str(dev_fold_index)+"\n")
                     nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
-                    nfcv_four.write("Epoch \t RSQ_tr  \t\t RSQ_dev\n")
+                    nfcv_four.write("Epoch \t RSQ_tr  \t RSQ_dev\n")
 
                     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
@@ -1605,7 +1605,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
-                        '''for each row in the training data, predict y value for itself, and then back
+                        '''for each row in the training data, predict y_training value for itself, and then back
                         propagate the loss'''
                         for each_data_item_index in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
 
@@ -1614,27 +1614,27 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                             model_4chunk.zero_grad()
 
                             feature=features[each_data_item_index]
-                            y = allY[each_data_item_index]
-                            each_adj = all_adj[each_data_item_index]
+                            y_training = allY[each_data_item_index]
+                            each_adj_tr = all_adj[each_data_item_index]
 
                             # print("feature:"+str(feature))
-                            # print("each_adj:"+str(each_adj)+"\n")
-                            # print("y:"+str(y))
+                            # print("each_adj_tr:"+str(each_adj_tr)+"\n")
+                            # print("y_training:"+str(y_training))
 
 
 
 
 
                             featureV= convert_to_variable(feature)
-                            pred_y = model_4chunk(each_adj, featureV)
+                            pred_y_training = model_4chunk(each_adj_tr, featureV)
 
-                            y_total_tr_data.append(y)
-                            pred_y_total_tr_data.append(pred_y.data.cpu().numpy())
+                            y_total_tr_data.append(y_training)
+                            pred_y_total_tr_data.append(pred_y_training.data.cpu().numpy())
 
 
-                            batch_y = convert_scalar_to_variable(y)
+                            batch_y = convert_scalar_to_variable(y_training)
 
-                            loss = loss_fn(pred_y, batch_y)
+                            loss = loss_fn(pred_y_training, batch_y)
 
 
                             # Backward pass
@@ -1661,20 +1661,20 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                         # for each element in the dev data, calculate its predicted value, and append it to predy_total
                         for dev_index in dev_data:
                             this_feature = features[dev_index]
-                            featureV_loo = convert_to_variable(this_feature)
-                            y = allY[dev_index]
-                            each_adj = all_adj[dev_index]
+                            featureV_dev = convert_to_variable(this_feature)
+                            y_dev = allY[dev_index]
+                            each_adj_dev = all_adj[dev_index]
 
 
 
-                            pred_y = model_4chunk(each_adj, featureV_loo)
-                            y_total_dev_data.append(y)
-                            pred_y_total_dev_data.append(pred_y.data.cpu().numpy())
+                            pred_y_dev = model_4chunk(each_adj_dev, featureV_dev)
+                            y_total_dev_data.append(y_dev)
+                            pred_y_total_dev_data.append(pred_y_dev.data.cpu().numpy())
 
                             # print("feature:" + str(feature))
-                            # print("each_adj:" + str(each_adj) + "\n")
-                            # print("y:" + str(y))
-                            # print(pred_y)
+                            # print("each_adj_tr:" + str(each_adj_tr) + "\n")
+                            # print("y_training:" + str(y_training))
+                            # print(pred_y_training)
 
 
 
@@ -1711,12 +1711,12 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
             #for test_data_index in dev_estop:
             # for test_data_index in test_data:
             #     this_feature = features[test_data_index]
-            #     featureV_loo= convert_to_variable(this_feature)
-            #     y = allY[test_data_index]
-            #     each_adj = all_adj[test_data_index]
-            #     pred_y = trained_model_nfcv(each_adj, featureV_loo)
-            #     y_total_test_data.append(y)
-            #     pred_y_total_test_data.append(pred_y.data.cpu().numpy())
+            #     featureV_dev= convert_to_variable(this_feature)
+            #     y_training = allY[test_data_index]
+            #     each_adj_tr = all_adj[test_data_index]
+            #     pred_y_training = trained_model_nfcv(each_adj_tr, featureV_dev)
+            #     y_total_test_data.append(y_training)
+            #     pred_y_total_test_data.append(pred_y_training.data.cpu().numpy())
             #
             #
             #
