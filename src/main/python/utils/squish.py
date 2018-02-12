@@ -27,7 +27,7 @@ dense1_size=1
 # dense3_size=1
 
 noOfFoldsCV=4
-noOfEpochs=5000
+noOfEpochs=1000
 learning_rate=1e-5
 patience_max=5;
 #lr=1e-2
@@ -1577,12 +1577,15 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                 #the patience counter starts from patience_max and decreases till it hits 0
                 patienceCounter = patience_max
 
+                y_total_tr_data=[]
+                pred_y_total_tr_data=[]
+
                 #run n epochs on the left over training data
                 with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "a")as nfcv_four:
                     nfcv_four.write("test_fold_index:" + str(test_fold_index)+"\n")
                     nfcv_four.write("dev_fold_index:"+str(dev_fold_index)+"\n")
                     nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
-                    nfcv_four.write("Epoch \t RSQ\n")
+                    nfcv_four.write("Epoch \t RSQ_tr  \t\t RSQ_dev\n")
 
                     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
@@ -1621,6 +1624,9 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                             featureV= convert_to_variable(feature)
                             pred_y = model_4chunk(each_adj, featureV)
 
+                            y_total_tr_data.append(y)
+                            pred_y_total_tr_data.append(pred_y.data.cpu().numpy())
+
 
                             batch_y = convert_scalar_to_variable(y)
 
@@ -1635,7 +1641,11 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
-                        #after every epoch, i.e after training on n data points,
+                        #after every epoch, i.e after training on n data points,-calculate rsq for trainign also
+                        rsquared_value_tr = r2_score(y_total_tr_data, pred_y_total_tr_data, sample_weight=None,
+                                                  multioutput='uniform_average')
+
+                        # #after every epoch, i.e after training on n data points,
                         #  run on dev data and calculate rsq
                         # print("size of  dev_estop:" + str(len(dev_estop)))
                         pred_y_total_dev_data = []
@@ -1678,7 +1688,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                         # print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
                         # print("\n")
 
-                        nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_dev) + "\n")
+                        nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_tr) +"\t" + str(rsquared_value_dev ) + "\n")
                         nfcv_four.flush()
 
 
