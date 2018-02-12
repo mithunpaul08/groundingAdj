@@ -1430,7 +1430,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
     print("str(len(features)):")
     print(str(len(features)))
 
-     np.random.shuffle(allIndex)
+    np.random.shuffle(allIndex)
 
 
 
