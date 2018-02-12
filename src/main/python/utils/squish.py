@@ -1423,6 +1423,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
     # shuffle before splitting
     if (useRandomSeed):
         np.random.seed(random_seed)
+    np.random.shuffle(allIndex)
 
 
     allIndex = np.arange(len(features))
@@ -1431,7 +1432,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
-    np.random.shuffle(allIndex)
+
 
     #split it into folds. n=number of folds. almost even sized.
     n=noOfFoldsCV
@@ -1463,8 +1464,9 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         #note:test_fold_index starts at zero
         for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
-            '''temporary hack to get the resultso nly on fold 3'''
-            if(True):
+            '''temporary hack to get the results on all folds except fold 0'''
+            if(test_fold_index != 0):
+
 
 
                 print("**************Starting next fold, fold number:"+str(test_fold_index)+" out of: "+str(len(chunkIndices))+"\n")
