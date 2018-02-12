@@ -22,13 +22,13 @@ torch.manual_seed(1)
 
 #hidden_layers=[30,1]
 # no_of_hidden_layers=3
-dense1_size=1
-#dense2_size=1
+dense1_size=10
+dense2_size=1
 # dense3_size=1
 
 noOfFoldsCV=4
 noOfEpochs=5000
-learning_rate=1e-6
+learning_rate=1e-5
 patience_max=5;
 #lr=1e-2
 
@@ -102,7 +102,7 @@ class AdjEmb(nn.Module):
         # note: this is also known as the weight vector to be used in an affine
 
         self.linear1 = nn.Linear(self.vec.size(1), dense1_size)
-        #self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
+        self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
         # self.linear3 = torch.nn.Linear(dense2_size, dense3_size)
 
 
@@ -127,11 +127,11 @@ class AdjEmb(nn.Module):
 
         #the last step: whatever the output of previous layer was concatenate it with the mu and sigma and one-hot vector for turker
         if(addTurkerOneHot):
-            self.fc = torch.nn.Linear(dense1_size+turkCount+2, 1)
+            self.fc = torch.nn.Linear(dense2_size+turkCount+2, 1)
             #print("found addTurkerOneHot=true")
         else:
             #use this when you dont have one hot for turkers
-            self.fc = torch.nn.Linear(dense1_size+2, 1)
+            self.fc = torch.nn.Linear(dense2_size+2, 1)
 
 
 
@@ -159,7 +159,7 @@ class AdjEmb(nn.Module):
 
         #
         out=F.tanh(self.linear1(embV))
-        #out=F.tanh(self.linear2(out))
+        out=F.tanh(self.linear2(out))
         #out=F.tanh(self.linear3(out))
 
 
