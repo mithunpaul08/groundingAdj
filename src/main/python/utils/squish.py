@@ -28,7 +28,7 @@ dense1_size=1
 
 noOfFoldsCV=4
 noOfEpochs=5000
-learning_rate=0.5e-5
+learning_rate=1e-6
 patience_max=5;
 #lr=1e-2
 
@@ -1462,7 +1462,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
             '''temporary hack to get the resultso nly on fold 3'''
-            if(test_fold_index==0 or test_fold_index==2):
+            if(test_fold_index==2):
 
                 print("**************Starting next fold, fold number:"+str(test_fold_index)+" out of: "+str(len(chunkIndices))+"\n")
 
