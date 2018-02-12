@@ -22,8 +22,8 @@ torch.manual_seed(1)
 
 #hidden_layers=[30,1]
 # no_of_hidden_layers=3
-dense1_size=10
-dense2_size=1
+dense1_size=1
+#dense2_size=1
 # dense3_size=1
 
 noOfFoldsCV=4
@@ -102,7 +102,7 @@ class AdjEmb(nn.Module):
         # note: this is also known as the weight vector to be used in an affine
 
         self.linear1 = nn.Linear(self.vec.size(1), dense1_size)
-        self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
+        #self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
         # self.linear3 = torch.nn.Linear(dense2_size, dense3_size)
 
 
@@ -127,11 +127,11 @@ class AdjEmb(nn.Module):
 
         #the last step: whatever the output of previous layer was concatenate it with the mu and sigma and one-hot vector for turker
         if(addTurkerOneHot):
-            self.fc = torch.nn.Linear(dense2_size+turkCount+2, 1)
+            self.fc = torch.nn.Linear(dense1_size+turkCount+2, 1)
             #print("found addTurkerOneHot=true")
         else:
             #use this when you dont have one hot for turkers
-            self.fc = torch.nn.Linear(dense2_size+2, 1)
+            self.fc = torch.nn.Linear(dense1_size+2, 1)
 
 
 
@@ -159,7 +159,7 @@ class AdjEmb(nn.Module):
 
         #
         out=F.tanh(self.linear1(embV))
-        out=F.tanh(self.linear2(out))
+        #out=F.tanh(self.linear2(out))
         #out=F.tanh(self.linear3(out))
 
 
@@ -1431,6 +1431,8 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
+    np.random.shuffle(allIndex)
+
     #split it into folds. n=number of folds. almost even sized.
     n=noOfFoldsCV
     split_data=chunk(allIndex,n)
@@ -1463,6 +1465,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
             '''temporary hack to get the resultso nly on fold 3'''
             if(True):
+
 
                 print("**************Starting next fold, fold number:"+str(test_fold_index)+" out of: "+str(len(chunkIndices))+"\n")
 
@@ -1512,13 +1515,54 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                 for eachElement_dev in split_data[dev_fold_index]:
                     dev_data.append(eachElement_dev)
 
+                uniqAdj_dev={}
+                uniqAdj_test={}
+                uniqAdj_training={}
+                for eachDev in dev_data:
+                    each_adj = all_adj[eachDev]
+                    uniqAdj_dev[each_adj] = uniqAdj_dev.get(each_adj, 0) + 1
+
+                for eachDev in test_data:
+                    each_adj = all_adj[eachDev]
+                    uniqAdj_test[each_adj] = uniqAdj_test.get(each_adj, 0) + 1
+
+                for eachDev in training_data:
+                    each_adj = all_adj[eachDev]
+                    uniqAdj_training[each_adj] = uniqAdj_training.get(each_adj, 0) + 1
+
+
+                for (k,v) in uniqAdj_dev.items():
+                    if k not in uniqAdj_training:
+                       print("WARNING: " + k+" this adj from dev was not there in training")
+                    # else:
+                    #     print("\t"+k+" this adj from dev was present there in training")
+
+                for (k,v) in uniqAdj_test.items():
+                    if k not in uniqAdj_training:
+                       print("WARNING: " + k+" this adj from test was not there in training")
+                    # else:
+                    #     print("\t"+k+" this adj from test was present there in training")
+
+                # print("\nADJECTIVES:")
+                # print("TRAINING:")
+                # print(uniqAdj_training.items())
+                #
+                #
+                # print("\nDEV:")
+                # print(uniqAdj_dev.items())
+                # print("\nTEST:")
+                # print(uniqAdj_test.items())
+
+
+
+
                 #print("length of dev_data:" + str(len(dev_data)))
 
 
 
 
 
-                #np.random.shuffle(training_data)
+
 
                 # print("size  of training_data1:" + str((len(training_data))))
                 # print("size of  test_data:" + str((len(test_data))))
