@@ -1461,178 +1461,181 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         #note:test_fold_index starts at zero
         for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
-            print("**************Starting next chunk, chunk number:"+str(test_fold_index)+" out of: "+str(len(chunkIndices))+"\n")
+            '''temporary hack to get the resultso nly on fold 3'''
+            if(test_fold_index==3):
 
-            model_4chunk = AdjEmb(193, addTurkerOneHot)
+                print("**************Starting next fold, fold number:"+str(test_fold_index)+" out of: "+str(len(chunkIndices))+"\n")
 
-            params_to_update = filter(lambda p: p.requires_grad == True, model_4chunk.parameters())
-            rms = optim.RMSprop(params_to_update, lr=learning_rate, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-            loss_fn = nn.MSELoss(size_average=True)
+                model_4chunk = AdjEmb(193, addTurkerOneHot)
 
-            dev_fold_index = (test_fold_index + 1) % 4
+                params_to_update = filter(lambda p: p.requires_grad == True, model_4chunk.parameters())
+                rms = optim.RMSprop(params_to_update, lr=learning_rate, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+                loss_fn = nn.MSELoss(size_average=True)
 
-            # create a  list of all the indices of chunks except the test and dev chunk you are keeping out
-            tr_fold_indices = []
-            for i in chunkIndices:
-                if (i != test_fold_index and i != dev_fold_index):
-                    tr_fold_indices.append(i)
+                dev_fold_index = (test_fold_index + 1) % 4
 
+                # create a  list of all the indices of chunks except the test and dev chunk you are keeping out
+                tr_fold_indices = []
+                for i in chunkIndices:
+                    if (i != test_fold_index and i != dev_fold_index):
+                        tr_fold_indices.append(i)
 
 
-            # print("tr_fold_indices:" + str(tr_fold_indices))
-            # print("test_fold_index:" + str(test_fold_index))
-            # print("dev_fold_index:"+str(dev_fold_index))
 
+                # print("tr_fold_indices:" + str(tr_fold_indices))
+                # print("test_fold_index:" + str(test_fold_index))
+                # print("dev_fold_index:"+str(dev_fold_index))
 
 
-            training_data=[]
 
-            #for each of these left over chunks, pull out its data points, and concatenate all into one single huge list of
-            # data points-this is the training data
-            for eachChunk in tr_fold_indices:
-                for eachElement in split_data[eachChunk]:
-                    training_data.append(eachElement)
+                training_data=[]
 
-            #print("length of training_data:"+str(len(training_data)))
-            test_data=[]
+                #for each of these left over chunks, pull out its data points, and concatenate all into one single huge list of
+                # data points-this is the training data
+                for eachChunk in tr_fold_indices:
+                    for eachElement in split_data[eachChunk]:
+                        training_data.append(eachElement)
 
-            #for the left out test chunk, pull out its data points, and concatenate all into one single huge list of
-            # data points-this is the test data
-            for eachElement in split_data[test_fold_index]:
-                    test_data.append(eachElement)
+                #print("length of training_data:"+str(len(training_data)))
+                test_data=[]
 
-            #print("length of test_data:" + str(len(test_data)))
+                #for the left out test chunk, pull out its data points, and concatenate all into one single huge list of
+                # data points-this is the test data
+                for eachElement in split_data[test_fold_index]:
+                        test_data.append(eachElement)
 
-            # for the left out dev chunk, pull out its data points, and concatenate all into one single huge list of
-            # data points-this is the test data
-            dev_data = []
-            for eachElement_dev in split_data[dev_fold_index]:
-                dev_data.append(eachElement_dev)
+                #print("length of test_data:" + str(len(test_data)))
 
-            #print("length of dev_data:" + str(len(dev_data)))
+                # for the left out dev chunk, pull out its data points, and concatenate all into one single huge list of
+                # data points-this is the test data
+                dev_data = []
+                for eachElement_dev in split_data[dev_fold_index]:
+                    dev_data.append(eachElement_dev)
 
+                #print("length of dev_data:" + str(len(dev_data)))
 
 
 
 
-            #np.random.shuffle(training_data)
 
-            # print("size  of training_data1:" + str((len(training_data))))
-            # print("size of  test_data:" + str((len(test_data))))
+                #np.random.shuffle(training_data)
 
+                # print("size  of training_data1:" + str((len(training_data))))
+                # print("size of  test_data:" + str((len(test_data))))
 
 
 
 
-                # print("(training_data):")
-                # print((training_data))
 
-            #the patience counter starts from patience_max and decreases till it hits 0
-            patienceCounter = patience_max
+                    # print("(training_data):")
+                    # print((training_data))
 
-            #run n epochs on the left over training data
-            with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "a")as nfcv_four:
-                nfcv_four.write("test_fold_index:" + str(test_fold_index)+"\n")
-                nfcv_four.write("dev_fold_index:"+str(dev_fold_index)+"\n")
-                nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
-                nfcv_four.write("Epoch \t RSQ\n")
+                #the patience counter starts from patience_max and decreases till it hits 0
+                patienceCounter = patience_max
 
-                for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+                #run n epochs on the left over training data
+                with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "a")as nfcv_four:
+                    nfcv_four.write("test_fold_index:" + str(test_fold_index)+"\n")
+                    nfcv_four.write("dev_fold_index:"+str(dev_fold_index)+"\n")
+                    nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
+                    nfcv_four.write("Epoch \t RSQ\n")
 
-                    # # shuffle before each epoch
-                    np.random.shuffle(training_data)
+                    for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
-                    #print(training_data)
+                        # # shuffle before each epoch
+                        np.random.shuffle(training_data)
 
+                        #print(training_data)
 
-                    #print("size of  length of training_data2:" + str((len(training_data))))
 
+                        #print("size of  length of training_data2:" + str((len(training_data))))
 
 
 
 
-                    '''for each row in the training data, predict y value for itself, and then back
-                    propagate the loss'''
-                    for each_data_item_index in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
 
+                        '''for each row in the training data, predict y value for itself, and then back
+                        propagate the loss'''
+                        for each_data_item_index in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
 
-                        #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
-                        model_4chunk.zero_grad()
 
-                        feature=features[each_data_item_index]
-                        y = allY[each_data_item_index]
-                        each_adj = all_adj[each_data_item_index]
+                            #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
+                            model_4chunk.zero_grad()
 
-                        # print("feature:"+str(feature))
-                        # print("each_adj:"+str(each_adj)+"\n")
-                        # print("y:"+str(y))
+                            feature=features[each_data_item_index]
+                            y = allY[each_data_item_index]
+                            each_adj = all_adj[each_data_item_index]
 
+                            # print("feature:"+str(feature))
+                            # print("each_adj:"+str(each_adj)+"\n")
+                            # print("y:"+str(y))
 
 
 
 
-                        featureV= convert_to_variable(feature)
-                        pred_y = model_4chunk(each_adj, featureV)
 
+                            featureV= convert_to_variable(feature)
+                            pred_y = model_4chunk(each_adj, featureV)
 
-                        batch_y = convert_scalar_to_variable(y)
 
-                        loss = loss_fn(pred_y, batch_y)
+                            batch_y = convert_scalar_to_variable(y)
 
+                            loss = loss_fn(pred_y, batch_y)
 
-                        # Backward pass
-                        loss.backward()
 
-                        rms.step()
+                            # Backward pass
+                            loss.backward()
 
+                            rms.step()
 
 
 
-                    #after every epoch, i.e after training on n data points,
-                    #  run on dev data and calculate rsq
-                    # print("size of  dev_estop:" + str(len(dev_estop)))
-                    pred_y_total_dev_data = []
-                    y_total_dev_data = []
 
-                    # print(dev_data)
-                    # print(str(len(dev_data)))
+                        #after every epoch, i.e after training on n data points,
+                        #  run on dev data and calculate rsq
+                        # print("size of  dev_estop:" + str(len(dev_estop)))
+                        pred_y_total_dev_data = []
+                        y_total_dev_data = []
 
-                    # for each element in the dev data, calculate its predicted value, and append it to predy_total
-                    for dev_index in dev_data:
-                        this_feature = features[dev_index]
-                        featureV_loo = convert_to_variable(this_feature)
-                        y = allY[dev_index]
-                        each_adj = all_adj[dev_index]
+                        # print(dev_data)
+                        # print(str(len(dev_data)))
 
+                        # for each element in the dev data, calculate its predicted value, and append it to predy_total
+                        for dev_index in dev_data:
+                            this_feature = features[dev_index]
+                            featureV_loo = convert_to_variable(this_feature)
+                            y = allY[dev_index]
+                            each_adj = all_adj[dev_index]
 
 
-                        pred_y = model_4chunk(each_adj, featureV_loo)
-                        y_total_dev_data.append(y)
-                        pred_y_total_dev_data.append(pred_y.data.cpu().numpy())
 
-                        # print("feature:" + str(feature))
-                        # print("each_adj:" + str(each_adj) + "\n")
-                        # print("y:" + str(y))
-                        # print(pred_y)
+                            pred_y = model_4chunk(each_adj, featureV_loo)
+                            y_total_dev_data.append(y)
+                            pred_y_total_dev_data.append(pred_y.data.cpu().numpy())
 
+                            # print("feature:" + str(feature))
+                            # print("each_adj:" + str(each_adj) + "\n")
+                            # print("y:" + str(y))
+                            # print(pred_y)
 
 
 
-                    # print(y_total_dev_data)
-                    # print(pred_y_total_dev_data)
-                    # print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
-                    # print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
 
-                    rsquared_value_dev = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
-                                              multioutput='uniform_average')
+                        # print(y_total_dev_data)
+                        # print(pred_y_total_dev_data)
+                        # print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
+                        # print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
 
+                        rsquared_value_dev = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
+                                                  multioutput='uniform_average')
 
-                    # print("\n")
-                    # print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
-                    # print("\n")
 
-                    nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_dev) + "\n")
-                    nfcv_four.flush()
+                        # print("\n")
+                        # print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
+                        # print("\n")
+
+                        nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_dev) + "\n")
+                        nfcv_four.flush()
 
 
 
