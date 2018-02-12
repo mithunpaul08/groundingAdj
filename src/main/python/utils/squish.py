@@ -1462,7 +1462,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
             '''temporary hack to get the resultso nly on fold 3'''
-            if(test_fold_index==3):
+            if(test_fold_index==3||test_fold_index==1):
 
                 print("**************Starting next fold, fold number:"+str(test_fold_index)+" out of: "+str(len(chunkIndices))+"\n")
 
