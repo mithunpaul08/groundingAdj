@@ -1423,12 +1423,14 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
     # shuffle before splitting
     if (useRandomSeed):
         np.random.seed(random_seed)
-    np.random.shuffle(allIndex)
+
 
 
     allIndex = np.arange(len(features))
     print("str(len(features)):")
     print(str(len(features)))
+
+     np.random.shuffle(allIndex)
 
 
 
