@@ -1467,7 +1467,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
             #left over from an earlier hack. too lazy to tab like 1000 lines
-            if(test_fold_index!=0):
+            if(True):
 
 
 
@@ -1592,7 +1592,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
                     '''found the best epochs per fold. after tuning on dev'''
                     if(test_fold_index==0):
-                        noOfEpochs=1947
+                        noOfEpochs=1
                     else:
                         if(test_fold_index==1):
                             noOfEpochs=899
@@ -1716,36 +1716,36 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
-            print("done with all epochs")
+                print("done with all epochs")
 
 
 
-            #Testing phase
-            # after all epochs in the given chunk, (i.e test once per fold)
-            # for each element in the test data, calculate its predicted value, and append it to predy_total
+                #Testing phase
+                # after all epochs in the given chunk, (i.e test once per fold)
+                # for each element in the test data, calculate its predicted value, and append it to predy_total
 
-            y_total_test_data=[]
-            pred_y_total_test_data=[]
+                y_total_test_data=[]
+                pred_y_total_test_data=[]
 
-            for test_data_index in test_data:
-                this_feature = features[test_data_index]
-                featureV_dev= convert_to_variable(this_feature)
-                y_test = allY[test_data_index]
-                each_adj_test = all_adj[test_data_index]
-                pred_y_test = model_4chunk(each_adj_test, featureV_dev)
-                y_total_test_data.append(y_test)
-                pred_y_total_test_data.append(pred_y_test.data.cpu().numpy())
+                for test_data_index in test_data:
+                    this_feature = features[test_data_index]
+                    featureV_dev= convert_to_variable(this_feature)
+                    y_test = allY[test_data_index]
+                    each_adj_test = all_adj[test_data_index]
+                    pred_y_test = model_4chunk(each_adj_test, featureV_dev)
+                    y_total_test_data.append(y_test)
+                    pred_y_total_test_data.append(pred_y_test.data.cpu().numpy())
 
 
 
-            #calculate the rsquared value for this  held out
-            rsquared_value_test=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
-            print("\n")
-            print("rsquared_value_on_test_after_chunk_"+str(test_fold_index)+":"+str(rsquared_value_test))
-            print("\n")
-            nfcv.write(str(test_fold_index) + "\t" + str(rsquared_value_test) + "\n")
-            nfcv.flush()
-            rsq_total.append(rsquared_value_test)
+                #calculate the rsquared value for this  held out
+                rsquared_value_test=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+                print("\n")
+                print("rsquared_value_on_test_after_chunk_"+str(test_fold_index)+":"+str(rsquared_value_test))
+                print("\n")
+                nfcv.write(str(test_fold_index) + "\t" + str(rsquared_value_test) + "\n")
+                nfcv.flush()
+                rsq_total.append(rsquared_value_test)
 
 
 
