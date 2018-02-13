@@ -1581,8 +1581,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                 #the patience counter starts from patience_max and decreases till it hits 0
                 patienceCounter = patience_max
 
-                y_total_tr_data=[]
-                pred_y_total_tr_data=[]
+
 
                 #run n epochs on the left over training data
                 with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "a")as nfcv_four:
@@ -1592,6 +1591,9 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                     nfcv_four.write("Epoch \t RSQ_tr  \t RSQ_dev\n")
 
                     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
+                        y_total_tr_data=[]
+                        pred_y_total_tr_data=[]
 
                         # # shuffle before each epoch
                         np.random.shuffle(training_data)
