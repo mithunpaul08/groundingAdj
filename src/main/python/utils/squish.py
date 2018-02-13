@@ -1467,7 +1467,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
             #left over from an earlier hack. too lazy to tab like 1000 lines
-            if(True):
+            if(test_fold_index!=0):
 
 
 
@@ -1595,13 +1595,13 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                         noOfEpochs=1947
                     else:
                         if(test_fold_index==1):
-                            noOfEpochs=780
+                            noOfEpochs=899
                         else:
                             if(test_fold_index==2):
-                                noOfEpochs=360
+                                noOfEpochs=990
                             else:
                                 if(test_fold_index==3):
-                                    noOfEpochs=985
+                                    noOfEpochs=983
 
                     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
