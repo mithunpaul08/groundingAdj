@@ -1466,8 +1466,8 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         #note:test_fold_index starts at zero
         for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
-            '''temporary hack to get the results on all folds except fold 0'''
-            if(test_fold_index != 0):
+            #left over from an earlier hack. too lazy to tab like 1000 lines
+            if(True):
 
 
 
@@ -1589,6 +1589,19 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                     nfcv_four.write("dev_fold_index:"+str(dev_fold_index)+"\n")
                     nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
                     nfcv_four.write("Epoch \t RSQ_tr  \t RSQ_dev\n")
+
+                    '''found the best epochs per fold. after tuning on dev'''
+                    if(test_fold_index==0):
+                        noOfEpochs=650
+                    else:
+                        if(test_fold_index==1):
+                            noOfEpochs=780
+                        else:
+                            if(test_fold_index==2):
+                                noOfEpochs=360
+                            else:
+                                if(test_fold_index==3):
+                                    noOfEpochs=985
 
                     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
