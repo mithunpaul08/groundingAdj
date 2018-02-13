@@ -1592,7 +1592,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
                     '''found the best epochs per fold. after tuning on dev'''
                     if(test_fold_index==0):
-                        noOfEpochs=650
+                        noOfEpochs=1947
                     else:
                         if(test_fold_index==1):
                             noOfEpochs=780
