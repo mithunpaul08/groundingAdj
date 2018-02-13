@@ -1620,7 +1620,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
-                        '''for each row in the training data, predict y_training value for itself, and then back
+                        '''for each row in the training data, predict y_test value for itself, and then back
                         propagate the loss'''
                         for each_data_item_index in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
 
@@ -1629,12 +1629,12 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                             model_4chunk.zero_grad()
 
                             feature=features[each_data_item_index]
-                            y_training = allY[each_data_item_index]
+                            y_test = allY[each_data_item_index]
                             each_adj_tr = all_adj[each_data_item_index]
 
                             # print("feature:"+str(feature))
                             # print("each_adj_tr:"+str(each_adj_tr)+"\n")
-                            # print("y_training:"+str(y_training))
+                            # print("y_test:"+str(y_test))
 
 
 
@@ -1643,11 +1643,11 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                             featureV= convert_to_variable(feature)
                             pred_y_training = model_4chunk(each_adj_tr, featureV)
 
-                            y_total_tr_data.append(y_training)
+                            y_total_tr_data.append(y_test)
                             pred_y_total_tr_data.append(pred_y_training.data.cpu().numpy())
 
 
-                            batch_y = convert_scalar_to_variable(y_training)
+                            batch_y = convert_scalar_to_variable(y_test)
 
                             loss = loss_fn(pred_y_training, batch_y)
 
@@ -1661,8 +1661,8 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
                         #after every epoch, i.e after training on n data points,-calculate rsq for trainign also
-                        rsquared_value_tr = r2_score(y_total_tr_data, pred_y_total_tr_data, sample_weight=None,
-                                                  multioutput='uniform_average')
+                        #rsquared_value_tr = r2_score(y_total_tr_data, pred_y_total_tr_data, sample_weight=None,
+                                                  #multioutput='uniform_average')
 
                         # #after every epoch, i.e after training on n data points,
                         #  run on dev data and calculate rsq
@@ -1674,21 +1674,21 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                         # print(str(len(dev_data)))
 
                         # for each element in the dev data, calculate its predicted value, and append it to predy_total
-                        for dev_index in dev_data:
-                            this_feature = features[dev_index]
-                            featureV_dev = convert_to_variable(this_feature)
-                            y_dev = allY[dev_index]
-                            each_adj_dev = all_adj[dev_index]
-
-
-
-                            pred_y_dev = model_4chunk(each_adj_dev, featureV_dev)
-                            y_total_dev_data.append(y_dev)
-                            pred_y_total_dev_data.append(pred_y_dev.data.cpu().numpy())
+                        # for dev_index in dev_data:
+                        #     this_feature = features[dev_index]
+                        #     featureV_dev = convert_to_variable(this_feature)
+                        #     y_dev = allY[dev_index]
+                        #     each_adj_dev = all_adj[dev_index]
+                        #
+                        #
+                        #
+                        #     pred_y_dev = model_4chunk(each_adj_dev, featureV_dev)
+                        #     y_total_dev_data.append(y_dev)
+                        #     pred_y_total_dev_data.append(pred_y_dev.data.cpu().numpy())
 
                             # print("feature:" + str(feature))
                             # print("each_adj_tr:" + str(each_adj_tr) + "\n")
-                            # print("y_training:" + str(y_training))
+                            # print("y_test:" + str(y_test))
                             # print(pred_y_training)
 
 
@@ -1699,16 +1699,16 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                         # print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
                         # print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
 
-                        rsquared_value_dev = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
-                                                  multioutput='uniform_average')
-
-
-                        # print("\n")
-                        # print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
-                        # print("\n")
-
-                        nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_tr) +"\t" + str(rsquared_value_dev ) + "\n")
-                        nfcv_four.flush()
+                        # rsquared_value_dev = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
+                        #                           multioutput='uniform_average')
+                        #
+                        #
+                        # # print("\n")
+                        # # print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
+                        # # print("\n")
+                        #
+                        # nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_tr) +"\t" + str(rsquared_value_dev ) + "\n")
+                        # nfcv_four.flush()
 
 
 
@@ -1721,28 +1721,31 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
             #Testing phase
-            # after all epochs in the given chunk,
+            # after all epochs in the given chunk, (i.e test once per fold)
             # for each element in the test data, calculate its predicted value, and append it to predy_total
-            #for test_data_index in dev_estop:
-            # for test_data_index in test_data:
-            #     this_feature = features[test_data_index]
-            #     featureV_dev= convert_to_variable(this_feature)
-            #     y_training = allY[test_data_index]
-            #     each_adj_tr = all_adj[test_data_index]
-            #     pred_y_training = trained_model_nfcv(each_adj_tr, featureV_dev)
-            #     y_total_test_data.append(y_training)
-            #     pred_y_total_test_data.append(pred_y_training.data.cpu().numpy())
-            #
-            #
-            #
-            # #calculate the rsquared value for this  held out
-            # rsquared_value=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
-            # print("\n")
-            # print("rsquared_value_on_test_after_chunk_"+str(test_fold_index)+":"+str(rsquared_value))
-            # print("\n")
-            # nfcv.write(str(test_fold_index) + "\t" + str(rsquared_value) + "\n")
-            # nfcv.flush()
-            # rsq_total.append(rsquared_value)
+
+            y_total_test_data=[]
+            pred_y_total_test_data=[]
+
+            for test_data_index in test_data:
+                this_feature = features[test_data_index]
+                featureV_dev= convert_to_variable(this_feature)
+                y_test = allY[test_data_index]
+                each_adj_test = all_adj[test_data_index]
+                pred_y_test = model_4chunk(each_adj_test, featureV_dev)
+                y_total_test_data.append(y_test)
+                pred_y_total_test_data.append(pred_y_test.data.cpu().numpy())
+
+
+
+            #calculate the rsquared value for this  held out
+            rsquared_value_test=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+            print("\n")
+            print("rsquared_value_on_test_after_chunk_"+str(test_fold_index)+":"+str(rsquared_value_test))
+            print("\n")
+            nfcv.write(str(test_fold_index) + "\t" + str(rsquared_value_test) + "\n")
+            nfcv.flush()
+            rsq_total.append(rsquared_value_test)
 
 
 
@@ -1752,7 +1755,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
     print("done with all chunks")
-    sys.exit(1)
+
     rsq_cumulative=0;
 
     for eachRsq in rsq_total:
