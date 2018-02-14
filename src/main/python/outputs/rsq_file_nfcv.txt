@@ -1,2 +1,29 @@
 Chunk 	 RSQ
-0	-5607077.330679133
+adj:solid rsq:-5478020.240521181 len:37
+adj:high rsq:-13805620.966494204 len:39
+adj:normal rsq:-16709458.901926242 len:31
+adj:wide rsq:-18434973.330990586 len:29
+adj:good rsq:-32172921.983619515 len:24
+adj:familiar rsq:-15839393.595018538 len:31
+adj:conventional rsq:-13558434.084270712 len:36
+adj:surprising rsq:-12036210.776058493 len:38
+adj:intense rsq:-23787208.793452825 len:30
+adj:steep rsq:-70272663.92388669 len:30
+adj:huge rsq:-9559524.93389341 len:35
+adj:clear rsq:-13245606.453600284 len:28
+adj:obvious rsq:-14424518.0739877 len:38
+adj:slight rsq:-14267042.080939028 len:37
+adj:adequate rsq:-6754019.2916217595 len:35
+adj:excessive rsq:-9092958.768886732 len:38
+adj:impressive rsq:-14013221.590425763 len:24
+adj:fundamental rsq:-46795671.77532307 len:32
+adj:rich rsq:-5612847.757270492 len:33
+adj:big rsq:-30137506.12247829 len:31
+adj:aggressive rsq:-41953591.82010715 len:33
+adj:substantial rsq:-41427674.79291223 len:33
+adj:appropriate rsq:-43244557.752449214 len:34
+adj:sensitive rsq:-7354074.630165944 len:38
+adj:sensitive rsq:-5509723.0598245505 len:31
+
+rsquared_value_on_test_after_chunk_0:-5607077.330679133
+len(test_fold_index)849

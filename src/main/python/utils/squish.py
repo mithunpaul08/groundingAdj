@@ -2076,7 +2076,6 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                         # found the best epochs per fold. after tuning on dev'''
                         if(test_fold_index==0):
                             noOfEpochs=214
-                            noOfEpochs=2
                         else:
                             if(test_fold_index==1):
                                 noOfEpochs=405
@@ -2236,20 +2235,23 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                     this_adj_gold_y=[]
                     this_adj_pred_y=[]
 
+                    data_point_per_adj=0
+
                     for indext,test_data_index in enumerate(test_data):
-                        print("test_data_index"+str(test_data_index))
+                        #print("test_data_index"+str(test_data_index))
                         this_feature = features[test_data_index]
                         featureV_dev= convert_to_variable(this_feature)
                         y_test = allY[test_data_index]
                         each_adj_test = all_adj[test_data_index]
-                        print("each_adj_test:"+each_adj_test)
+                        #print("each_adj_test:"+each_adj_test)
+
                         pred_y_test = model_4chunk(each_adj_test, featureV_dev)
                         y_total_test_data.append(y_test)
                         pred_y_total_test_data.append(pred_y_test.data.cpu().numpy())
 
-                        print("feature:" + str(this_feature))
-                        print("each_adj_test:" + str(each_adj_test) + "\n")
-                        print("y_test:" + str(y_test))
+                        # print("feature:" + str(this_feature))
+                        # print("each_adj_test:" + str(each_adj_test) + "\n")
+                        # print("y_test:" + str(y_test))
 
 
                         #below code is to calculate rsq values per adjective
@@ -2260,34 +2262,54 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
 
 
 
-                        # #very first time initialize the previous_adj=current_adj
-                        # if(indext==0):
-                        #     previous_adj=current_adj
-                        #     print("found that index==0")
-                        #
-                        # #append to the value the tuple of [gold, predicted] if exists
-                        # if each_adj_test in adj_gold_pred:
-                        #     adj_gold_pred[each_adj_test] += [y_test,pred_y_test.data.cpu().numpy()]
-                        # else:
-                        #     adj_gold_pred[each_adj_test] = [y_test,pred_y_test.data.cpu().numpy()]
-                        #
-                        #
-                        # if(current_adj==previous_adj):
-                        #     this_adj_gold_y.append(y_test)
-                        #     this_adj_pred_y.append(pred_y_test.data.cpu().numpy()[0])
-                        #     print("foujnd that this adj and previous adj are same.")
-                        #
-                        #
-                        # #if the adjectives are different, it means that we are switching to a new one. calculate rsquared. update previous_adj
-                        # else:
-                        #     print("foujnd that this adj and previous adj are NOT same.")
-                        #     print(str(len(this_adj_gold_y)))
-                        #     print(str(len(this_adj_pred_y)))
-                        #     previous_adj=current_adj
-                        #     rsquared_value_per_adj=r2_score(this_adj_gold_y, this_adj_pred_y, sample_weight=None, multioutput='uniform_average')
-                        #     print("adj:"+current_adj+" rsq value:"+str(rsquared_value_per_adj))
-                        #
-                        # print("previous_adj:"+previous_adj+"current_adj:"+current_adj)
+                        #very first time initialize the previous_adj=current_adj
+                        if(indext==0):
+                            previous_adj=current_adj
+                            data_point_per_adj=data_point_per_adj+1
+                            #print("found that index==0")
+
+                        #append to the value the tuple of [gold, predicted] if exists
+                        if each_adj_test in adj_gold_pred:
+                            adj_gold_pred[each_adj_test] += [y_test,pred_y_test.data.cpu().numpy()]
+                        else:
+                            adj_gold_pred[each_adj_test] = [y_test,pred_y_test.data.cpu().numpy()]
+
+
+                        if(current_adj==previous_adj):
+                            data_point_per_adj=data_point_per_adj+1
+                            this_adj_gold_y.append(y_test)
+                            this_adj_pred_y.append(pred_y_test.data.cpu().numpy()[0])
+                            #print("foujnd that this adj and previous adj are same.")
+
+
+                        #if the adjectives are different, it means that we are switching to a new one. calculate rsquared. update previous_adj
+                        else:
+                            data_point_per_adj=0
+                            # print("foujnd that this adj and previous adj are NOT same.")
+                            # print(str(len(this_adj_gold_y)))
+                            # print(str(len(this_adj_pred_y)))
+                            previous_adj=current_adj
+                            rsquared_value_per_adj=r2_score(this_adj_gold_y, this_adj_pred_y, sample_weight=None, multioutput='uniform_average')
+
+                            #print("adj:"+current_adj+" rsq:"+str(rsquared_value_per_adj)+" len:"+str(data_point_per_adj))
+                            nfcv.write("adj:"+current_adj+" rsq:"+str(rsquared_value_per_adj)+" len:"+str(len(this_adj_gold_y))+"\n")
+                            nfcv.flush()
+                            this_adj_gold_y=[]
+                            this_adj_pred_y=[]
+
+                        #print the last element's value before you exit
+                        print("indext"+str(indext)+"len:"+str(len(test_data)))
+                        if(indext==(len(test_data)-1)):
+                            #print("adj:"+current_adj+" rsq:"+str(rsquared_value_per_adj))
+                            rsquared_value_per_adj=r2_score(this_adj_gold_y, this_adj_pred_y, sample_weight=None, multioutput='uniform_average')
+                            nfcv.write("adj:"+current_adj+" rsq:"+str(rsquared_value_per_adj)+" len:"+str(len(this_adj_gold_y))+"\n")
+                            nfcv.flush()
+                            this_adj_gold_y=[]
+                            this_adj_pred_y=[]
+
+
+
+                            #print("previous_adj:"+previous_adj+"current_adj:"+current_adj)
 
                         # if((indext)==2):
                         #     print("test_data_index==2:")
@@ -2304,7 +2326,8 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                         #         print(k+":"+str(rsquared_value_per_adj))
 
 
-                            
+
+
 
 
 
@@ -2313,8 +2336,11 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                     rsquared_value_test=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
                     print("\n")
                     print("rsquared_value_on_test_after_chunk_"+str(test_fold_index)+":"+str(rsquared_value_test))
+                    print("len(test_fold_index)"+str(len(test_data)))
                     print("\n")
-                    nfcv.write(str(test_fold_index) + "\t" + str(rsquared_value_test) + "\n")
+                    nfcv.write("\n")
+                    nfcv.write("rsquared_value_on_test_after_chunk_"+str(test_fold_index)+":"+str(rsquared_value_test)+"\n")
+                    nfcv.write("len(test_fold_index): "+str(len(test_data)))
                     nfcv.flush()
                     rsq_total.append(rsquared_value_test)
 
