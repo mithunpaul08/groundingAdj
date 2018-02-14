@@ -1790,8 +1790,7 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
     #print(allIndex)
 
 
-    # print("str(len(features)):")
-    # print(str(len(features)))
+
 
     np.random.shuffle(allIndex)
 
@@ -1943,122 +1942,135 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                 test_data = []
                 dev_data = []
 
-                # write training data to a separate file. This should happen only once.
-                for index, eachline in raw_turk_data.iterrows():
-                    thisadj = eachline['adjective']
 
-                    results = [eachline["turker"], eachline["adjective"], eachline["mean"],
-                               eachline["onestdev"],
-                               eachline["had_negative"], eachline["logrespdev"]]
 
-                    if (thisadj in trainingData_adj_str):
-                        training_data.append(results)
-                    else:
-                        if (thisadj in dev_adj_str):
-                            dev_data.append(results)
-                        else:
-                            if (thisadj in test_adj_str):
-                                test_data.append(results)
+                #for each adjective in the training fold.
+                for each_tr_adj in tqdm(trainingData_adj_str,total=len(trainingData_adj_str), desc="trainingData_adj_str:"):
+
+                    # Go through the raw data- if you find a line which has the same adjective, add its index to training_data
+                    for index, eachline in raw_turk_data.iterrows():
+                        thisadj = eachline['adjective']
+
+                        # results = [eachline["turker"], eachline["adjective"], eachline["mean"],
+                        #            eachline["onestdev"],
+                        #            eachline["had_negative"], eachline["logrespdev"]]
+
+                        if (thisadj == each_tr_adj):
+                            training_data.append(index)
+
+                # for each adjective in the dev fold.
+                for each_dev_adj in tqdm(dev_adj_str, total=len(dev_adj_str),
+                                        desc="dev_adj_str:"):
+
+                    # Go through the raw data- if you find a line which has the same adjective, add its index to training_data
+                    for index, eachline in raw_turk_data.iterrows():
+                        thisadj = eachline['adjective']
+
+                        # results = [eachline["turker"], eachline["adjective"], eachline["mean"],
+                        #            eachline["onestdev"],
+                        #            eachline["had_negative"], eachline["logrespdev"]]
+
+                        if (thisadj == each_dev_adj):
+                            dev_data.append(index)
+
+                # for each adjective in the test fold.
+                for each_test_adj in tqdm(test_adj_str, total=len(test_adj_str),
+                                         desc="test_adj_str:"):
+
+                    # Go through the raw data- if you find a line which has the same adjective, add its index to training_data
+                    for index, eachline in raw_turk_data.iterrows():
+                        thisadj = eachline['adjective']
+
+                        # results = [eachline["turker"], eachline["adjective"], eachline["mean"],
+                        #            eachline["onestdev"],
+                        #            eachline["had_negative"], eachline["logrespdev"]]
+
+                        if (thisadj == each_test_adj):
+                            test_data.append(index)
+
+                np.random.shuffle(training_data)
+                np.random.shuffle(test_data)
+                np.random.shuffle(dev_data)
+
+                # print(((training_data)))
+                # print(test_data)
+                # print(dev_data)
+
+
+                print(str(len(training_data)))
+                print(str(len(test_data)))
+                print(str(len(dev_data)))
+
+                sys.exit(1)
+
+
+                                # print(results)
+                    # feature=features[index]
+                    # y_test = allY[index]
+                    # each_adj_tr = all_adj[index]
+                    #
+                    # print("feature:" + str(feature))
+                    # print("each_adj_tr:" + str(each_adj_tr) + "\n")
+                    # print("y_test:" + str(y_test))
+                    #
+
+
+
+                    # if (thisadj in trainingData_adj_str):
+                    #     training_data.append(index)
+                    # else:
+                    #     if (thisadj in dev_adj_str):
+                    #         dev_data.append(index)
+                    #     else:
+                    #         if (thisadj in test_adj_str):
+                    #             test_data.append(index)
 
                 print(str(len(training_data)))
                 print(str(len(dev_data)))
                 print((test_data))
 
-                sys.exit(1)
-                # its data points, and concatenate all into one single huge list of
-                # data points-this is the training data
-                # for eachChunk in tr_fold_indices:
-                #     for eachElement in split_data[eachChunk]:
-                #         training_data.append(eachElement)
 
-                #print("length of training_data:"+str(len(training_data)))
-                test_data=[]
 
-                #for the left out test chunk, pull out its data points, and concatenate all into one single huge list of
-                # data points-this is the test data
-                for eachElement in split_data[test_fold_index]:
-                        test_data.append(eachElement)
-
-                #print("length of test_data:" + str(len(test_data)))
-
-                # for the left out dev chunk, pull out its data points, and concatenate all into one single huge list of
-                # data points-this is the test data
-                dev_data = []
-                for eachElement_dev in split_data[dev_fold_index]:
-                    dev_data.append(eachElement_dev)
-
+                #get the number of times each adjective occurs in each fold
                 uniqAdj_dev={}
                 uniqAdj_test={}
                 uniqAdj_training={}
-                for eachDev in dev_data:
-                    each_adj_tr = all_adj[eachDev]
-                    uniqAdj_dev[each_adj_tr] = uniqAdj_dev.get(each_adj_tr, 0) + 1
+                for eachDev1 in dev_data:
+                    each_adj_dev = eachDev1[1]
+                    uniqAdj_dev[each_adj_dev] = uniqAdj_dev.get(each_adj_dev, 0) + 1
 
-                for eachDev in test_data:
-                    each_adj_tr = all_adj[eachDev]
-                    uniqAdj_test[each_adj_tr] = uniqAdj_test.get(each_adj_tr, 0) + 1
+                for eachDev2 in test_data:
+                    each_adj_test = eachDev2[1]
+                    uniqAdj_test[each_adj_test] = uniqAdj_test.get(each_adj_test, 0) + 1
 
-                for eachDev in training_data:
-                    each_adj_tr = all_adj[eachDev]
+                for eachDev3 in training_data:
+                    each_adj_tr = eachDev3[1]
                     uniqAdj_training[each_adj_tr] = uniqAdj_training.get(each_adj_tr, 0) + 1
 
-
-                for (k,v) in uniqAdj_dev.items():
-                    if k not in uniqAdj_training:
-                       print("WARNING: " + k+" this adj from dev was not there in training")
-                    # else:
-                    #     print("\t"+k+" this adj from dev was present there in training")
-
-                for (k,v) in uniqAdj_test.items():
-                    if k not in uniqAdj_training:
-                       print("WARNING: " + k+" this adj from test was not there in training")
-                    # else:
-                    #     print("\t"+k+" this adj from test was present there in training")
-
-                # print("\nADJECTIVES:")
-                # print("TRAINING:")
-                # print(uniqAdj_training.items())
+                # print("\nCount of adjectives in tr data:")
+                # for (k, v) in uniqAdj_training.items():
+                #     print(str(k) + ":" + str(v))
+                #
+                # print("\nCount of adjectives in test data:")
+                # for (k, v) in uniqAdj_test.items():
+                #     print(str(k) + ":" + str(v))
                 #
                 #
-                # print("\nDEV:")
-                # print(uniqAdj_dev.items())
-                # print("\nTEST:")
-                # print(uniqAdj_test.items())
+                # print("\nCount of adjectives in dev data:")
+                # for (k,v) in uniqAdj_dev.items():
+                #     print(str(k)+":"+str(v))
 
 
 
-
-                #print("length of dev_data:" + str(len(dev_data)))
-
-
-
-
-
-
-
-                # print("size  of training_data1:" + str((len(training_data))))
-                # print("size of  test_data:" + str((len(test_data))))
-
-
-
-
-
-                    # print("(training_data):")
-                    # print((training_data))
-
-                #the patience counter starts from patience_max and decreases till it hits 0
-                patienceCounter = patience_max
-
-
-
-                #run n epochs on the left over training data
+                #run n epochs on the  training data
                 with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "a")as nfcv_four:
                     nfcv_four.write("test_fold_index:" + str(test_fold_index)+"\n")
                     nfcv_four.write("dev_fold_index:"+str(dev_fold_index)+"\n")
                     nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
                     nfcv_four.write("Epoch \t RSQ_tr  \t RSQ_dev\n")
 
-                    # '''found the best epochs per fold. after tuning on dev'''
+                    # '''this is to be used after dev tunin.
+                    # found the best epochs per fold. after tuning on dev'''
                     # if(test_fold_index==0):
                     #     noOfEpochs=1
                     # else:
@@ -2085,24 +2097,29 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                         #print("size of  length of training_data2:" + str((len(training_data))))
 
 
-
+                        print("str(len(features)):")
+                        print(str(len(features)))
 
 
                         '''for each row in the training data, predict y_test value for itself, and then back
                         propagate the loss'''
-                        for each_data_item_index in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
+                        for each_data_item_index,data in tqdm(enumerate(training_data), total=len(training_data), desc="trng_data_point:"):
 
 
                             #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
                             model_4chunk.zero_grad()
 
+
+
                             feature=features[each_data_item_index]
                             y_test = allY[each_data_item_index]
                             each_adj_tr = all_adj[each_data_item_index]
 
-                            # print("feature:"+str(feature))
-                            # print("each_adj_tr:"+str(each_adj_tr)+"\n")
-                            # print("y_test:"+str(y_test))
+                            print("feature:"+str(feature))
+                            print("each_adj_tr:"+str(each_adj_tr)+"\n")
+                            print("y_test:"+str(y_test))
+
+                            sys.exit(1)
 
 
 
