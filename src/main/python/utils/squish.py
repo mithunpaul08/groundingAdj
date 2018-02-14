@@ -2097,8 +2097,8 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                         #print("size of  length of training_data2:" + str((len(training_data))))
 
 
-                        print("str(len(features)):")
-                        print(str(len(features)))
+                        # print("str(len(features)):")
+                        # print(str(len(features)))
 
 
                         '''for each row in the training data, predict y_test value for itself, and then back

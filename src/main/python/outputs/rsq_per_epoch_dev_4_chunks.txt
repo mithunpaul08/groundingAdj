@@ -1,0 +1,12 @@
+test_fold_index:0
+dev_fold_index:1
+tr_fold_indices:[2, 3]
+Epoch 	 RSQ_tr  	 RSQ_dev
+0	-141773.995754	-169927.862229
+1	-101096.228276	-117559.32313
+test_fold_index:1
+dev_fold_index:2
+tr_fold_indices:[0, 3]
+Epoch 	 RSQ_tr  	 RSQ_dev
+0	-420069.107373	-252176.539049
+1	-331627.119074	-196632.621012
