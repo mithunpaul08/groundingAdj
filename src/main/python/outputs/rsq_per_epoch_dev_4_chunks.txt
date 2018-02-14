@@ -1,5 +1,0 @@
-test_fold_index:0
-dev_fold_index:1
-tr_fold_indices:[2, 3]
-Epoch 	 RSQ_tr  	 RSQ_dev
-0	-141773.995754	-169927.862229

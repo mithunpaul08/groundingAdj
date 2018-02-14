@@ -2156,7 +2156,7 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                         y_total_dev_data = []
 
                         #print(dev_data)
-                        print(str(len(dev_data)))
+                        #print(str(len(dev_data)))
 
                         # for each element in the dev data, calculate its predicted value, and append it to predy_total
                         for dev_index in dev_data:
@@ -2181,22 +2181,22 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
 
                         # print(y_total_dev_data)
                         # print(pred_y_total_dev_data)
-                        print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
-                        print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
+                        #print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
+                        #print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
 
                         rsquared_value_dev = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
                                                   multioutput='uniform_average')
 
 
-                        print("\n")
-                        print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
-                        print("\n")
+                        # print("\n")
+                        # print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
+                        # print("\n")
 
                         nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_tr) +"\t" + str(rsquared_value_dev ) + "\n")
                         nfcv_four.flush()
 
 
-                        
+
 
 
 
