@@ -1796,6 +1796,11 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
     np.random.shuffle(allIndex)
 
 
+    #read the entire turk data
+    df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
+
+    # sort the entire data based on adjectives.
+    sorted_df_raw_turk_data = df_raw_turk_data.sort_values("adjective")
 
 
 
@@ -1864,9 +1869,9 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
 
 
 
-                print("tr_fold_indices:" + str(tr_fold_indices))
-                print("test_fold_index:" + str(test_fold_index))
-                print("dev_fold_index:"+str(dev_fold_index))
+                # print("tr_fold_indices:" + str(tr_fold_indices))
+                # print("test_fold_index:" + str(test_fold_index))
+                # print("dev_fold_index:"+str(dev_fold_index))
 
 
 
@@ -1914,40 +1919,61 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
                     adjs_id_test_data.append(eachElement4)
                     test_adj_str.append(uniq_adj_list[eachElement4])
 
-                print(str(len(adjs_id_test_data)))
-                print(str(len(adjs_ids_training_data)))
-                print(str(len(adjs_ids_dev_data)))
+                # print(str(len(adjs_id_test_data)))
+                # print(str(len(adjs_ids_training_data)))
+                # print(str(len(adjs_ids_dev_data)))
 
 
-                print(trainingData_adj_str)
-                print(dev_adj_str)
-                print(test_adj_str)
-
-                print(str(len(trainingData_adj_str)))
-                print(str(len(dev_adj_str)))
-                print(str(len(test_adj_str)))
-
-                sys.exit(1)
-
+                # print(trainingData_adj_str)
+                # print(dev_adj_str)
+                # print(test_adj_str)
+                #
+                # print(str(len(trainingData_adj_str)))
+                # print(str(len(dev_adj_str)))
+                # print(str(len(test_adj_str)))
 
 
 
 
-                #go through the indices of the entire data and assign the indicies based on where its adjective folds
+
+
+
+                #this where the actual turk data is divided.
+                # go through the indices of the entire data and assign the indicies based on where its adjective folds
                 #so if the turk data which has index 1234 has an adjective which is in training fold, assign it to training fold
                 #then all you have to do is hand it over to the NFCV code or seen data
 
-
-
-
-
-
                 training_data = []
+                test_data = []
+                dev_data = []
+
+                # write training data to a separate file. This should happen only once.
+                for index, eachline in sorted_data.iterrows():
+                    thisadj = eachline['adjective']
+
+                    results = [eachline["turker"], eachline["adjective"], eachline["mean"],
+                               eachline["onestdev"],
+                               eachline["had_negative"], eachline["logrespdev"]]
+
+                    if (thisadj in trainingData_adj_str):
+                        training_data.append(results)
+                    else:
+                        if (thisadj in dev_adj_str):
+                            dev_data.append(results)
+                        else:
+                            if (thisadj in test_adj_str):
+                                test_data.append(results)
+
+                print(str(len(training_data)))
+                print(str(len(dev_data)))
+                print(str(len(test_data)))
+
+                sys.exit(1)
                 # its data points, and concatenate all into one single huge list of
                 # data points-this is the training data
-                for eachChunk in tr_fold_indices:
-                    for eachElement in split_data[eachChunk]:
-                        training_data.append(eachElement)
+                # for eachChunk in tr_fold_indices:
+                #     for eachElement in split_data[eachChunk]:
+                #         training_data.append(eachElement)
 
                 #print("length of training_data:"+str(len(training_data)))
                 test_data=[]
@@ -2036,18 +2062,18 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
                     nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
                     nfcv_four.write("Epoch \t RSQ_tr  \t RSQ_dev\n")
 
-                    '''found the best epochs per fold. after tuning on dev'''
-                    if(test_fold_index==0):
-                        noOfEpochs=1
-                    else:
-                        if(test_fold_index==1):
-                            noOfEpochs=899
-                        else:
-                            if(test_fold_index==2):
-                                noOfEpochs=990
-                            else:
-                                if(test_fold_index==3):
-                                    noOfEpochs=983
+                    # '''found the best epochs per fold. after tuning on dev'''
+                    # if(test_fold_index==0):
+                    #     noOfEpochs=1
+                    # else:
+                    #     if(test_fold_index==1):
+                    #         noOfEpochs=899
+                    #     else:
+                    #         if(test_fold_index==2):
+                    #             noOfEpochs=990
+                    #         else:
+                    #             if(test_fold_index==3):
+                    #                 noOfEpochs=983
 
                     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
