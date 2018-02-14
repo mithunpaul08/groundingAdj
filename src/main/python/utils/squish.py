@@ -1988,7 +1988,7 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                         if (thisadj == each_test_adj):
                             test_data.append(index)
 
-                np.random.shuffle(training_data)
+
                 np.random.shuffle(test_data)
                 np.random.shuffle(dev_data)
 
@@ -2001,7 +2001,7 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                 print(str(len(test_data)))
                 print(str(len(dev_data)))
 
-                sys.exit(1)
+
 
 
                                 # print(results)
@@ -2025,27 +2025,27 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                     #         if (thisadj in test_adj_str):
                     #             test_data.append(index)
 
-                print(str(len(training_data)))
-                print(str(len(dev_data)))
-                print((test_data))
+                # print(str(len(training_data)))
+                # print(str(len(dev_data)))
+                # print((test_data))
 
 
 
                 #get the number of times each adjective occurs in each fold
-                uniqAdj_dev={}
-                uniqAdj_test={}
-                uniqAdj_training={}
-                for eachDev1 in dev_data:
-                    each_adj_dev = eachDev1[1]
-                    uniqAdj_dev[each_adj_dev] = uniqAdj_dev.get(each_adj_dev, 0) + 1
-
-                for eachDev2 in test_data:
-                    each_adj_test = eachDev2[1]
-                    uniqAdj_test[each_adj_test] = uniqAdj_test.get(each_adj_test, 0) + 1
-
-                for eachDev3 in training_data:
-                    each_adj_tr = eachDev3[1]
-                    uniqAdj_training[each_adj_tr] = uniqAdj_training.get(each_adj_tr, 0) + 1
+                # uniqAdj_dev={}
+                # uniqAdj_test={}
+                # uniqAdj_training={}
+                # for eachDev1 in dev_data:
+                #     each_adj_dev = eachDev1[1]
+                #     uniqAdj_dev[each_adj_dev] = uniqAdj_dev.get(each_adj_dev, 0) + 1
+                #
+                # for eachDev2 in test_data:
+                #     each_adj_test = eachDev2[1]
+                #     uniqAdj_test[each_adj_test] = uniqAdj_test.get(each_adj_test, 0) + 1
+                #
+                # for eachDev3 in training_data:
+                #     each_adj_tr = eachDev3[1]
+                #     uniqAdj_training[each_adj_tr] = uniqAdj_training.get(each_adj_tr, 0) + 1
 
                 # print("\nCount of adjectives in tr data:")
                 # for (k, v) in uniqAdj_training.items():
@@ -2103,14 +2103,14 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
 
                         '''for each row in the training data, predict y_test value for itself, and then back
                         propagate the loss'''
-                        for each_data_item_index,data in tqdm(enumerate(training_data), total=len(training_data), desc="trng_data_point:"):
+                        for each_data_item_index in tqdm((training_data), total=len(training_data), desc="trng_data_point:"):
 
 
                             #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
                             model_4chunk.zero_grad()
 
 
-
+                            print("each_data_item_index:"+str(each_data_item_index))
                             feature=features[each_data_item_index]
                             y_test = allY[each_data_item_index]
                             each_adj_tr = all_adj[each_data_item_index]
