@@ -328,12 +328,20 @@ if __name__ == "__main__":
                                                 trained_model = train_dev_print_rsq(dev_entire_data,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
                                             else:
                                                     if(myInput=="6"):
+                                                            # read the raw  turk data as a pandas data frame
+                                                            df_raw_turk_data = readRawTurkDataFile(cwd, entire_turk_data)
+
+
+                                                            # # sort the entire data based on adjectives.
+                                                            # sorted_df_raw_turk_data = df_raw_turk_data.sort_values(
+                                                            #     "adjective")
+
                                                            # read all the data. i.e without training-dev-split. This is for LOOCV
                                                             features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, entire_turk_data,
                                                                                                                                                          addAdjOneHot, uniq_turker, addTurkerOneHot)
 
                                                              # run with leave one out cross validation
-                                                            nfoldCV_adj_grouped_turk_data_4chunks(features, y, adj_lexicon, all_adj,addTurkerOneHot)
+                                                            nfoldCV_adj_grouped_turk_data_4chunks(df_raw_turk_data,features, y, adj_lexicon, all_adj,addTurkerOneHot)
 
                                                             print("done loocv for adj turk data, going to exit")
 

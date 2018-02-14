@@ -1778,7 +1778,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 '''get all uniq adjectives. Divide into 4 chunks.: out of 4 chunks, keep one for testing,
  one for dev, and the rest two as training. Then pick it corresponding data points. DO cross validation'''
-def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurkerOneHot):
+def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj, all_adj,addTurkerOneHot):
     # shuffle before splitting
     if (useRandomSeed):
         np.random.seed(random_seed)
@@ -1796,11 +1796,7 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
     np.random.shuffle(allIndex)
 
 
-    #read the entire turk data
-    df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
 
-    # sort the entire data based on adjectives.
-    sorted_df_raw_turk_data = df_raw_turk_data.sort_values("adjective")
 
 
 
@@ -1948,7 +1944,7 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
                 dev_data = []
 
                 # write training data to a separate file. This should happen only once.
-                for index, eachline in sorted_data.iterrows():
+                for index, eachline in raw_turk_data.iterrows():
                     thisadj = eachline['adjective']
 
                     results = [eachline["turker"], eachline["adjective"], eachline["mean"],
