@@ -1859,25 +1859,49 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
 
 
 
-                # print("tr_fold_indices:" + str(tr_fold_indices))
-                # print("test_fold_index:" + str(test_fold_index))
-                # print("dev_fold_index:"+str(dev_fold_index))
+                print("tr_fold_indices:" + str(tr_fold_indices))
+                print("test_fold_index:" + str(test_fold_index))
+                print("dev_fold_index:"+str(dev_fold_index))
 
 
 
                 #the list of adj ids which are present in training data chunk
                 adjs_training_data=[]
 
-                for eachChunk1 in split_data:
-                    print(str(len(eachChunk1)))
-                #in each of these  chunks, pull out the list of adjectives for tr, dev and test folds.
+                # print the number of elements per chunk
+                # for eachChunk1 in split_data:
+                #     print(str(len(eachChunk1)))
 
+
+                #in each of these  chunks, pull out the list of adjectives and assign it to tr,
+                # dev and test folds. note that these are just the indices of adjectives, not the actual data
+
+                #since there are more than one chunks in training, for each of the chunk id:
                 for eachChunk2 in tr_fold_indices:
                     for eachElement in split_data[eachChunk2]:
                         adjs_training_data.append(eachElement)
 
                 print(str(len(adjs_training_data)))
+
+                adjs_dev_data = []
+
+                for eachElement3 in split_data[dev_fold_index]:
+                    adjs_dev_data.append(eachElement3)
+
+                print(str(len(adjs_dev_data)))
+
+                adjs_test_data = []
+
+
+                for eachElement4 in split_data[test_fold_index]:
+                    adjs_test_data.append(eachElement4)
+
+                print(str(len(adjs_test_data)))
+
+
+
                 sys.exit(1)
+
 
                 #go through the indices of the entire data and assign the indicies based on where its adjective folds
                 #so if the turk data which has index 1234 has an adjective which is in training fold, assign it to training fold
