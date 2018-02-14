@@ -43,7 +43,7 @@ training_data="trainingData.csv"
 #test_data="test_rand_seed1.csv"
 test_data="test_no_random_seed2.csv"
 
-random_seed=1
+random_seed=2
 useRandomSeed=True
 
 class AdjEmb(nn.Module):
@@ -1991,7 +1991,7 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                             if (thisadj == each_test_adj):
                                 test_data.append(index)
 
-
+                    #dont shuffle the dev or test data. We have a code below which depends on the fact that all the turk data of the same adjective are grouped together
                     # np.random.shuffle(test_data)
                     # np.random.shuffle(dev_data)
 
