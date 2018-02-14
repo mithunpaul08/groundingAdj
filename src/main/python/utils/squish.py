@@ -1997,9 +1997,9 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                 # print(dev_data)
 
 
-                print(str(len(training_data)))
-                print(str(len(test_data)))
-                print(str(len(dev_data)))
+                # print(str(len(training_data)))
+                # print(str(len(test_data)))
+                # print(str(len(dev_data)))
 
 
 
@@ -2110,16 +2110,16 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                             model_4chunk.zero_grad()
 
 
-                            print("each_data_item_index:"+str(each_data_item_index))
+                            #print("each_data_item_index:"+str(each_data_item_index))
                             feature=features[each_data_item_index]
                             y_test = allY[each_data_item_index]
                             each_adj_tr = all_adj[each_data_item_index]
 
-                            print("feature:"+str(feature))
-                            print("each_adj_tr:"+str(each_adj_tr)+"\n")
-                            print("y_test:"+str(y_test))
+                            # print("feature:"+str(feature))
+                            # print("each_adj_tr:"+str(each_adj_tr)+"\n")
+                            # print("y_test:"+str(y_test))
 
-                            sys.exit(1)
+
 
 
 
@@ -2146,30 +2146,30 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
 
 
                         #after every epoch, i.e after training on n data points,-calculate rsq for trainign also
-                        #rsquared_value_tr = r2_score(y_total_tr_data, pred_y_total_tr_data, sample_weight=None,
-                                                  #multioutput='uniform_average')
+                        rsquared_value_tr = r2_score(y_total_tr_data, pred_y_total_tr_data, sample_weight=None,
+                                                  multioutput='uniform_average')
 
                         # #after every epoch, i.e after training on n data points,
                         #  run on dev data and calculate rsq
-                        # print("size of  dev_estop:" + str(len(dev_estop)))
+
                         pred_y_total_dev_data = []
                         y_total_dev_data = []
 
-                        # print(dev_data)
-                        # print(str(len(dev_data)))
+                        #print(dev_data)
+                        print(str(len(dev_data)))
 
                         # for each element in the dev data, calculate its predicted value, and append it to predy_total
-                        # for dev_index in dev_data:
-                        #     this_feature = features[dev_index]
-                        #     featureV_dev = convert_to_variable(this_feature)
-                        #     y_dev = allY[dev_index]
-                        #     each_adj_dev = all_adj[dev_index]
-                        #
-                        #
-                        #
-                        #     pred_y_dev = model_4chunk(each_adj_dev, featureV_dev)
-                        #     y_total_dev_data.append(y_dev)
-                        #     pred_y_total_dev_data.append(pred_y_dev.data.cpu().numpy())
+                        for dev_index in dev_data:
+                            this_feature = features[dev_index]
+                            featureV_dev = convert_to_variable(this_feature)
+                            y_dev = allY[dev_index]
+                            each_adj_dev = all_adj[dev_index]
+
+
+
+                            pred_y_dev = model_4chunk(each_adj_dev, featureV_dev)
+                            y_total_dev_data.append(y_dev)
+                            pred_y_total_dev_data.append(pred_y_dev.data.cpu().numpy())
 
                             # print("feature:" + str(feature))
                             # print("each_adj_tr:" + str(each_adj_tr) + "\n")
@@ -2181,19 +2181,22 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
 
                         # print(y_total_dev_data)
                         # print(pred_y_total_dev_data)
-                        # print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
-                        # print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
+                        print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
+                        print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
 
-                        # rsquared_value_dev = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
-                        #                           multioutput='uniform_average')
-                        #
-                        #
-                        # # print("\n")
-                        # # print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
-                        # # print("\n")
-                        #
-                        # nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_tr) +"\t" + str(rsquared_value_dev ) + "\n")
-                        # nfcv_four.flush()
+                        rsquared_value_dev = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
+                                                  multioutput='uniform_average')
+
+
+                        print("\n")
+                        print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
+                        print("\n")
+
+                        nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_tr) +"\t" + str(rsquared_value_dev ) + "\n")
+                        nfcv_four.flush()
+
+
+                        
 
 
 
