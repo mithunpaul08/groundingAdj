@@ -25,6 +25,7 @@ from utils.squish import do_training
 from utils.squish import run_loocv_on_turk_data
 from utils.squish import run_nfoldCV_on_turk_data
 from utils.squish import run_nfoldCV_on_turk_data_4chunks
+from utils.squish import nfoldCV_adj_grouped_turk_data_4chunks
 from utils.squish import run_loocv_per_adj
 from utils.squish import tuneOnDev
 from utils.squish import train_dev_print_rsq
@@ -263,7 +264,7 @@ if __name__ == "__main__":
 
 
                                             #code that splits the data based on adjectives and not the entire data- should be used only once ideally
-                                            # features, y, adj_lexicon, all_adj, uniq_turker = split_data_based_on_adj(cwd, entire_turk_data,
+                                            #features, y, adj_lexicon, all_adj, uniq_turker = split_data_based_on_adj(cwd, entire_turk_data,
                                             #                                                                          False, uniq_turker)
 
                                             features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, training_adj,
@@ -327,15 +328,14 @@ if __name__ == "__main__":
                                                 trained_model = train_dev_print_rsq(dev_entire_data,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
                                             else:
                                                     if(myInput=="6"):
-                                                            #run1: run with leave one out cross validationon all the turk experiment data points-i.e no adjective based split
-                                                            # read all the data. i.e without training-dev-split. This is for LOOCV
-                                                            features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, training_adj,
+                                                           # read all the data. i.e without training-dev-split. This is for LOOCV
+                                                            features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, entire_turk_data,
                                                                                                                                                          addAdjOneHot, uniq_turker, addTurkerOneHot)
 
-                                                             # run1: run with leave one out cross validation
-                                                            run_nfoldCV_on_turk_data(features, y, adj_lexicon, all_adj,addTurkerOneHot,useEarlyStopping)
+                                                             # run with leave one out cross validation
+                                                            nfoldCV_adj_grouped_turk_data_4chunks(features, y, adj_lexicon, all_adj,addTurkerOneHot)
 
-                                                            print("done loocv for all turk data, going to exit")
+                                                            print("done loocv for adj turk data, going to exit")
 
 
 

@@ -514,14 +514,13 @@ def get_features_labels_from_data(cwd, turkFile, useAdjOneHot, uniq_turker, addT
         return npfeatures,y, uniq_adj, all_adj,uniq_turker,uniq_adj_list
 
 
-'''this is created on jan 22nd 2018. By now we have the grounding working for squished to 1 architecture.
-Turker is removed. Next aim is to sort the entire data based on 98 adjectives, split it into 80-10-10 based on
-adjectives. So that 10 data points in TEST partiition will be unseen by the code '''
 def split_data_based_on_adj(cwd, turkFile, useOneHot, uniq_turker):
     df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
 
     #sort the entire data based on adjectives.
     sorted_df_raw_turk_data=df_raw_turk_data.sort_values("adjective")
+
+    sorted_df_raw_turk_data=data.groupby("adjective")
 
     print(sorted_df_raw_turk_data)
     split_adj_data_write_to_file(sorted_df_raw_turk_data, cwd)
@@ -970,7 +969,10 @@ def split_entire_data(cwd, turkFile, useOneHot):
         return npfeatures,y, uniq_adj, all_adj,uniq_turker
 
 
-def split_adj_data_write_to_file(df_raw_turk_data, cwd):
+'''this is created on jan 22nd 2018. By now we have the grounding working for squished to 1 architecture.
+Turker is removed. Next aim is to sort the entire data based on 98 adjectives, split it into 80-10-10 based on
+adjectives. So that 10 data points in TEST partiition will be unseen by the code '''
+def split_adj_data_write_to_file(sorted_data, cwd):
     #df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
 
     # # create a hash table to store unique adj
@@ -978,7 +980,7 @@ def split_adj_data_write_to_file(df_raw_turk_data, cwd):
     counter = 0
 
     # create a total list of unique adj in this collection
-    for a in df_raw_turk_data["adjective"]:
+    for a in sorted_data["adjective"]:
         if (a) not in uniq_adj:
             # if its not there already add it as the latest element
             uniq_adj[a] = counter
@@ -1040,7 +1042,7 @@ def split_adj_data_write_to_file(df_raw_turk_data, cwd):
     testData=[]
 
     # write training data to a separate file. This should happen only once.
-    for index, eachline in df_raw_turk_data.iterrows():
+    for index, eachline in sorted_data.iterrows():
         thisadj=eachline['adjective']
 
         results = [eachline["turker"],eachline["adjective"],eachline["mean"],
@@ -1064,4 +1066,99 @@ def split_adj_data_write_to_file(df_raw_turk_data, cwd):
 
     sys.exit(1)
 
+
+
+def group_data_by_adj(sorted_data, cwd):
+    #df_raw_turk_data = readRawTurkDataFile(cwd, turkFile)
+
+    # # create a hash table to store unique adj
+    uniq_adj = {}
+    counter = 0
+
+    # create a total list of unique adj in this collection
+    for a in sorted_data["adjective"]:
+        if (a) not in uniq_adj:
+            # if its not there already add it as the latest element
+            uniq_adj[a] = counter
+            counter = counter + 1
+
+    print("total number of unique adjectives is "+str(len(uniq_adj)))
+
+
+
+
+    # get the total number of unique adjectives
+    noOfRows = len(uniq_adj.items())
+
+    # noOfRows_data = len(df_raw_turk_data.items())
+
+    # print("noOfRows")
+    # print(noOfRows)
+
+
+    # create an numpy array of that range
+    allIndex = np.arange(noOfRows)
+
+    # now shuffle it and split
+    # np.random.seed(1)
+    #np.random.shuffle(allIndex)
+
+    # take 80% of the total data as training data- rest as testing
+    eighty = math.ceil(noOfRows * 80 / 100)
+    ten= math.ceil(noOfRows * 10 / 100)
+
+    # twenty_index=math.ceil(noOfRows*80/100)
+    # print("eighty")
+    # print(eighty)
+
+
+    uniq_adj_list=[]
+    for k,v in uniq_adj.items():
+        uniq_adj_list.append(k)
+
+
+    # eighty= number of rows
+    trainingData_adj = uniq_adj_list[:eighty]
+    dev_adj = uniq_adj_list[eighty:(eighty+ten)]
+    test_adj = uniq_adj_list[(eighty+ten):(eighty+ten+ten)]
+
+    #
+    # print("trainingData_adj")
+    # print(len(trainingData_adj))
+    # print("dev_adj")
+    # print((dev_adj))
+    # print("test_adj")
+    # print((test_adj))
+
+
+    #go through each of the index in training data.
+
+    trainingData = []
+    devData=[]
+    testData=[]
+
+    # write training data to a separate file. This should happen only once.
+    for index, eachline in sorted_data.iterrows():
+        thisadj=eachline['adjective']
+
+        results = [eachline["turker"],eachline["adjective"],eachline["mean"],
+                   eachline["onestdev"],
+                   eachline["had_negative"],eachline["logrespdev"]]
+
+        if(thisadj in trainingData_adj):
+            trainingData.append(results)
+        else:
+            if(thisadj in dev_adj):
+                devData.append(results)
+            else:
+                if(thisadj in test_adj):
+                    testData.append(results)
+
+
+    writeToFileWithHeader(trainingData,cwd, "trainingData_adj.csv")
+    writeToFileWithHeader(devData,cwd, "dev_adj.csv")
+    writeToFileWithHeader(testData,cwd, "test_adj.csv")
+
+
+    sys.exit(1)
 
