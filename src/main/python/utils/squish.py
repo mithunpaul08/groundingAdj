@@ -1815,6 +1815,11 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
     rsq_total=[]
     cwd=os.getcwd()
 
+    # push all unique adjectives into a list
+    uniq_adj_list = []
+    for k, v in uniq_adj.items():
+        uniq_adj_list.append(k)
+
     # write rsq per chunk to disk
     with open(cwd + "/outputs/" + rsq_file_nfcv, "w+")as nfcv:
         #empty out the existing file before loop does append
@@ -1865,8 +1870,11 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
 
 
 
-                #the list of adj ids which are present in training data chunk
-                adjs_training_data=[]
+
+                #the list of adj ids which are present in each data chunk
+                adjs_ids_training_data=[]
+                adjs_id_test_data = []
+                adjs_ids_dev_data = []
 
                 # print the number of elements per chunk
                 # for eachChunk1 in split_data:
@@ -1876,36 +1884,61 @@ def nfoldCV_adj_grouped_turk_data_4chunks(features, allY, uniq_adj, all_adj,addT
                 #in each of these  chunks, pull out the list of adjectives and assign it to tr,
                 # dev and test folds. note that these are just the indices of adjectives, not the actual data
 
+
+                #string values of each of the adjectives in each fold
+                trainingData_adj_str = []
+                dev_adj_str = []
+                test_adj_str = []
+
+
                 #since there are more than one chunks in training, for each of the chunk id:
                 for eachChunk2 in tr_fold_indices:
                     for eachElement in split_data[eachChunk2]:
-                        adjs_training_data.append(eachElement)
+                        adjs_ids_training_data.append(eachElement)
+                        trainingData_adj_str.append(uniq_adj_list[eachElement])
 
-                print(str(len(adjs_training_data)))
 
-                adjs_dev_data = []
+
+
 
                 for eachElement3 in split_data[dev_fold_index]:
-                    adjs_dev_data.append(eachElement3)
+                    adjs_ids_dev_data.append(eachElement3)
+                    dev_adj_str.append(uniq_adj_list[eachElement3])
 
-                print(str(len(adjs_dev_data)))
 
-                adjs_test_data = []
+
+
 
 
                 for eachElement4 in split_data[test_fold_index]:
-                    adjs_test_data.append(eachElement4)
+                    adjs_id_test_data.append(eachElement4)
+                    test_adj_str.append(uniq_adj_list[eachElement4])
 
-                print(str(len(adjs_test_data)))
+                print(str(len(adjs_id_test_data)))
+                print(str(len(adjs_ids_training_data)))
+                print(str(len(adjs_ids_dev_data)))
 
 
+                print(trainingData_adj_str)
+                print(dev_adj_str)
+                print(test_adj_str)
+
+                print(str(len(trainingData_adj_str)))
+                print(str(len(dev_adj_str)))
+                print(str(len(test_adj_str)))
 
                 sys.exit(1)
+
+
+
 
 
                 #go through the indices of the entire data and assign the indicies based on where its adjective folds
                 #so if the turk data which has index 1234 has an adjective which is in training fold, assign it to training fold
                 #then all you have to do is hand it over to the NFCV code or seen data
+
+
+
 
 
 
