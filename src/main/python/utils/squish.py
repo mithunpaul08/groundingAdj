@@ -1962,7 +1962,7 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
 
                 print(str(len(training_data)))
                 print(str(len(dev_data)))
-                print(str(len(test_data)))
+                print((test_data))
 
                 sys.exit(1)
                 # its data points, and concatenate all into one single huge list of
