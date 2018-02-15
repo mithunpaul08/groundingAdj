@@ -26,6 +26,8 @@ from utils.squish import run_loocv_on_turk_data
 from utils.squish import run_nfoldCV_on_turk_data
 from utils.squish import run_nfoldCV_on_turk_data_4chunks
 from utils.squish import nfoldCV_adj_grouped_turk_data_4chunks
+from utils.squish import load_nfoldCV_adj_grouped_turk_data_4chunks
+
 from utils.squish import run_loocv_per_adj
 from utils.squish import tuneOnDev
 from utils.squish import train_dev_print_rsq
@@ -94,6 +96,7 @@ if __name__ == "__main__":
                 print("To train with nfoldCV on  adj based split)  press:6")
                 print("To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:3")
                 print("To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:4")
+                print("To test using a saved model on adj_based_data_test_partition which was trained on nfcv 4 chunks press:7")
                 print("To exit Press:0")
 
 
@@ -344,6 +347,23 @@ if __name__ == "__main__":
                                                             nfoldCV_adj_grouped_turk_data_4chunks(df_raw_turk_data,features, y, adj_lexicon, all_adj,addTurkerOneHot)
 
                                                             print("done loocv for adj turk data, going to exit")
+
+                                                    else:
+
+                                                            if(myInput=="7"):
+
+                                                                # read the raw  turk data as a pandas data frame
+                                                                df_raw_turk_data = readRawTurkDataFile(cwd, entire_turk_data)
+
+
+                                                               # read all the data. i.e without training-dev-split. This is for LOOCV
+                                                                features, y, adj_lexicon, all_adj, uniq_turker,uniq_adj_list = get_features_labels_from_data(cwd, entire_turk_data,
+                                                                                                                                                             addAdjOneHot, uniq_turker, addTurkerOneHot)
+
+                                                                 # run with leave one out cross validation
+                                                                load_nfoldCV_adj_grouped_turk_data_4chunks(df_raw_turk_data,features, y, adj_lexicon, all_adj,addTurkerOneHot)
+
+                                                                print("done loocv for adj turk data, going to exit")
 
 
 
