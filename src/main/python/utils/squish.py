@@ -2083,7 +2083,7 @@ def nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uniq_adj
                     # '''this is to be used after dev tunin.
                     # found the best epochs per fold. after tuning on dev'''
                     if(test_fold_index==0):
-                        noOfEpochs=231
+                        noOfEpochs=214
 
                     else:
                         if(test_fold_index==1):
