@@ -1434,6 +1434,10 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
 
 
 
+    overall_pred_y=[]
+    overall_gold_y=[]
+    overall_adj=[]
+
 
 
     #split it into folds. n=number of folds. almost even sized.
@@ -1467,7 +1471,8 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
             #left over from an earlier hack. too lazy to tab like 1000 lines
-            if(test_fold_index==0):
+            if(True):
+            #if(test_fold_index==0):
 
 
 
@@ -1603,6 +1608,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                                 if(test_fold_index==3):
                                     noOfEpochs=983
 
+                    
                     for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
 
                         y_total_tr_data=[]
@@ -1736,6 +1742,11 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                     y_total_test_data.append(y_test)
                     pred_y_total_test_data.append(pred_y_test.data.cpu().numpy())
 
+                    overall_gold_y.append(y_test)
+                    overall_pred_y.append(pred_y_test.data.cpu().numpy())
+                    overall_adj.append(each_adj_test)
+
+
 
 
                 #calculate the rsquared value for this  held out
@@ -1748,6 +1759,15 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
                 rsq_total.append(rsquared_value_test)
 
 
+    #TO FIND AVERAGE OF gold and predicted values- using the overall method
+        nfcv.write("\noverall_gold_y\toverall_pred_y\toverall_adj\n")
+        for oindex,eachOverall in enumerate(overall_gold_y):
+            nfcv.write(str(overall_gold_y[oindex])+"\t"+str(overall_pred_y[oindex])+"\t"+str(overall_adj[oindex])+"\n")
+            nfcv.flush()
+
+        rsquared_value_test_overalll=r2_score(overall_gold_y, overall_pred_y, sample_weight=None, multioutput='uniform_average')
+        nfcv.write("overall rsq:"+str(rsquared_value_test_overalll)+"\n")
+        nfcv.flush()
 
     #  After all chunks are done, calculate the average of each element in the list of predicted rsquared values.
     # There should be 10 such values,
@@ -1771,6 +1791,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
     with open(cwd + "/outputs/" + rsq_file_nfcv_avrg, "w+")as rsq_values_avg:
         rsq_values_avg.write("rsq_average: \t "+str(rsq_average))
     rsq_values_avg.close()
+
 
 
     sys.exit(1)
