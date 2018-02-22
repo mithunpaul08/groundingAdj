@@ -47,7 +47,7 @@ def writeToFileWithPd( trainingData,cwd, inputFile):
     path = cwd + "/data/"
     trainingData.to_csv(path + inputFile, sep=',')
 
-
+#for turk data, if you have it without header, this code will write the header for you
 def writeToFileWithHeader(data, cwd, inputFile):
     with open(cwd+"/data/"+inputFile, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
@@ -58,6 +58,7 @@ def writeToFileWithHeader(data, cwd, inputFile):
         for line in data:
             writer.writerow(line)
 
+#input:dictionary output:csv
 def writeCsvToFile(data, cwd, inputFile):
     with open(cwd+"/data/"+inputFile, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
