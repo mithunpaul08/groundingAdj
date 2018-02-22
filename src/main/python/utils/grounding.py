@@ -75,7 +75,7 @@ def predict_grounding(cwd,turkFile):
                 sys.exit(1)
 
 
-        ##print("OOV word count is:"+str(oovCount))
+
         return features, y
 
 
@@ -109,16 +109,14 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker,addTurkerOneHot):
         uniq_turker_count=len(uniq_turker)
 
 
-        ##print("total number of unique adjectives is "+str(len(uniq_adj)))
-        ##print("total number of unique turkers is "+str(len(uniq_turker)))
+
 
 
 
 
         #Split data in to train-dev-test
         noOfRows=df_raw_turk_data.shape[0]
-        #print("noOfRows")
-        #print(noOfRows)
+
 
 
         #create an numpy array of that range
@@ -131,8 +129,6 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker,addTurkerOneHot):
         #take 80% of the total data as training data- rest as testing
         #eighty=math.ceil(noOfRows*80/100)
         #twenty_index=math.ceil(noOfRows*80/100)
-        #print("eighty")
-        #print(eighty)
 
         #eighty= number of rows
         #trainingData_indices=allIndex[:eighty]
@@ -164,18 +160,16 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker,addTurkerOneHot):
 
             #get the index of the adjective
             adjIndex=uniq_adj[adj]
-            ##print("adjIndex:"+str(adjIndex))
-            ##print("uniq_adj_count:"+str(uniq_adj_count))
+
 
             embV=[]
             if(useOneHot):
                 #####create a one hot vector for all adjectives
                 # one_hot_adj=np.zeros(uniq_adj_count)
                 one_hot_adj = [0] * uniq_adj_count
-                # #print(one_hot_adj)
-                # #print("one hot shape:"+str((one_hot_adj.shape)))
+
                 one_hot_adj[adjIndex] = 1
-                # #print(one_hot_adj)
+
                 #todo : extend/append this new vector
                 embV=one_hot_adj
 
@@ -189,14 +183,12 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker,addTurkerOneHot):
             #get the id number of of the turker
             turkerId=df_raw_turk_data["turker"][eachTurkRow]
             turkerIndex=uniq_turker[turkerId]
-            ##print("turkerIndex:"+str(turkerIndex))
+
 
             #create a one hot vector for all turkers
             one_hotT=[0]*(uniq_turker_count)
-            ##print(one_hotT)
-            ##print("one one_hotT shape:"+str((one_hotT.shape)))
+
             one_hotT[turkerIndex]=1
-            ##print(one_hotT)
 
 
             ################get the mean and variance for this row and attach to this one hot
@@ -205,9 +197,6 @@ def get_features_dev(cwd, turkFile, useOneHot,uniq_turker,addTurkerOneHot):
             mean=df_raw_turk_data["mean"][eachTurkRow]
             stddev=df_raw_turk_data["onestdev"][eachTurkRow]
             logRespDev=df_raw_turk_data["logrespdev"][eachTurkRow]
-            ##print("index:"+str(eachTurkRow))
-            ##print("mean"+str(mean))
-            ##print("adjective:"+str(adj))
 
             #############combine adj-1-hot to mean , variance and turker-one-hot
 
