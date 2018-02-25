@@ -1,3 +1,4 @@
 target/
 project/
 src/main/resources/marneffe/*
+__pycache__/*
