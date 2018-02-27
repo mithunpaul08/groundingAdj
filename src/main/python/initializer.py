@@ -65,12 +65,11 @@ if __name__ == "__main__":
                 print("Welcome to Grounding For Adjectives. Please pick one of the following:")
 
                 print("To train and save using adj based split press :1")
-                print("To train on all the data (not adj based split) press :5")
-
-                print("To train with nfoldCV on entire data (no adj based split)  press:2")
-                print("To train with nfoldCV on  adj based split)  press:6")
-                print("To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:3")
-                print("To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:4")
+                print("To train on all the data (not adj based split) press :2")
+                print("To train with nfoldCV on entire data (no adj based split)  press:3")
+                print("To train with nfoldCV on  adj based split)  press:4")
+                print("To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:5")
+                print("To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:6")
                 print("To test using a saved model on adj_based_data_test_partition which was trained on nfcv 4 chunks press:7")
                 print("To exit Press:0")
 
@@ -79,7 +78,7 @@ if __name__ == "__main__":
 
                 uniq_turker = {}
 
-                if(myInput=="2"):
+                if(myInput=="3"):
 
 
                     #run1: run with leave one out cross validationon all the turk experiment data points-i.e no adjective based split
@@ -141,7 +140,7 @@ if __name__ == "__main__":
                     print("time taken:" + str(elapsed_time/60)+"minutes")
 
                 else:
-                    if(myInput=="4"):
+                    if(myInput=="6"):
 
                         #empty out the existing file
                         with open(cwd + "/outputs/" + rsq_on_test_adj_based_data, "w+")as rsq_values:
@@ -174,7 +173,7 @@ if __name__ == "__main__":
                             print("time taken:" + str(elapsed_time/60)+"minutes")
                     else:
 
-                        if(myInput=="3"):
+                        if(myInput=="5"):
 
                             #empty out the existing file
                             with open(cwd + "/outputs/" + rsq_on_test_all_data, "w+")as rsq_values:
@@ -238,7 +237,7 @@ if __name__ == "__main__":
 
                                         else:
 
-                                            if(myInput=="5"):
+                                            if(myInput=="2"):
                                                 #run 2 : do training and dev tuning separately--this is entire data, not based on adjectives.
 
                                                 uniq_turker = {}
@@ -248,7 +247,7 @@ if __name__ == "__main__":
                                                 #features here is the features you just read in the line above
                                                 trained_model = train_dev_print_rsq(dev_entire_data,features, y, adj_lexicon, all_adj,uniq_turker,addTurkerOneHot)
                                             else:
-                                                    if(myInput=="6"):
+                                                    if(myInput=="4"):
                                                             # read the raw  turk data as a pandas data frame
                                                             df_raw_turk_data = readRawTurkDataFile(cwd, entire_turk_data)
 
