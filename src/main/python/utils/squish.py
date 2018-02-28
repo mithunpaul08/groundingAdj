@@ -20,17 +20,12 @@ from utils.grounding import get_features_labels_from_data
 from utils.grounding import get_features_dev
 torch.manual_seed(1)
 
-#hidden_layers=[30,1]
-# no_of_hidden_layers=3
 dense1_size=1
-#dense2_size=1
-# dense3_size=1
 
 noOfFoldsCV=4
 noOfEpochs=1000
 learning_rate=1e-5
 patience_max=5;
-#lr=1e-2
 
 rsq_file="rsq_file.txt"
 rsq_file_nfcv="rsq_file_nfcv.txt"
@@ -47,43 +42,18 @@ random_seed=1
 useRandomSeed=True
 
 class AdjEmb(nn.Module):
-    #the constructor. Pass whatever you need to
     def __init__(self,turkCount,addTurkerOneHot):
         super(AdjEmb,self).__init__()
 
 
-        # get teh glove vectors
-        #print("going to load glove for per adj.")
-
-        # get the glove embeddings for this adjective
-        #self.vocab, self.vec = torchwordemb.load_glove_text("/data/nlp/corpora/glove/6B/glove.6B.300d.txt")
-
-        #load a subset of glove which contains embeddings for the adjectives we have
-
         cwd=os.getcwd()
         path = cwd+"/data/"
+
+        #load a subset of glove which contains embeddings for the adjectives we have
         self.vocab, self.vec = torchwordemb.load_glove_text(path+"glove_our_adj.csv")
-
-        #emb=self.vec[self.vocab["intense"]]
-        #print(emb)
-
-
         self.noOfTurkers=turkCount
 
 
-
-        # df_raw_turk_data=readRawTurkDataFile(cwd,"glove_our_adj")
-        # print(df_raw_turk_data)
-        # print(df_raw_turk_data["mithun"])
-        #sys.exit(1)
-
-        # get teh glove vectors
-        # print("just loaded glove for per adj. going to load glove for entire embeddings.")
-        #
-        # print(".self.vec.shape[0]")
-        # print(self.vec.shape[0])
-        # print(".self.vec.shape[1]")
-        # print(self.vec.shape[1])
         self.embeddings = nn.Embedding(self.vec.shape[0], self.vec.shape[1])
         self.embeddings.weight.data.copy_(self.vec)
 
@@ -91,97 +61,25 @@ class AdjEmb(nn.Module):
         self.embeddings.weight.requires_grad=False
 
 
-        #the size of the last layer will be the last entry in dense3_size
-        #dense3_size=hidden_layers[len(hidden_layers)-1]
-
-
-        # the layer where you squish the 300 embeddings to a dense layer of whatever size.
-        # if the list hidden_layers[] is empty, then it will be directly squished to tbd
-
-        # i.e it takes embeddings as input and returns a dense layer of size 10
-        # note: this is also known as the weight vector to be used in an affine
-
         self.linear1 = nn.Linear(self.vec.size(1), dense1_size)
-        #self.linear2 = torch.nn.Linear(dense1_size, dense2_size)
-        # self.linear3 = torch.nn.Linear(dense2_size, dense3_size)
 
-
-        #dynamically add the hidden layers
-        # for index,layer in enumerate(hidden_layers):
-        #     #first squish alone is from size of embeddings
-        #     if(index==0):
-        #         layername="linear"+str(index)
-        #         self.layername = nn.Linear(self.vec.size(1), hidden_layers[index])
-        #     else:
-        #         #second squish onwards dynamically add
-        #         if((index+1) < len(hidden_layers)):
-        #             layername="linear"+str(index)
-        #             self.layername = torch.nn.Linear(hidden_layers[index], hidden_layers[index+1])
-
-
-
-
-        #
-        # print("dense3_size:")
-        # print(dense3_size)
 
         #the last step: whatever the output of previous layer was concatenate it with the mu and sigma and one-hot vector for turker
         if(addTurkerOneHot):
             self.fc = torch.nn.Linear(dense1_size+turkCount+2, 1)
-            #print("found addTurkerOneHot=true")
         else:
             #use this when you dont have one hot for turkers
             self.fc = torch.nn.Linear(dense1_size+2, 1)
 
 
 
-        #print("done loading all gloves")
-
-        #glove = vocab.GloVe(name='6B', dim=300)
-        #the linear regression code which maps hidden layer to intercept value must come here
-
-
     #init was where you where just defining what embeddings meant. Here we actually use it
     def forward(self, adj, feats):
 
-        #get the corresponding  embeddings of the adjective
-        #emb_adj=self.embeddings(adj)
-
-
-
-
-        #print(self.vec.size())
-        #print("adj:")
-        #print(adj)
         emb=self.vec[self.vocab[adj]]#.numpy()
-        #embT =torch.from_numpy(emb)
         embV=Variable(emb,requires_grad=False)
-
-        #
         out=F.tanh(self.linear1(embV))
-        #out=F.tanh(self.linear2(out))
-        #out=F.tanh(self.linear3(out))
-
-
-        # #dynamically add the hidden layers
-        # for index,layer in enumerate(hidden_layers):
-        #     layername="linear"+str(index)
-        #     #first squish alone is from size of embeddings
-        #     if(index==0):
-        #         out=F.tanh(self.layername(embV))
-        #     else:
-        #         #second squish onwards dynamically add
-        #
-        #         if((index+1) < len(hidden_layers)):
-        #             out=F.tanh(self.layername(out))
-
-
-
-
-
-
         feature_squished = (torch.cat((feats, out)))
-
         retValue=(self.fc(feature_squished))
         return retValue
 
@@ -191,15 +89,9 @@ def convert_adj_index(listOfAdj):
 
     adj_Indices={}
     for eachAdj in tqdm(listOfAdj,total=len(listOfAdj),desc="adj_train:"):
-        # print("eachSent:")
-        # print(eachSent)
         if eachAdj not in adj_Indices:
                     adj_Indices[eachAdj] = len(adj_Indices)
     return adj_Indices
-
-
-
-
     file_Name2 = "adj_Indices.pkl"
     # open the file for writing
     fileObject2 = open(file_Name2,'wb')
@@ -222,8 +114,6 @@ This is all done for tuning purposes'''
 def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTurkerOneHot):
     #take the list of adjectives and give it all an index
     adj_index=convert_adj_index(list_Adj)
-
-    print("got inside do_training. going to Load embeddings:")
 
     #there are 193 unique turkers
     model=AdjEmb(193,addTurkerOneHot)
@@ -271,66 +161,22 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
                 true_variable_y = convert_scalar_to_variable(y)
                 y_total.append(y)
-
-                #rms = optim.RMSprop(fc.parameters(),lr=1e-5, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-                #print("batch_x")
-                #print(batch_x)
-
-                #multiply weight with input vector
-                # affine=fc(batch_x)
-                #
-                # #this is the actual prediction of the intercept
-                # pred_y=affine.data.cpu().numpy()
                 pred_y_total.append(pred_y.data.cpu().numpy()[0])
-
-
-
-
                 loss_training = loss_fn(pred_y, true_variable_y)
-
-
-
-
 
                 # Backward pass
                 loss_training.backward()
 
-
-
-                # optimizer.step()
-                # adam.step()
                 rms.step()
-
-            # print("zip")
-            # print(list(zip(y_total,pred_y_total)))
-            # # print("y_total:")
-            # # print(y_total)
-            # # print("pred_y_total:")
-            # # print(pred_y_total)
-
-
 
 
             rsquared_value_training=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
-            # print("rsquared_value_training: "+str(rsquared_value_training))
             rsq_values.write(str(epoch)+"\t"+str(rsquared_value_training)+"\t")
             rsq_values.flush()
-            # print("loss_training:")
-            # print(loss_training)
-
-
-
-
-
-            #this is a hack. we need to put early stopping or something here
-                #once you hit a good rsq value, break out of the epochs loop and save the model and run on test partition
             foundGoodModel=tuneOnDev(model,dev,cwd, uniq_turker,rsq_values,rsquared_value_training,loss_training,addTurkerOneHot,epoch)
 
-            # if(foundGoodModel):
-            #     break
-            # Print weights
             learned_weights = model.fc.weight.data
-            #print("\tlearned weights:" + str(learned_weights.cpu().numpy()))
+
             if(epoch==120):
                 # the model is trained by now-store it to disk
                 file_Name122 = "adj_data_80-10-10-120-epochs.pkl"
@@ -341,58 +187,14 @@ def  train_dev_print_rsq(dev,features, allY, list_Adj, all_adj,uniq_turker,addTu
 
 
 
-
-    print("found a good model after tuning the model on dev. Going to  write it to disk")
-
-
     #the model is trained by now-store it to disk
     file_Name_200 = "adj_data_80-10-10-145epochs.pkl"
     # open the file for writing
     fileObject_200 = open(file_Name_200,'wb')
     pk.dump(model, fileObject_200)
 
-   #  learned_weights = fc.weight.data
-   #  #return(learned_weights.cpu().numpy())
-   #
-   #
-   # #save the weights to disk
-   #  file_Name1 = "learned_weights.pkl"
-   #  # open the file for writing
-   #  fileObject1 = open(file_Name1,'wb')
-   #  pk.dump(learned_weights.cpu().numpy(), fileObject1)
-
     return model
 
-
-
-    # print("loss_training")
-    #
-    # #print(loss_training)
-    # #
-    # #
-    # # #todo: return the entire new 98x10 hashtable to regression code
-    # # print(adj_10_emb)
-    # # sys.exit(1)
-    # #
-    # # print('Loss: after all epochs'+str((loss_training.data)))
-    # #
-    # #print("allY value:")
-    # #print(len(y_total))
-    # #print("predicted allY value")
-    # #print(len(pred_y_total))
-    # rsquared_value_training=r2_score(y_total, pred_y_total, sample_weight=None, multioutput='uniform_average')
-    #
-    #
-    # print("rsquared_value_training:")
-    # print(str(rsquared_value_training))
-    #learned_weights = model.affine.weight.data
-    #return(learned_weights.cpu().numpy())
-
-    # #rsquared_value2= rsquared(allY, pred_y)
-    # print("rsquared_value2:")
-    # print(str(rsquared_value2))
-
-    # print(fc.weight.data.view(-1))
 
 '''from: http://wordaligned.org/articles/slicing-a-list-evenly-with-python'''
 def chunk(xs, n):
@@ -431,7 +233,6 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
     #split it into folds. n=number of folds. almost even sized.
     n=noOfFoldsCV
     split_data=chunk(allIndex,n)
-    #print(str(split_data))
     chunkIndices = np.arange(len(split_data))
 
 
@@ -444,7 +245,7 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         nfcv.write("Chunk \t RSQ\n")
         nfcv.close()
 
-        # tp write rsq per epoch  to disk
+        # to write rsq per epoch  to disk
         # first empty out the existing file before loop does append
     with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "w+")as nfcv_four:
         nfcv_four.write("")
@@ -458,293 +259,178 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         #note:test_fold_index starts at zero
         for test_fold_index in tqdm(chunkIndices,total=len(chunkIndices), desc="n-fold-CV:"):
 
-            #left over from an earlier hack. too lazy to tab like 1000 lines
-            if(True):
-            #if(test_fold_index==0):
+
+            print("**************Starting next fold, fold number:"+str(test_fold_index)+" out of: "+str(len(chunkIndices))+"\n")
+
+            model_4chunk = AdjEmb(193, addTurkerOneHot)
+
+            params_to_update = filter(lambda p: p.requires_grad == True, model_4chunk.parameters())
+            rms = optim.RMSprop(params_to_update, lr=learning_rate, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
+            loss_fn = nn.MSELoss(size_average=True)
+
+            dev_fold_index = (test_fold_index + 1) % 4
+
+            # create a  list of all the indices of chunks except the test and dev chunk you are keeping out
+            tr_fold_indices = []
+            for i in chunkIndices:
+                if (i != test_fold_index and i != dev_fold_index):
+                    tr_fold_indices.append(i)
+
+
+            training_data=[]
+
+            #for each of these left over chunks, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the training data
+            for eachChunk in tr_fold_indices:
+                for eachElement in split_data[eachChunk]:
+                    training_data.append(eachElement)
+
+            test_data=[]
+
+            #for the left out test chunk, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the test data
+            for eachElement in split_data[test_fold_index]:
+                    test_data.append(eachElement)
+
+
+            # for the left out dev chunk, pull out its data points, and concatenate all into one single huge list of
+            # data points-this is the test data
+            dev_data = []
+            for eachElement_dev in split_data[dev_fold_index]:
+                dev_data.append(eachElement_dev)
+
+            uniqAdj_dev={}
+            uniqAdj_test={}
+            uniqAdj_training={}
+            for eachDev in dev_data:
+                each_adj_tr = all_adj[eachDev]
+                uniqAdj_dev[each_adj_tr] = uniqAdj_dev.get(each_adj_tr, 0) + 1
+
+            for eachDev in test_data:
+                each_adj_tr = all_adj[eachDev]
+                uniqAdj_test[each_adj_tr] = uniqAdj_test.get(each_adj_tr, 0) + 1
+
+            for eachDev in training_data:
+                each_adj_tr = all_adj[eachDev]
+                uniqAdj_training[each_adj_tr] = uniqAdj_training.get(each_adj_tr, 0) + 1
+
+
+            for (k,v) in uniqAdj_dev.items():
+                if k not in uniqAdj_training:
+                   print("WARNING: " + k+" this adj from dev was not there in training")
+
+            for (k,v) in uniqAdj_test.items():
+                if k not in uniqAdj_training:
+                   print("WARNING: " + k+" this adj from test was not there in training")
 
 
 
-                print("**************Starting next fold, fold number:"+str(test_fold_index)+" out of: "+str(len(chunkIndices))+"\n")
-
-                model_4chunk = AdjEmb(193, addTurkerOneHot)
-
-                params_to_update = filter(lambda p: p.requires_grad == True, model_4chunk.parameters())
-                rms = optim.RMSprop(params_to_update, lr=learning_rate, alpha=0.99, eps=1e-8, weight_decay=0, momentum=0)
-                loss_fn = nn.MSELoss(size_average=True)
-
-                dev_fold_index = (test_fold_index + 1) % 4
-
-                # create a  list of all the indices of chunks except the test and dev chunk you are keeping out
-                tr_fold_indices = []
-                for i in chunkIndices:
-                    if (i != test_fold_index and i != dev_fold_index):
-                        tr_fold_indices.append(i)
+            #the patience counter starts from patience_max and decreases till it hits 0
+            patienceCounter = patience_max
 
 
+            #the best epochs per fold learned from tuning on dev=
+            best_epochs= [231,899,990,983]
 
-                # print("tr_fold_indices:" + str(tr_fold_indices))
-                # print("test_fold_index:" + str(test_fold_index))
-                # print("dev_fold_index:"+str(dev_fold_index))
+            #run n epochs on the left over training data
+            with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "a")as nfcv_four:
+                nfcv_four.write("test_fold_index:" + str(test_fold_index)+"\n")
+                nfcv_four.write("dev_fold_index:"+str(dev_fold_index)+"\n")
+                nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
+                nfcv_four.write("Epoch \t RSQ_tr  \t RSQ_dev\n")
 
-
-
-                training_data=[]
-
-                #for each of these left over chunks, pull out its data points, and concatenate all into one single huge list of
-                # data points-this is the training data
-                for eachChunk in tr_fold_indices:
-                    for eachElement in split_data[eachChunk]:
-                        training_data.append(eachElement)
-
-                #print("length of training_data:"+str(len(training_data)))
-                test_data=[]
-
-                #for the left out test chunk, pull out its data points, and concatenate all into one single huge list of
-                # data points-this is the test data
-                for eachElement in split_data[test_fold_index]:
-                        test_data.append(eachElement)
-
-                #print("length of test_data:" + str(len(test_data)))
-
-                # for the left out dev chunk, pull out its data points, and concatenate all into one single huge list of
-                # data points-this is the test data
-                dev_data = []
-                for eachElement_dev in split_data[dev_fold_index]:
-                    dev_data.append(eachElement_dev)
-
-                uniqAdj_dev={}
-                uniqAdj_test={}
-                uniqAdj_training={}
-                for eachDev in dev_data:
-                    each_adj_tr = all_adj[eachDev]
-                    uniqAdj_dev[each_adj_tr] = uniqAdj_dev.get(each_adj_tr, 0) + 1
-
-                for eachDev in test_data:
-                    each_adj_tr = all_adj[eachDev]
-                    uniqAdj_test[each_adj_tr] = uniqAdj_test.get(each_adj_tr, 0) + 1
-
-                for eachDev in training_data:
-                    each_adj_tr = all_adj[eachDev]
-                    uniqAdj_training[each_adj_tr] = uniqAdj_training.get(each_adj_tr, 0) + 1
-
-
-                for (k,v) in uniqAdj_dev.items():
-                    if k not in uniqAdj_training:
-                       print("WARNING: " + k+" this adj from dev was not there in training")
-                    # else:
-                    #     print("\t"+k+" this adj from dev was present there in training")
-
-                for (k,v) in uniqAdj_test.items():
-                    if k not in uniqAdj_training:
-                       print("WARNING: " + k+" this adj from test was not there in training")
-                    # else:
-                    #     print("\t"+k+" this adj from test was present there in training")
-
-                # print("\nADJECTIVES:")
-                # print("TRAINING:")
-                # print(uniqAdj_training.items())
-                #
-                #
-                # print("\nDEV:")
-                # print(uniqAdj_dev.items())
-                # print("\nTEST:")
-                # print(uniqAdj_test.items())
-
-
-
-
-                #print("length of dev_data:" + str(len(dev_data)))
-
-
-
-
-
-
-
-                # print("size  of training_data1:" + str((len(training_data))))
-                # print("size of  test_data:" + str((len(test_data))))
-
-
-
-
-
-                    # print("(training_data):")
-                    # print((training_data))
-
-                #the patience counter starts from patience_max and decreases till it hits 0
-                patienceCounter = patience_max
-
-
-
-                #run n epochs on the left over training data
-                with open(cwd + "/outputs/" + rsq_per_epoch_dev_four_chunks, "a")as nfcv_four:
-                    nfcv_four.write("test_fold_index:" + str(test_fold_index)+"\n")
-                    nfcv_four.write("dev_fold_index:"+str(dev_fold_index)+"\n")
-                    nfcv_four.write("tr_fold_indices:" + str(tr_fold_indices) + "\n")
-                    nfcv_four.write("Epoch \t RSQ_tr  \t RSQ_dev\n")
-
-                    '''found the best epochs per fold. after tuning on dev'''
-                    if(test_fold_index==0):
-                        noOfEpochs=231
+                '''found the best epochs per fold. after tuning on dev'''
+                if(test_fold_index==0):
+                    noOfEpochs=best_epochs[0]
+                else:
+                    if(test_fold_index==1):
+                        noOfEpochs=best_epochs[1]
                     else:
-                        if(test_fold_index==1):
-                            noOfEpochs=899
+                        if(test_fold_index==2):
+                            noOfEpochs=best_epochs[2]
                         else:
-                            if(test_fold_index==2):
-                                noOfEpochs=990
-                            else:
-                                if(test_fold_index==3):
-                                    noOfEpochs=983
-
-                    
-                    for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
-
-                        y_total_tr_data=[]
-                        pred_y_total_tr_data=[]
-
-                        # # shuffle before each epoch
-                        np.random.shuffle(training_data)
-
-                        #print(training_data)
+                            if(test_fold_index==3):
+                                noOfEpochs=best_epochs[3]
 
 
-                        #print("size of  length of training_data2:" + str((len(training_data))))
+                for epoch in tqdm(range(noOfEpochs),total=noOfEpochs,desc="epochs:"):
+
+                    y_total_tr_data=[]
+                    pred_y_total_tr_data=[]
+
+                    # shuffle before each epoch
+                    np.random.shuffle(training_data)
 
 
 
+                    '''for each row in the training data, predict y_test value for itself, and then back
+                    propagate the loss'''
+                    for each_data_item_index in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
 
 
-                        '''for each row in the training data, predict y_test value for itself, and then back
-                        propagate the loss'''
-                        for each_data_item_index in tqdm(training_data, total=len(training_data), desc="trng_data_point:"):
+                        #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
+                        model_4chunk.zero_grad()
+
+                        feature=features[each_data_item_index]
+                        y_test = allY[each_data_item_index]
+                        each_adj_tr = all_adj[each_data_item_index]
+
+                        featureV= convert_to_variable(feature)
+                        pred_y_training = model_4chunk(each_adj_tr, featureV)
+
+                        y_total_tr_data.append(y_test)
+                        pred_y_total_tr_data.append(pred_y_training.data.cpu().numpy())
 
 
-                            #every time you feed forward, make sure the gradients are emptied out. From pytorch documentation
-                            model_4chunk.zero_grad()
+                        batch_y = convert_scalar_to_variable(y_test)
 
-                            feature=features[each_data_item_index]
-                            y_test = allY[each_data_item_index]
-                            each_adj_tr = all_adj[each_data_item_index]
-
-                            # print("feature:"+str(feature))
-                            # print("each_adj_tr:"+str(each_adj_tr)+"\n")
-                            # print("y_test:"+str(y_test))
+                        loss = loss_fn(pred_y_training, batch_y)
 
 
+                        # Backward pass
+                        loss.backward()
+
+                        rms.step()
 
 
+                    pred_y_total_dev_data = []
+                    y_total_dev_data = []
 
-                            featureV= convert_to_variable(feature)
-                            pred_y_training = model_4chunk(each_adj_tr, featureV)
-
-                            y_total_tr_data.append(y_test)
-                            pred_y_total_tr_data.append(pred_y_training.data.cpu().numpy())
-
-
-                            batch_y = convert_scalar_to_variable(y_test)
-
-                            loss = loss_fn(pred_y_training, batch_y)
-
-
-                            # Backward pass
-                            loss.backward()
-
-                            rms.step()
+            print("done with all epochs")
 
 
 
+            #Testing phase
+            # after all epochs in the given chunk, (i.e test once per fold)
+            # for each element in the test data, calculate its predicted value, and append it to predy_total
 
-                        #after every epoch, i.e after training on n data points,-calculate rsq for trainign also
-                        #rsquared_value_tr = r2_score(y_total_tr_data, pred_y_total_tr_data, sample_weight=None,
-                                                  #multioutput='uniform_average')
+            y_total_test_data=[]
+            pred_y_total_test_data=[]
 
-                        # #after every epoch, i.e after training on n data points,
-                        #  run on dev data and calculate rsq
-                        # print("size of  dev_estop:" + str(len(dev_estop)))
-                        pred_y_total_dev_data = []
-                        y_total_dev_data = []
+            for test_data_index in test_data:
+                this_feature = features[test_data_index]
+                featureV_dev= convert_to_variable(this_feature)
+                y_test = allY[test_data_index]
+                each_adj_test = all_adj[test_data_index]
+                pred_y_test = model_4chunk(each_adj_test, featureV_dev)
+                y_total_test_data.append(y_test)
+                pred_y_total_test_data.append(pred_y_test.data.cpu().numpy())
 
-                        # print(dev_data)
-                        # print(str(len(dev_data)))
-
-                        # for each element in the dev data, calculate its predicted value, and append it to predy_total
-                        # for dev_index in dev_data:
-                        #     this_feature = features[dev_index]
-                        #     featureV_dev = convert_to_variable(this_feature)
-                        #     y_dev = allY[dev_index]
-                        #     each_adj_dev = all_adj[dev_index]
-                        #
-                        #
-                        #
-                        #     pred_y_dev = model_4chunk(each_adj_dev, featureV_dev)
-                        #     y_total_dev_data.append(y_dev)
-                        #     pred_y_total_dev_data.append(pred_y_dev.data.cpu().numpy())
-
-                            # print("feature:" + str(feature))
-                            # print("each_adj_tr:" + str(each_adj_tr) + "\n")
-                            # print("y_test:" + str(y_test))
-                            # print(pred_y_training)
+                overall_gold_y.append(y_test)
+                overall_pred_y.append(pred_y_test.data.cpu().numpy())
+                overall_adj.append(each_adj_test)
 
 
 
 
-                        # print(y_total_dev_data)
-                        # print(pred_y_total_dev_data)
-                        # print("size of y_total_dev_data:"+str(len(y_total_dev_data)))
-                        # print("size of pred_y_total_dev_data:" + str(len(pred_y_total_dev_data)))
-
-                        # rsquared_value_dev = r2_score(y_total_dev_data, pred_y_total_dev_data, sample_weight=None,
-                        #                           multioutput='uniform_average')
-                        #
-                        #
-                        # # print("\n")
-                        # # print("rsquared_value_Dev" + str(test_fold_index) + ":" + str(rsquared_value_dev))
-                        # # print("\n")
-                        #
-                        # nfcv_four.write(str(epoch) + "\t" + str(rsquared_value_tr) +"\t" + str(rsquared_value_dev ) + "\n")
-                        # nfcv_four.flush()
-
-
-
-
-
-
-
-                print("done with all epochs")
-
-
-
-                #Testing phase
-                # after all epochs in the given chunk, (i.e test once per fold)
-                # for each element in the test data, calculate its predicted value, and append it to predy_total
-
-                y_total_test_data=[]
-                pred_y_total_test_data=[]
-
-                for test_data_index in test_data:
-                    this_feature = features[test_data_index]
-                    featureV_dev= convert_to_variable(this_feature)
-                    y_test = allY[test_data_index]
-                    each_adj_test = all_adj[test_data_index]
-                    pred_y_test = model_4chunk(each_adj_test, featureV_dev)
-                    y_total_test_data.append(y_test)
-                    pred_y_total_test_data.append(pred_y_test.data.cpu().numpy())
-
-                    overall_gold_y.append(y_test)
-                    overall_pred_y.append(pred_y_test.data.cpu().numpy())
-                    overall_adj.append(each_adj_test)
-
-
-
-
-                #calculate the rsquared value for this  held out
-                rsquared_value_test=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
-                print("\n")
-                print("rsquared_value_on_test_after_chunk_"+str(test_fold_index)+":"+str(rsquared_value_test))
-                print("\n")
-                nfcv.write(str(test_fold_index) + "\t" + str(rsquared_value_test) + "\n")
-                nfcv.flush()
-                rsq_total.append(rsquared_value_test)
+            #calculate the rsquared value for this  held out
+            rsquared_value_test=r2_score(y_total_test_data, pred_y_total_test_data, sample_weight=None, multioutput='uniform_average')
+            print("\n")
+            print("rsquared_value_on_test_after_chunk_"+str(test_fold_index)+":"+str(rsquared_value_test))
+            print("\n")
+            nfcv.write(str(test_fold_index) + "\t" + str(rsquared_value_test) + "\n")
+            nfcv.flush()
+            rsq_total.append(rsquared_value_test)
 
 
     #TO FIND AVERAGE OF gold and predicted values- using the overall method
@@ -780,9 +466,6 @@ def run_nfoldCV_on_turk_data_4chunks(features, allY, uniq_adj, all_adj,addTurker
         rsq_values_avg.write("rsq_average: \t "+str(rsq_average))
     rsq_values_avg.close()
 
-
-
-    sys.exit(1)
 
 
 '''get all uniq adjectives. Divide into 4 chunks.: out of 4 chunks, keep one for testing,
