@@ -1083,7 +1083,7 @@ def load_nfoldCV_adj_grouped_turk_data_4chunks(raw_turk_data,features, allY, uni
                         this_adj_gold_y=[]
                         this_adj_pred_y=[]
 
-                   if(indext==(len(test_data)-1)):
+                    if(indext==(len(test_data)-1)):
                         rsquared_value_per_adj=r2_score(this_adj_gold_y, this_adj_pred_y, sample_weight=None, multioutput='uniform_average')
                         nfcv.write("adj:"+current_adj+" rsq:"+str(rsquared_value_per_adj)+" len:"+str(len(this_adj_gold_y))+"\n")
                         nfcv.flush()
@@ -1156,13 +1156,6 @@ def tuneOnDev(trained_model,dev,cwd, uniq_turker,rsq_values,rsquared_value_train
     # calculate rsquared
     rsquared_dev_value = predictAndCalculateRSq(y, features, all_adj, trained_model,epoch)
 
-
-    print("")
-    print("rsquared_value_training:\n")
-    print(str(rsquared_value_training))
-    print("rsquared_value_dev:\n")
-    print(str(rsquared_dev_value))
-    print("")
     rsq_values.write(str(rsquared_dev_value)+"\n")
     rsq_values.flush()
 
