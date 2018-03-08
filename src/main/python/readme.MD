@@ -73,11 +73,11 @@ python initializer.py
 ## OnScreen Instructions:
 There are 7 modes in which this code can be run. Below are the details of various modes you are asked to choose from in the welcome screen.
 
-#To train and save using adj based split press :1
+### To train and save using adj based split press :1
 
 In this mode the data that was gained from crowd sourcing experiment is first grouped based on the adjectives. Then the data is split into training-dev-test partitions, in 80-10-10 splits.
 
-#To train on all the data (not adj based split) press :2
+#### To train on all the data (not adj based split) press :2
 In this mode the data that was gained from crowd sourcing experiment is used as is. i.e it is NOT grouped based on the adjectives. The data is split into training-dev-test partitions, in 80-10-10 splits.
 
 
@@ -89,7 +89,7 @@ To test using a saved model on adj_based_data_test_partition which was trained o
 To exit Press:0
 
 
-#  These are the complete list of packages you need to run this code:
+##  These are the complete list of packages you need to run this code:
 #
 
 ```
