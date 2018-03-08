@@ -1,26 +1,79 @@
-conda create --name turkCompare python scipy pandas
+# Code for the Neural Network part in : Grounding Gradable Adjectives through Crowdsourcing. Submitted to  LREC 2018.
 
-#use Conda to install all the below packages
-conda create --name turkCompare python scipy pandas
-source activate turkCompare
+
+## Reproducibility
+
+This repository contains the files necessary to reproduce thissubmission.
+
+Rather than providing seed values and requiring the model to be
+retrained, the repository also contains relevant scripts and the PyTorch
+model trained as part of the submission.
+
+The submission can easily be reproduced by loading this model using the
+`initializer.py` script and following instructions on screen.
+
+Alternatively the initializer.py` script can be used to train the model with different architectures.
+
+## Getting started
+
+To get started, simply download the files in this repository to a local
+directory.
+
+### Prerequisites
+The model was developed, trained and tested using the
+following packages on a Mac OSX:10.12.6 Sierra
+
+A detailed list of packages are given at the end of this document.
+Following the list of instructions in the `Steps to Install` section should get you all these packages installed.
+
+```
+Conda==4.3.30
+Python==3.6.3
+PyTorch=0.1.12
+NumPy==1.13.1
+Pandas=0.21.0
+Pip=9.0.1
+Scipy=0.19.1
+Tqdm=4.19.4
+
+
+
+```
+
+
+
+
+Please note that compatibility of the saved model with newer versions
+of `PyTorch` has not been checked. Accordingly, please use the
+`PyTorch` version listed above.
+### Installing
+
+Other than ensuring the dependencies are in place, no separate
+installation is required.
+
+Simply execute the `initializer.py` file once the repository has been
+saved locally.
+
+## Steps to Install
+
+
+conda create --name grounding python==3.6.3 scipy==0.19.1 pandas==0.21.0
+source activate grounding
 pip install sklearn
-conda install pytorch-cpu torchvision -c pytorch
+conda install pytorch torchvision -c pytorch
+
 pip install tqdm
-pip install torchtext
 pip install torchwordemb
-#to run
+
+
+## Steps to run
+If you are not already in the home folder:
 cd src/main/python
 python initializer.py
-Press 2 for dense layer
-Takes around 1/10 mins per epochs. i.e 100 epochs =10 mins
 
 
-#conda environments to use
-in clara: mithunhw3
-in MBP laptop:myPytorch
-in chung: turkCompare
 
-# FYI These are the complete list of packages you need to run this code:
+#  These are the complete list of packages you need to run this code:
 #
 python 3+
 

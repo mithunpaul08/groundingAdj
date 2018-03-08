@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.autograd as autograd
 import torch.nn.functional as F
 import torch.optim as optim
-import torchtext.vocab as vocab
+#import torchtext.vocab as vocab
 import torchwordemb
 import numpy as np
 import os

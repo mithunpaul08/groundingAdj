@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import sys
-import torchtext.vocab as vocab
+#import torchtext.vocab as vocab
 import torchwordemb
 from tqdm import tqdm
 
