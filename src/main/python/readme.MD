@@ -74,27 +74,36 @@ python initializer.py
 There are 7 modes in which this code can be run. Below are the details of various modes you are asked to choose from in the welcome screen.
 
 ### To train and save using adj based split press :1
-
 In this mode the data that was gained from crowd sourcing experiment is first grouped based on the adjectives. Then the data is split into training-dev-test partitions, in 80-10-10 splits.
 
-#### To train on all the data (not adj based split) press :2
+### To train on all the data (not adj based split) press :2
 In this mode the data that was gained from crowd sourcing experiment is used as is. i.e it is NOT grouped based on the adjectives. The data is split into training-dev-test partitions, in 80-10-10 splits.
 
 
-To train with nfoldCV on entire data (no adj based split)  press:3
-To train with nfoldCV on  adj based split)  press:4
-To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:5
-To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:6
-To test using a saved model on adj_based_data_test_partition which was trained on nfcv 4 chunks press:7
+### To train with nfoldCV on entire data (no adj based split)  press:3
+In this mode the data that was gained from crowd sourcing experiment is used as is.. Also the data is not split into 80-10-10 . Instead we do n-fold cross validation.
+
+
+### To train with nfoldCV on  adj based split)  press:4
+In this mode the data that was gained from crowd sourcing experiment is first grouped based on the adjectives. Also the data is not split into 80-10-10 . Instead we do n-fold cross validation.
+
+
+### To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:5
+In this mode, a model that is already trained is loaded and used to test on the test partition. Specifically, in this case, the model is trained on mode 2 above.
+
+### To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:6
+In this mode, a model that is already trained is loaded and used to test on the test partition. Specifically, in this case, the model is trained on mode 1 above.
+
+### To test using a saved model on adj_based_data_test_partition which was trained on nfcv 4 chunks press:7
+In this mode, a model that is already trained is loaded and used to test on the test partition. Specifically, in this case, the model is trained on mode 4 above where number of folds=4
+
 To exit Press:0
 
 
 ##  These are the complete list of packages you need to run this code:
-#
+
 
 ```
-
-
 ca-certificates           2017.08.26           ha1e5d58_0
 certifi                   2018.1.18                py36_0
 cffi                      1.11.5           py36h342bebf_0
