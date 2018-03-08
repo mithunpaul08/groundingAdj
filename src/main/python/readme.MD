@@ -1,18 +1,16 @@
-# Code for the Neural Network part in : Grounding Gradable Adjectives through Crowdsourcing. Submitted to  LREC 2018.
+# The Neural Network model in the paper titled "Grounding Gradable Adjectives through Crowdsourcing". Submitted to  LREC 2018.
 
 
 ## Reproducibility
 
-This repository contains the files necessary to reproduce thissubmission.
+This repository contains the files necessary to reproduce the Neural Network model.
 
-Rather than providing seed values and requiring the model to be
-retrained, the repository also contains relevant scripts and the PyTorch
+Rather than providing specific hyper parameters values and requiring the model to be
+retrained (which usually takes around 12 hours), the repository also contains a PyTorch
 model trained as part of the submission.
 
 The submission can easily be reproduced by loading this model using the
-`initializer.py` script and following instructions on screen.
-
-Alternatively the initializer.py` script can be used to train the model with different architectures.
+`initializer.py` script and following the instructions on screen.
 
 ## Getting started
 
@@ -24,7 +22,7 @@ The model was developed, trained and tested using the
 following packages on a Mac OSX:10.12.6 Sierra
 
 A detailed list of packages are given at the end of this document.
-Following the list of instructions in the `Steps to Install` section should get you all these packages installed.
+Following the list of instructions in the `Steps to Install` section should get all these packages installed.
 
 ```
 Conda==4.3.30
@@ -35,9 +33,6 @@ Pandas=0.21.0
 Pip=9.0.1
 Scipy=0.19.1
 Tqdm=4.19.4
-
-
-
 ```
 
 
@@ -56,15 +51,15 @@ saved locally.
 
 ## Steps to Install
 
-
+Please follow the following steps in order:
+```
 conda create --name grounding python==3.6.3 scipy==0.19.1 pandas==0.21.0
 source activate grounding
 pip install sklearn
 conda install pytorch torchvision -c pytorch
-
 pip install tqdm
 pip install torchwordemb
-
+```
 
 ## Steps to run
 If you are not already in the home folder:
