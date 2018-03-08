@@ -63,49 +63,77 @@ pip install torchwordemb
 
 ## Steps to run
 If you are not already in the home folder:
+```
 cd src/main/python
-python initializer.py
 
+python initializer.py
+```
+
+
+## OnScreen Instructions:
+There are 7 modes in which this code can be run. Below are the details of various modes you are asked to choose from in the welcome screen.
+
+#To train and save using adj based split press :1
+
+In this mode the data that was gained from crowd sourcing experiment is first grouped based on the adjectives. Then the data is split into training-dev-test partitions, in 80-10-10 splits.
+
+#To train on all the data (not adj based split) press :2
+In this mode the data that was gained from crowd sourcing experiment is used as is. i.e it is NOT grouped based on the adjectives. The data is split into training-dev-test partitions, in 80-10-10 splits.
+
+
+To train with nfoldCV on entire data (no adj based split)  press:3
+To train with nfoldCV on  adj based split)  press:4
+To test using a saved model on alldata_test_partition which was trained on entire data 80-10-10 press:5
+To test using a saved model on adj_based_data_test_partition which was trained on adj_based_split press:6
+To test using a saved model on adj_based_data_test_partition which was trained on nfcv 4 chunks press:7
+To exit Press:0
 
 
 #  These are the complete list of packages you need to run this code:
 #
-python 3+
 
-ca-certificates           2017.08.26           h1d4fec5_0
-certifi                   2017.7.27.1      py36h8b7b77e_0
-cffi                      1.10.0           py36had8d393_1
-cudatoolkit               8.0                           3
-cudnn                     6.0.21                cuda8.0_0
-cycler                    0.10.0                    <pip>
-intel-openmp              2018.0.0             h15fc484_7
-libedit                   3.1                  heed3624_0
-libffi                    3.2.1                hd88cf55_4
-libgcc                    7.2.0                h69d50b8_2
-libgcc-ng                 7.2.0                h7cc24e2_2
-libgfortran               3.0.0                         1
-libstdcxx-ng              7.2.0                h7a57d05_2
-matplotlib                2.1.0                     <pip>
-mkl                       2017.0.4             h4c4d0af_0
-nccl                      1.3.4                 cuda8.0_1
-ncurses                   6.0                  h9df7e31_2
-numpy                     1.13.1                   py36_0
-openssl                   1.0.2m               h26d622b_1
-pandas                    0.21.0           py36h78bd809_1
-pip                       9.0.1            py36h6c6f9ce_4
-pycparser                 2.18             py36hf9f622e_1
-pyparsing                 2.2.0                     <pip>
-python                    3.6.3                h1284df2_4
-python-dateutil           2.6.1            py36h88d3b88_1
-pytorch                   0.1.12          py36cuda8.0cudnn6.0_1
-pytz                      2017.3           py36h63b9c63_0
-readline                  7.0                  ha6073c6_4
-scipy                     0.19.1              np113py36_0
-setuptools                36.5.0           py36he42e2e1_0
-six                       1.11.0           py36h372c433_1
-sqlite                    3.20.1               hb898158_2
-tk                        8.6.7                hc745277_3
-tqdm                      4.19.4           py36ha5a5176_0
-wheel                     0.29.0           py36he7f4e38_1
-xz                        5.2.3                h55aa19d_2
-zlib                      1.2.11               ha838bed_2
+```
+
+
+ca-certificates           2017.08.26           ha1e5d58_0
+certifi                   2018.1.18                py36_0
+cffi                      1.11.5           py36h342bebf_0
+freetype                  2.8                  h12048fb_1
+intel-openmp              2018.0.0             h8158457_8
+jpeg                      9b                   he5867d9_2
+libcxx                    4.0.1                h579ed51_0
+libcxxabi                 4.0.1                hebd6815_0
+libedit                   3.1                  hb4e282d_0
+libffi                    3.2.1                h475c297_4
+libgfortran               3.0.1                h93005f0_2
+libpng                    1.6.34               he12f830_0
+libtiff                   4.0.9                h0dac147_0
+mkl                       2018.0.1             hfbd8650_4
+ncurses                   6.0                  hd04f020_2
+numpy                     1.14.1           py36ha726252_2
+olefile                   0.45.1                   py36_0
+openssl                   1.0.2n               hdbc3d79_0
+pandas                    0.21.0           py36hfed917e_1
+pillow                    5.0.0            py36hfcce615_0
+pip                       9.0.1                    py36_5
+pycparser                 2.18             py36h724b2fc_1
+python                    3.6.3                h47c878a_7
+python-dateutil           2.6.1            py36h86d2abb_1
+pytorch                   0.3.1           py36_cuda0.0_cudnn0.0_2    pytorch
+pytz                      2018.3                   py36_0
+readline                  7.0                  hc1231fa_4
+scikit-learn              0.19.1                    <pip>
+scipy                     0.19.1           py36h3e758e1_3
+setuptools                38.5.1                   py36_0
+six                       1.11.0           py36h0e22d5e_1
+sklearn                   0.0                       <pip>
+sqlite                    3.22.0               h3efe00b_0
+tk                        8.6.7                h35a86e2_3
+torchvision               0.2.0            py36hf5eb7ec_1    pytorch
+torchwordemb              0.0.8                     <pip>
+tqdm                      4.19.6                    <pip>
+wheel                     0.30.0           py36h5eb2c71_1
+xz                        5.2.3                h0278029_2
+zlib                      1.2.11               hf3cbc9b_2
+
+```
