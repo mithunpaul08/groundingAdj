@@ -104,10 +104,11 @@ In this mode, a model that is already trained is loaded and used to test on the 
 ## Results
 
 Here are the Rsquared values produced by each of the experiments:
-
-Mode 5: Adjective based split (80-10-10) Unseen data: 33.32
+```
+Mode 5: Adjective based split (80-10-10) i.e has Unseen data: 33.32
 Mode 6: Entire data (80-10-10): 61.59
-
+Mode 7: Adjective based grouping but uses n-fold cross validation: 24.4
+```
 
 ##  These are the complete list of packages you need to run this code:
 

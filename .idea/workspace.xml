@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbc88f83-8607-4f52-b4c3-b86a46b449ce" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/outputs/rsq_file_nfcv.txt" afterPath="$PROJECT_DIR$/src/main/python/outputs/rsq_file_nfcv.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/outputs/rsq_on_test.txt" afterPath="$PROJECT_DIR$/src/main/python/outputs/rsq_on_test.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/outputs/rsq_on_test_adj_based_data.txt" afterPath="$PROJECT_DIR$/src/main/python/outputs/rsq_on_test_adj_based_data.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/python/readme.MD" afterPath="$PROJECT_DIR$/src/main/python/readme.MD" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
@@ -64,8 +60,8 @@
       <file leaf-file-name="readme.MD" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/python/readme.MD">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="704">
-              <caret line="105" column="31" lean-forward="false" selection-start-line="105" selection-start-column="31" selection-end-line="105" selection-end-column="31" />
+            <state relative-caret-position="764">
+              <caret line="109" column="71" lean-forward="false" selection-start-line="109" selection-start-column="71" selection-end-line="109" selection-end-column="71" />
               <folding />
             </state>
           </provider>
@@ -882,8 +878,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/python/readme.MD">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="704">
-          <caret line="105" column="31" lean-forward="false" selection-start-line="105" selection-start-column="31" selection-end-line="105" selection-end-column="31" />
+        <state relative-caret-position="764">
+          <caret line="109" column="71" lean-forward="false" selection-start-line="109" selection-start-column="71" selection-end-line="109" selection-end-column="71" />
           <folding />
         </state>
       </provider>
