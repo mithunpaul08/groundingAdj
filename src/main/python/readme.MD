@@ -75,9 +75,11 @@ There are 7 modes in which this code can be run. Below are the details of variou
 
 ### To train and save using adj based split press :1
 In this mode the data that was gained from crowd sourcing experiment is first grouped based on the adjectives. Then the data is split into training-dev-test partitions, in 80-10-10 splits.
+Note that this is the `unseen` adjective experiment mentioned in the paper. i.e the adjectives present in the test partition are not present in dev or training and vice versa.
 
 ### To train on all the data (not adj based split) press :2
 In this mode the data that was gained from crowd sourcing experiment is used as is. i.e it is NOT grouped based on the adjectives. The data is split into training-dev-test partitions, in 80-10-10 splits.
+Note that this is the `seen` adjective experiment mentioned in the paper. i.e the adjectives present in the test partition might or might not be present in dev or training and vice versa.
 
 
 ### To train with nfoldCV on entire data (no adj based split)  press:3
@@ -97,7 +99,14 @@ In this mode, a model that is already trained is loaded and used to test on the 
 ### To test using a saved model on adj_based_data_test_partition which was trained on nfcv 4 chunks press:7
 In this mode, a model that is already trained is loaded and used to test on the test partition. Specifically, in this case, the model is trained on mode 4 above where number of folds=4
 
-To exit Press:0
+### To exit Press:0
+
+## Results
+
+Here are the Rsquared values produced by each of the experiments:
+
+Mode 5: Adjective based split (80-10-10) Unseen data: 33.32
+Mode 6: Entire data (80-10-10): 61.59
 
 
 ##  These are the complete list of packages you need to run this code:
