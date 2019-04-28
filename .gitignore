@@ -1,4 +1,5 @@
 target/
 project/
 src/main/resources/marneffe/*
-*.pyc
+src/main/python/utils/*.pyc
+src/main/python/utils/__pycache__/*
